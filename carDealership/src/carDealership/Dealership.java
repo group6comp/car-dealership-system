@@ -1,11 +1,8 @@
 package carDealership;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
-import javax.swing.JFrame;
-
-public class Dealership implements Serializable {
+public class Dealership {
 	private String name;
 	private String location;
 	private int nv;

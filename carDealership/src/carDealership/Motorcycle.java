@@ -1,6 +1,7 @@
 package carDealership;
 
 public class Motorcycle extends Vehicle {
+	private static final long serialVersionUID = -3762021630826741458L;
 	private String handlebarType;
 
 	public Motorcycle(String make, String model, String color, int year, double price, String handlebarType) {

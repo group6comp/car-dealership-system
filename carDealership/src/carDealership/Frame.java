@@ -2,24 +2,11 @@ package carDealership;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.HeadlessException;
 import java.awt.Toolkit;
 
 import javax.swing.JButton;
@@ -36,14 +23,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 public class Frame extends JFrame implements ActionListener {
-
-	private Container con;
+	private static final long serialVersionUID = -4235592661347719465L;
 	private JFrame jf1;
 	// ---------Buttons--------
 	private JButton m_displayAllButton, m_addVehicleButton, m_sellVehicleButton, m_removeVehicleButton, m_editVehicleButton, m_salesHistoryButton, m_searchCarButton, m_dealershipInfoButton;
 
 	// =========Files==========
-	private String fileName;
 	private JTextArea textArea;
 	private JScrollPane scrollPane;
 	// ---------JMenu -----------------
@@ -52,22 +37,11 @@ public class Frame extends JFrame implements ActionListener {
 	private JMenuItem save;
 	private JMenuItem deleteDealership;
 
-	private ImageAnimation ia;
 	// -----------Labels---------
 	private JLabel jl1;
-	private JLabel jl2;
 
 	public Frame() {
 		jf1 = new JFrame();
-		con = new Container();
-
-		// ===== secret stuff ======
-		SwingUtilities.invokeLater(() -> {
-			ia = new ImageAnimation();
-			// ia.setVisible(true);
-			// jf1.add(ia);
-
-		});
 
 		// ------------- Jmenu ------------
 		menuBar = new JMenuBar();
