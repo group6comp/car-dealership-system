@@ -1,3 +1,5 @@
+Fork of https://github.com/mohanad-hafez/car-dealership-system for educational purposes.
+
 # Car Dealership System
 
 This repository contains the second phase of the **Car Dealership System**, a Java project developed for the CSC 113 course during the second semester of 1445. This phase enhances the program by handling exceptions, using files for data storage, and providing a graphical user interface (GUI) using Java Swing components.
