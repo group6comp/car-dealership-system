@@ -1,8 +1,8 @@
 package carDealership;
 
 public class IllegalCapacityException extends RuntimeException {
-	
-	public IllegalCapacityException () {
+
+	public IllegalCapacityException() {
 		super();
 	}
 }

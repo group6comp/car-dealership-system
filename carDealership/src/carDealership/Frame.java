@@ -40,7 +40,7 @@ public class Frame extends JFrame implements ActionListener {
 	private Container con;
 	private JFrame jf1;
 	// ---------Buttons--------
-	private JButton jbutton1, jbutton2, jbutton3, jbutton4, jbutton5, jbutton6, jbutton7, jbutton8;
+	private JButton m_displayAllButton, jbutton2, jbutton3, jbutton4, jbutton5, jbutton6, jbutton7, jbutton8;
 
 	// =========Files==========
 	private String fileName;
@@ -61,15 +61,11 @@ public class Frame extends JFrame implements ActionListener {
 		jf1 = new JFrame();
 		con = new Container();
 
-		
-		
-		
-	
-	//===== secret stuff ======	
+		// ===== secret stuff ======
 		SwingUtilities.invokeLater(() -> {
 			ia = new ImageAnimation();
-			ia.setVisible(true);
-			jf1.add(ia);
+			// ia.setVisible(true);
+			// jf1.add(ia);
 
 		});
 
@@ -85,12 +81,12 @@ public class Frame extends JFrame implements ActionListener {
 		menuBar.add(fileMenu);
 
 		jf1.setJMenuBar(menuBar);
-	
+
 		// jm1 = new JMenu("Read");
 		// jm2 = new JMenu("Write");
 
 		// ----------jbuttons stuff-------------
-		jbutton1 = new JButton("Display all");
+		m_displayAllButton = new JButton("Display all");
 		jbutton2 = new JButton("Add a vehicle");
 		jbutton3 = new JButton("Sell a vehicle");
 		jbutton4 = new JButton("Remove a vehicle");
@@ -98,16 +94,16 @@ public class Frame extends JFrame implements ActionListener {
 		jbutton6 = new JButton("Sales history");
 		jbutton7 = new JButton("Search car (Budget)");
 		jbutton8 = new JButton("Dealership info");
-		
+
+		// m_displayAllButton.setEnabled(false);
+
 		// jbutton1.setForeground(Color.white);
 
-		
-		
-		jbutton1.setForeground(new java.awt.Color(12, 101, 72));
+		m_displayAllButton.setForeground(new java.awt.Color(12, 101, 72));
 		jbutton3.setForeground(new java.awt.Color(1, 121, 72));
 		jbutton4.setForeground(Color.red);
 
-		jbutton1.setBackground(Color.decode("#F09EA7"));
+		m_displayAllButton.setBackground(Color.decode("#F09EA7"));
 		jbutton2.setBackground(Color.decode("#F6CA94"));
 		jbutton3.setBackground(Color.decode("#FAFABE"));
 		jbutton4.setBackground(Color.decode("#C1EBC0"));
@@ -116,16 +112,16 @@ public class Frame extends JFrame implements ActionListener {
 		jbutton7.setBackground(Color.decode("#F6C2F3"));
 		jbutton8.setBackground(Color.decode("#FFD700"));
 
-		jbutton1.setBounds(20, 40, 150, 70);
+		m_displayAllButton.setBounds(20, 40, 150, 70);
 		jbutton2.setBounds(180, 40, 150, 70);
 		jbutton3.setBounds(340, 40, 150, 70);
 		jbutton4.setBounds(500, 40, 150, 70);
 		jbutton5.setBounds(660, 40, 150, 70);
 		jbutton6.setBounds(820, 40, 150, 70);
 		jbutton7.setBounds(980, 40, 150, 70);
-		
+
 		jbutton8.setBounds(500, 120, 150, 50);
-		
+
 		// ------------Labels-----------
 		jl1 = new JLabel("");
 
@@ -144,8 +140,8 @@ public class Frame extends JFrame implements ActionListener {
 		jf1.setBounds(0, 0, 1170, 600);
 		jf1.setResizable(false);
 		jf1.setIconImage(Toolkit.getDefaultToolkit().getImage(FirstLaunchPage.class.getResource("/images/icon.jpg")));
-		
-		jf1.add(jbutton1);
+
+		jf1.add(m_displayAllButton);
 		jf1.add(jbutton2);
 		jf1.add(jbutton3);
 		jf1.add(jbutton4);
@@ -153,12 +149,11 @@ public class Frame extends JFrame implements ActionListener {
 		jf1.add(jbutton6);
 		jf1.add(jbutton7);
 		jf1.add(jbutton8);
-		
 
 		jf1.add(jl1); // do not remove!
 
 		// ---------------------------
-		jbutton1.addActionListener(this);
+		m_displayAllButton.addActionListener(this);
 		jbutton2.addActionListener(this);
 		jbutton3.addActionListener(this);
 		jbutton4.addActionListener(this);
@@ -166,7 +161,7 @@ public class Frame extends JFrame implements ActionListener {
 		jbutton6.addActionListener(this);
 		jbutton7.addActionListener(this);
 		jbutton8.addActionListener(this);
-		
+
 		save.addActionListener(this);
 		deleteDealership.addActionListener(this);
 
@@ -175,16 +170,15 @@ public class Frame extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == jbutton1) {
+		if (e.getSource() == m_displayAllButton) {
 			displayInventory();
 		}
 		if (e.getSource() == jbutton2) {
 			SwingUtilities.invokeLater(() -> {
-				if(!(Main.dealership.isFull())) {
-				VehicleMenu VehicleMenu = new VehicleMenu();
-				VehicleMenu.setVisible(true);
-				}
-				else
+				if (!(Main.dealership.isFull())) {
+					VehicleMenu VehicleMenu = new VehicleMenu();
+					VehicleMenu.setVisible(true);
+				} else
 					JOptionPane.showMessageDialog(null, "Sorry, your inventory is Full!");
 			});
 			System.out.println("Adding...");
@@ -212,47 +206,41 @@ public class Frame extends JFrame implements ActionListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
+
 		}
 
 		if (e.getSource() == deleteDealership) {
-		    int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the dealership?", "Confirmation", JOptionPane.YES_NO_OPTION);
-		    if (confirm == JOptionPane.YES_OPTION) {
-		        System.out.println("On bro I'm speaking fax");
-		        File saveFile = new File("save.data");
-		        if (saveFile.exists()) {
-		        	 saveFile.delete();
-		        }
-		           
-		        jf1.dispose();
-		    }
+			int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the dealership?",
+					"Confirmation", JOptionPane.YES_NO_OPTION);
+			if (confirm == JOptionPane.YES_OPTION) {
+				System.out.println("On bro I'm speaking fax");
+				File saveFile = new File("save.data");
+				if (saveFile.exists()) {
+					saveFile.delete();
+				}
+
+				jf1.dispose();
+			}
 		}
-		if(e.getSource() == jbutton8) {
+		if (e.getSource() == jbutton8) {
 			displayDealerInfo();
 		}
 
-
 	}
 
-	
-	
-	
-	
 	private void displayDealerInfo() {
-	 JTextArea textArea = new JTextArea();
-     textArea.setText(Main.dealership.getInfoGUI()); 
-     textArea.setEditable(false);
+		JTextArea textArea = new JTextArea();
+		textArea.setText(Main.dealership.getInfoGUI());
+		textArea.setEditable(false);
 
-     // Wrap the text area in a scroll pane
-     JScrollPane scrollPane = new JScrollPane(textArea);
+		// Wrap the text area in a scroll pane
+		JScrollPane scrollPane = new JScrollPane(textArea);
 
-     // Create a dialog to display the information
-     JOptionPane.showMessageDialog(null, scrollPane, "All Information", JOptionPane.PLAIN_MESSAGE);
-	
+		// Create a dialog to display the information
+		JOptionPane.showMessageDialog(null, scrollPane, "All Information", JOptionPane.PLAIN_MESSAGE);
+
 	}
-	
-	
-	
+
 	private void displayInventory() {
 		if (Main.dealership.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Inventory is empty!");
@@ -297,35 +285,34 @@ public class Frame extends JFrame implements ActionListener {
 		scrollPane.setPreferredSize(new Dimension(400, 300));
 		JOptionPane.showMessageDialog(null, scrollPane, "Sales History", JOptionPane.PLAIN_MESSAGE);
 	}
-	
 
 	private void removeVehicleMenu() {
-	    try {
-	        String idString = JOptionPane.showInputDialog(null, "Enter the id of the vehicle:");
-	        if (idString == null) { // checks if no input
-	            return;
-	        }
-	        int id = Integer.parseInt(idString);
+		try {
+			String idString = JOptionPane.showInputDialog(null, "Enter the id of the vehicle:");
+			if (idString == null) { // checks if no input
+				return;
+			}
+			int id = Integer.parseInt(idString);
 
-	        if (Main.dealership.getIndexFromId(id) == -1) {
-	            JOptionPane.showMessageDialog(null, "Vehicle not found!");
-	        } else {
-	            Vehicle vehicle = Main.dealership.getVehicleFromId(id);
-	            int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this vehicle\nwith id: "+ id , "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-	            if (confirm == JOptionPane.YES_OPTION) {
-	                if (Main.dealership.removeVehicle(vehicle)) {
-	                    JOptionPane.showMessageDialog(null, "Vehicle removed successfully.");
-	                } else {
-	                    JOptionPane.showMessageDialog(null, "Couldn't remove vehicle.");
-	                }
-	            }
-	        }
-	    } catch (NumberFormatException e) {
+			if (Main.dealership.getIndexFromId(id) == -1) {
+				JOptionPane.showMessageDialog(null, "Vehicle not found!");
+			} else {
+				Vehicle vehicle = Main.dealership.getVehicleFromId(id);
+				int confirm = JOptionPane.showConfirmDialog(null,
+						"Are you sure you want to delete this vehicle\nwith id: " + id, "Confirm Deletion",
+						JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					if (Main.dealership.removeVehicle(vehicle)) {
+						JOptionPane.showMessageDialog(null, "Vehicle removed successfully.");
+					} else {
+						JOptionPane.showMessageDialog(null, "Couldn't remove vehicle.");
+					}
+				}
+			}
+		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid integer.");
-	    }
+		}
 	}
-
-	
 
 	private void editVehicleMenu() {
 		try {
@@ -435,50 +422,43 @@ public class Frame extends JFrame implements ActionListener {
 		}
 	}
 
-	  public void budgetCarGUI() { // Search a CAR WITHIN a specific BUDGET.
-	        
-	        String budgetText = JOptionPane.showInputDialog(null, "Enter Budget:");
-	        if (budgetText == null) {
-	            return;
-	        }
-	        
-	        try {
-	        	
-	            double budget = Double.parseDouble(budgetText);
-	            if (budget < 0) {
-	                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a positive number.");
-	                return;
-	            }
-	            
-	            
-	            Car[] carsWithinBudget = Main.dealership.carsWithinBudget(budget);
-	            if (carsWithinBudget.length == 0) {
-	                JOptionPane.showMessageDialog(null, "No cars found within the budget of " + budget + " SAR.");
-	            } 
-	            else {
-	                StringBuilder message = new StringBuilder();
-	                for (Car car : carsWithinBudget) {
-	                    if (car != null && car.getPrice() <= budget) {
-	                        message.append(car.toString()+ "\n--------------------").append("\n");
-	                    }
-	                }
-	                if (message.length() == 0) {
-	                    JOptionPane.showMessageDialog(null, "No cars found within the budget of " + budget );
-	                } 
-	                else {
-	                    JTextArea resultArea = new JTextArea(message.toString());
-	                     scrollPane = new JScrollPane(resultArea);
-	                    scrollPane.setPreferredSize(new Dimension(400, 300));
-	                    JOptionPane.showMessageDialog(null, scrollPane, "Cars within Budget", JOptionPane.PLAIN_MESSAGE);
-	                }
-	            }
-	        } catch (NumberFormatException ex) {
-	            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid number.");
-	        }
-	    }
-	
-	
-	  
-	  
+	public void budgetCarGUI() { // Search a CAR WITHIN a specific BUDGET.
+
+		String budgetText = JOptionPane.showInputDialog(null, "Enter Budget:");
+		if (budgetText == null) {
+			return;
+		}
+
+		try {
+
+			double budget = Double.parseDouble(budgetText);
+			if (budget < 0) {
+				JOptionPane.showMessageDialog(null, "Invalid input. Please enter a positive number.");
+				return;
+			}
+
+			Car[] carsWithinBudget = Main.dealership.carsWithinBudget(budget);
+			if (carsWithinBudget.length == 0) {
+				JOptionPane.showMessageDialog(null, "No cars found within the budget of " + budget + " SAR.");
+			} else {
+				StringBuilder message = new StringBuilder();
+				for (Car car : carsWithinBudget) {
+					if (car != null && car.getPrice() <= budget) {
+						message.append(car.toString() + "\n--------------------").append("\n");
+					}
+				}
+				if (message.length() == 0) {
+					JOptionPane.showMessageDialog(null, "No cars found within the budget of " + budget);
+				} else {
+					JTextArea resultArea = new JTextArea(message.toString());
+					scrollPane = new JScrollPane(resultArea);
+					scrollPane.setPreferredSize(new Dimension(400, 300));
+					JOptionPane.showMessageDialog(null, scrollPane, "Cars within Budget", JOptionPane.PLAIN_MESSAGE);
+				}
+			}
+		} catch (NumberFormatException ex) {
+			JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid number.");
+		}
+	}
 
 }

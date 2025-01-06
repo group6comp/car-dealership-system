@@ -1,13 +1,14 @@
 package carDealership;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Sale implements Serializable{
+public class Sale implements Serializable {
 	private Vehicle vehicle;
 	private String buyerName;
 	private String buyerContact;
 	private LocalDate saleDate;
-	
+
 	public Sale(Vehicle vehicle, String buyerName, String buyerContact, LocalDate saleDate) {
 		this.vehicle = vehicle;
 		this.buyerName = buyerName;
@@ -46,8 +47,5 @@ public class Sale implements Serializable{
 	public void setSaleDate(LocalDate saleDate) {
 		this.saleDate = saleDate;
 	}
-	
-	
-	
-	
+
 }

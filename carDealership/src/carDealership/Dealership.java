@@ -29,13 +29,15 @@ public class Dealership implements Serializable {
 
 	}
 
-	public String getInfoGUI() { //for gui 
-		
-  ;return"Dealership name: ["+name+"]\nLocation: ["+location+"]\nInventory Size: ["+inventory.length+"]\n\n"+"Available space: "
-  +(inventory.length-nv)+"\nTotal Cars: "+getTotalCars() + "\nTotal Motorcycles: "+ getTotalMotorcycles() +"\n\nTotal sales profit: "+ salesProfit() 
-  + "\nTotal vehicles sold: " + ns;
-		
-		}
+	public String getInfoGUI() { // for gui
+
+		;
+		return "Dealership name: [" + name + "]\nLocation: [" + location + "]\nInventory Size: [" + inventory.length
+				+ "]\n\n" + "Available space: " + (inventory.length - nv) + "\nTotal Cars: " + getTotalCars()
+				+ "\nTotal Motorcycles: " + getTotalMotorcycles() + "\n\nTotal sales profit: " + salesProfit()
+				+ "\nTotal vehicles sold: " + ns;
+
+	}
 
 	private int salesProfit() {
 		int total = 0;
@@ -47,8 +49,6 @@ public class Dealership implements Serializable {
 			}
 		return total;
 	}
-	
-	
 
 	public boolean addVehicle(Vehicle vehicle) {
 		if (nv == inventory.length) {
@@ -240,7 +240,6 @@ public class Dealership implements Serializable {
 		return types;
 	}
 
-	
 	public int carBudget(double budget) {
 		int total = 0;
 		boolean notChecked = true; // controls the messages by deciding whether cars exsist or not.
@@ -249,8 +248,8 @@ public class Dealership implements Serializable {
 			if (inventory[i] instanceof Car) {
 				notChecked = false;
 				if (inventory[i].getPrice() <= budget) {
-				inventory[i].displayInfo();
-						System.out.println("---------------------");
+					inventory[i].displayInfo();
+					System.out.println("---------------------");
 					total++;
 				}
 			}
@@ -263,23 +262,20 @@ public class Dealership implements Serializable {
 		return total;
 
 	}
-	
-	
+
 	public Car[] carsWithinBudget(double budget) { // for gui returns cars that are within specific budgets.
 		Car car[] = new Car[getTotalCars()];
 		int counter = 0;
-		for(int i =0; i<nv;i++) {
+		for (int i = 0; i < nv; i++) {
 			if (inventory[i] instanceof Car) {
 				if (inventory[i].getPrice() <= budget) {
-					car[counter++] = (Car)inventory[i];
-		}
-	}
+					car[counter++] = (Car) inventory[i];
+				}
+			}
 		}
 		return car;
 	}
-	
-	
-	
+
 	// Dealership End
 
 }

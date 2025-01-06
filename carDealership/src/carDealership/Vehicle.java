@@ -2,13 +2,13 @@ package carDealership;
 
 import java.io.Serializable;
 
-public abstract class Vehicle implements Serializable{
+public abstract class Vehicle implements Serializable {
 	protected String make, model, color;
 	protected int year;
 	protected double price;
 	protected int id;
-	//private static int nextId;
-	
+	// private static int nextId;
+
 	public Vehicle(String make, String model, String color, int year, double price) {
 		this.make = make;
 		this.model = model;
@@ -16,16 +16,14 @@ public abstract class Vehicle implements Serializable{
 		this.year = year;
 		setPrice(price);
 	}
-	
+
 	public abstract void displayInfo();
-	
-	
+
 	public String toString() {
-		
-		return "ID: " + id +"\nMake: " +make + "\nModel: "+ model+ "\nColor: "+ color +"\nYear: "+year +"\nPrice: "+ price ;
+
+		return "ID: " + id + "\nMake: " + make + "\nModel: " + model + "\nColor: " + color + "\nYear: " + year
+				+ "\nPrice: " + price;
 	}
-	
-	
 
 	public String getMake() {
 		return make;
@@ -64,7 +62,7 @@ public abstract class Vehicle implements Serializable{
 	}
 
 	public void setPrice(double price) {
-		if(price<0) {
+		if (price < 0) {
 			price = 0;
 		}
 		this.price = price;
