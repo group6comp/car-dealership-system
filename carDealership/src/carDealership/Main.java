@@ -8,9 +8,6 @@ public class Main {
 	public static Dealership dealership;
 
 	public static void main(String args[]) throws IOException, ClassNotFoundException {
-
-		// --------------- Load save file if exists, launch new dealership page if it
-		// doesn't ----------------
 		File saveFile = new File("save.data");
 
 		if (saveFile.exists()) {
@@ -22,39 +19,6 @@ public class Main {
 		} else {
 			FirstLaunchPage newPage = new FirstLaunchPage();
 		}
-
-		/*
-		 * System.out.println("Welcome to the Dealership System!");
-		 * dealership.getInfo(); // Prints dealership's name,location,inventory size.
-		 * while (true) { System.out.println("\nChoose an option:");
-		 * System.out.println("1. Display all vehicles");
-		 * System.out.println("2. Add a vehicle");
-		 * System.out.println("3. Sell a vehicle");
-		 * System.out.println("4. Remove a vehicle");
-		 * System.out.println("5. Edit a vehicle");
-		 * System.out.println("6. Sales history"); System.out.println("7. Search type");
-		 * System.out.println("8. Find car using budget");
-		 * System.out.println("9. Change text color"); System.out.println("10. Exit");
-		 * System.out.print("Enter your choice: "); String choice = input.nextLine();
-		 * 
-		 * switch (choice) { case "1": if (dealership.isEmpty()) {
-		 * System.out.println("\nInventory is empty!"); break; }
-		 * dealership.displayAll(); break; case "2": if (dealership.isFull()) {
-		 * System.out.println("Inventory is full!"); break; } addVehicleMenu(); break;
-		 * case "3": sellVehicleMenu(); break; case "4": removeVehicleMenu(); break;
-		 * case "5": editVehicleMenu(); break; case "6":
-		 * dealership.displaySalesHistory(); break; case "9": changeColorMenu(); break;
-		 * case "7": searchCarMenu();
-		 * 
-		 * break; case "8": budgetCarMenu();
-		 * 
-		 * break; case "10":
-		 * System.out.println("Exiting the Dealership System. Goodbye!"); return;
-		 * default: System.out.println("Invalid choice. Please try again.");
-		 * 
-		 * 
-		 * } }
-		 */
 	}
 
 	public static void addVehicleMenu() {

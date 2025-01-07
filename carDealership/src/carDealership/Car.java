@@ -1,6 +1,7 @@
 package carDealership;
 
 public class Car extends Vehicle {
+	private static final long serialVersionUID = -8046573803286029881L;
 	private String type;
 
 	public Car(String make, String model, String color, int year, double price, String type) {

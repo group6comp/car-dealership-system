@@ -2,24 +2,11 @@ package carDealership;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.HeadlessException;
 import java.awt.Toolkit;
 
 import javax.swing.JButton;
@@ -36,14 +23,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 public class Frame extends JFrame implements ActionListener {
-
-	private Container con;
+	private static final long serialVersionUID = -4235592661347719465L;
 	private JFrame jf1;
 	// ---------Buttons--------
-	private JButton m_displayAllButton, jbutton2, jbutton3, jbutton4, jbutton5, jbutton6, jbutton7, jbutton8;
+	private JButton m_displayAllButton, m_addVehicleButton, m_sellVehicleButton, m_removeVehicleButton, m_editVehicleButton, m_salesHistoryButton, m_searchCarButton, m_dealershipInfoButton;
 
 	// =========Files==========
-	private String fileName;
 	private JTextArea textArea;
 	private JScrollPane scrollPane;
 	// ---------JMenu -----------------
@@ -52,22 +37,11 @@ public class Frame extends JFrame implements ActionListener {
 	private JMenuItem save;
 	private JMenuItem deleteDealership;
 
-	private ImageAnimation ia;
 	// -----------Labels---------
 	private JLabel jl1;
-	private JLabel jl2;
 
 	public Frame() {
 		jf1 = new JFrame();
-		con = new Container();
-
-		// ===== secret stuff ======
-		SwingUtilities.invokeLater(() -> {
-			ia = new ImageAnimation();
-			// ia.setVisible(true);
-			// jf1.add(ia);
-
-		});
 
 		// ------------- Jmenu ------------
 		menuBar = new JMenuBar();
@@ -82,45 +56,38 @@ public class Frame extends JFrame implements ActionListener {
 
 		jf1.setJMenuBar(menuBar);
 
-		// jm1 = new JMenu("Read");
-		// jm2 = new JMenu("Write");
-
 		// ----------jbuttons stuff-------------
 		m_displayAllButton = new JButton("Display all");
-		jbutton2 = new JButton("Add a vehicle");
-		jbutton3 = new JButton("Sell a vehicle");
-		jbutton4 = new JButton("Remove a vehicle");
-		jbutton5 = new JButton("Edit a vehicle");
-		jbutton6 = new JButton("Sales history");
-		jbutton7 = new JButton("Search car (Budget)");
-		jbutton8 = new JButton("Dealership info");
-
-		// m_displayAllButton.setEnabled(false);
-
-		// jbutton1.setForeground(Color.white);
+		m_addVehicleButton = new JButton("Add a vehicle");
+		m_sellVehicleButton = new JButton("Sell a vehicle");
+		m_removeVehicleButton = new JButton("Remove a vehicle");
+		m_editVehicleButton = new JButton("Edit a vehicle");
+		m_salesHistoryButton = new JButton("Sales history");
+		m_searchCarButton = new JButton("Search car (Budget)");
+		m_dealershipInfoButton = new JButton("Dealership info");
 
 		m_displayAllButton.setForeground(new java.awt.Color(12, 101, 72));
-		jbutton3.setForeground(new java.awt.Color(1, 121, 72));
-		jbutton4.setForeground(Color.red);
+		m_sellVehicleButton.setForeground(new java.awt.Color(1, 121, 72));
+		m_removeVehicleButton.setForeground(Color.red);
 
 		m_displayAllButton.setBackground(Color.decode("#F09EA7"));
-		jbutton2.setBackground(Color.decode("#F6CA94"));
-		jbutton3.setBackground(Color.decode("#FAFABE"));
-		jbutton4.setBackground(Color.decode("#C1EBC0"));
-		jbutton5.setBackground(Color.decode("#C7CAFF"));
-		jbutton6.setBackground(Color.decode("#CDABEB"));
-		jbutton7.setBackground(Color.decode("#F6C2F3"));
-		jbutton8.setBackground(Color.decode("#FFD700"));
+		m_addVehicleButton.setBackground(Color.decode("#F6CA94"));
+		m_sellVehicleButton.setBackground(Color.decode("#FAFABE"));
+		m_removeVehicleButton.setBackground(Color.decode("#C1EBC0"));
+		m_editVehicleButton.setBackground(Color.decode("#C7CAFF"));
+		m_salesHistoryButton.setBackground(Color.decode("#CDABEB"));
+		m_searchCarButton.setBackground(Color.decode("#F6C2F3"));
+		m_dealershipInfoButton.setBackground(Color.decode("#FFD700"));
 
 		m_displayAllButton.setBounds(20, 40, 150, 70);
-		jbutton2.setBounds(180, 40, 150, 70);
-		jbutton3.setBounds(340, 40, 150, 70);
-		jbutton4.setBounds(500, 40, 150, 70);
-		jbutton5.setBounds(660, 40, 150, 70);
-		jbutton6.setBounds(820, 40, 150, 70);
-		jbutton7.setBounds(980, 40, 150, 70);
+		m_addVehicleButton.setBounds(180, 40, 150, 70);
+		m_sellVehicleButton.setBounds(340, 40, 150, 70);
+		m_removeVehicleButton.setBounds(500, 40, 150, 70);
+		m_editVehicleButton.setBounds(660, 40, 150, 70);
+		m_salesHistoryButton.setBounds(820, 40, 150, 70);
+		m_searchCarButton.setBounds(980, 40, 150, 70);
 
-		jbutton8.setBounds(500, 120, 150, 50);
+		m_dealershipInfoButton.setBounds(500, 120, 150, 50);
 
 		// ------------Labels-----------
 		jl1 = new JLabel("");
@@ -142,25 +109,25 @@ public class Frame extends JFrame implements ActionListener {
 		jf1.setIconImage(Toolkit.getDefaultToolkit().getImage(FirstLaunchPage.class.getResource("/images/icon.jpg")));
 
 		jf1.add(m_displayAllButton);
-		jf1.add(jbutton2);
-		jf1.add(jbutton3);
-		jf1.add(jbutton4);
-		jf1.add(jbutton5);
-		jf1.add(jbutton6);
-		jf1.add(jbutton7);
-		jf1.add(jbutton8);
+		jf1.add(m_addVehicleButton);
+		jf1.add(m_sellVehicleButton);
+		jf1.add(m_removeVehicleButton);
+		jf1.add(m_editVehicleButton);
+		jf1.add(m_salesHistoryButton);
+		jf1.add(m_searchCarButton);
+		jf1.add(m_dealershipInfoButton);
 
 		jf1.add(jl1); // do not remove!
 
 		// ---------------------------
 		m_displayAllButton.addActionListener(this);
-		jbutton2.addActionListener(this);
-		jbutton3.addActionListener(this);
-		jbutton4.addActionListener(this);
-		jbutton5.addActionListener(this);
-		jbutton6.addActionListener(this);
-		jbutton7.addActionListener(this);
-		jbutton8.addActionListener(this);
+		m_addVehicleButton.addActionListener(this);
+		m_sellVehicleButton.addActionListener(this);
+		m_removeVehicleButton.addActionListener(this);
+		m_editVehicleButton.addActionListener(this);
+		m_salesHistoryButton.addActionListener(this);
+		m_searchCarButton.addActionListener(this);
+		m_dealershipInfoButton.addActionListener(this);
 
 		save.addActionListener(this);
 		deleteDealership.addActionListener(this);
@@ -173,7 +140,7 @@ public class Frame extends JFrame implements ActionListener {
 		if (e.getSource() == m_displayAllButton) {
 			displayInventory();
 		}
-		if (e.getSource() == jbutton2) {
+		if (e.getSource() == m_addVehicleButton) {
 			SwingUtilities.invokeLater(() -> {
 				if (!(Main.dealership.isFull())) {
 					VehicleMenu VehicleMenu = new VehicleMenu();
@@ -183,19 +150,19 @@ public class Frame extends JFrame implements ActionListener {
 			});
 			System.out.println("Adding...");
 		}
-		if (e.getSource() == jbutton3) {
+		if (e.getSource() == m_sellVehicleButton) {
 			sellVehicleMenu();
 		}
-		if (e.getSource() == jbutton4) {
+		if (e.getSource() == m_removeVehicleButton) {
 			removeVehicleMenu();
 		}
-		if (e.getSource() == jbutton5) {
+		if (e.getSource() == m_editVehicleButton) {
 			editVehicleMenu();
 		}
-		if (e.getSource() == jbutton6) {
+		if (e.getSource() == m_salesHistoryButton) {
 			displaySalesHistory();
 		}
-		if (e.getSource() == jbutton7) {
+		if (e.getSource() == m_searchCarButton) {
 			budgetCarGUI();
 		}
 
@@ -222,7 +189,7 @@ public class Frame extends JFrame implements ActionListener {
 				jf1.dispose();
 			}
 		}
-		if (e.getSource() == jbutton8) {
+		if (e.getSource() == m_dealershipInfoButton) {
 			displayDealerInfo();
 		}
 
