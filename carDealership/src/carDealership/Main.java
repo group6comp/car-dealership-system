@@ -2,14 +2,18 @@ package carDealership;
 
 import java.util.Scanner;
 import java.io.*;
+import java.sql.SQLException;
 
 public class Main {
 	public static Scanner input = new Scanner(System.in);
 	public static Dealership dealership;
 
-	public static void main(String args[]) throws IOException, ClassNotFoundException {
+	public static void main(String args[]) throws IOException, ClassNotFoundException, SQLException {
+		DBManager dbManager = DBManager.getInstance();
+
 		File saveFile = new File("save.data");
 
+		// TODO: Add a method in DBManager to tell if the database was just created and use it here
 		if (saveFile.exists()) {
 			FileInputStream inFileStream = new FileInputStream(saveFile);
 			ObjectInputStream inObjStream = new ObjectInputStream(inFileStream);
@@ -339,7 +343,4 @@ public class Main {
 		outObjStream.close();
 
 	}
-
-	// Main end.
-
 }

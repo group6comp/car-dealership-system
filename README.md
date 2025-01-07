@@ -1,5 +1,11 @@
 Fork of https://github.com/mohanad-hafez/car-dealership-system for educational purposes.
 
+You will need the JDBC SQLite connector.
+If you use Eclipse, your can just download https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.47.2.0/sqlite-jdbc-3.47.2.0.jar and copy it under carDealership: the project is already configured to use this library.
+
+Otherwise import the jar file using your IDE.
+
+
 # Car Dealership System
 
 This repository contains the second phase of the **Car Dealership System**, a Java project developed for the CSC 113 course during the second semester of 1445. This phase enhances the program by handling exceptions, using files for data storage, and providing a graphical user interface (GUI) using Java Swing components.
