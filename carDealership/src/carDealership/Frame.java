@@ -22,11 +22,15 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 public class Frame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -4235592661347719465L;
 	private JFrame jf1;
 	// ---------Buttons--------
-	private JButton m_displayAllButton, m_addVehicleButton, m_sellVehicleButton, m_removeVehicleButton, m_editVehicleButton, m_salesHistoryButton, m_searchCarButton, m_dealershipInfoButton;
+	private JButton m_displayAllButton, m_addVehicleButton, m_sellVehicleButton, m_removeVehicleButton,
+			m_editVehicleButton, m_salesHistoryButton, m_searchCarButton, m_dealershipInfoButton;
 
 	// =========Files==========
 	private JTextArea textArea;
@@ -94,9 +98,6 @@ public class Frame extends JFrame implements ActionListener {
 
 		// ----------MENU------------
 		jf1.setJMenuBar(menuBar);
-		// menuBar.add(jm1);
-		// menuBar.add(jm2);
-
 		// -------------------------
 
 		jf1.setTitle("Dealership system");
@@ -131,9 +132,6 @@ public class Frame extends JFrame implements ActionListener {
 
 		save.addActionListener(this);
 		deleteDealership.addActionListener(this);
-
-		// ============= eXcpetions
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
