@@ -1,7 +1,7 @@
 Fork of https://github.com/mohanad-hafez/car-dealership-system for educational purposes.
 
 You will need the JDBC SQLite connector.
-If you use Eclipse, your can just download https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.47.2.0/sqlite-jdbc-3.47.2.0.jar and copy it under carDealership: the project is already configured to use this library.
+If you use Eclipse, your can just download https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.47.2.0/sqlite-jdbc-3.47.2.0.jar and copy it at the root of the project: the Eclipse project is already configured to use this library.
 
 Otherwise import the jar file using your IDE.
 
