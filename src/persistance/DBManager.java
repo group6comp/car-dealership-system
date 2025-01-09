@@ -1,9 +1,10 @@
-package carDealership;
+package persistance;
 
 import java.io.*;
 import java.nio.file.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBManager {
@@ -20,6 +21,19 @@ public class DBManager {
 		initDB();
 	}
 
+	public void runInsert(String query) throws SQLException {
+		System.out.println("Will run insert query: " + query);
+		var stmt = m_connection.createStatement();
+		stmt.execute(query);
+		m_connection.commit();
+	}
+
+	public ResultSet runQuery(String query) throws SQLException {
+		System.out.println("Will run query: " + query);
+		var stmt = m_connection.createStatement();
+		return stmt.executeQuery(query);
+	}
+
 	private void initDB() throws SQLException {
 		var dbFile = new File(m_dbPath);
 		var mustCreateTables = !dbFile.exists();
@@ -28,7 +42,7 @@ public class DBManager {
 		try {
 			m_connection = DriverManager.getConnection(url);
 			System.out.println("Connection to SQLite has been established.");
-
+			m_connection.setAutoCommit(false);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -42,11 +56,13 @@ public class DBManager {
 	}
 
 	private void createTables() throws SQLException {
-		var dealershipSQL = "CREATE TABLE IF NOT EXISTS dealership (" + "    id INTEGER PRIMARY KEY,"
-				+ "    name text NOT NULL," + "    location text NOT NULL," + "    capacity INTEGER" + ");";
+		System.out.println("Creating the dealerships table");
+		var dealershipSQL = "CREATE TABLE IF NOT EXISTS dealerships (id INTEGER PRIMARY KEY,"
+				+ " name text NOT NULL, location text NOT NULL, capacity INTEGER);";
 
 		var stmt = m_connection.createStatement();
 		stmt.execute(dealershipSQL);
+		m_connection.commit();
 	}
 
 	public static DBManager getInstance() throws SQLException {

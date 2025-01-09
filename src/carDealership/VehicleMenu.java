@@ -86,7 +86,7 @@ public class VehicleMenu extends JFrame implements ActionListener { // this clas
 
 			String type = carTypeField.getText();
 
-			if (Main.dealership.addVehicle(new Car(make, model, color, year, price, type)))
+			if (Main.m_dealership.addVehicle(new Car(make, model, color, year, price, type)))
 				JOptionPane.showMessageDialog(null, "Car has been added successfully.");
 			else
 				JOptionPane.showMessageDialog(null, "Sorry, the car has not been added.");
@@ -134,7 +134,7 @@ public class VehicleMenu extends JFrame implements ActionListener { // this clas
 
 			String handlebarType = handlebarTypeField.getText();
 
-			if (Main.dealership.addVehicle(new Motorcycle(make, model, color, year, price, handlebarType)))
+			if (Main.m_dealership.addVehicle(new Motorcycle(make, model, color, year, price, handlebarType)))
 				JOptionPane.showMessageDialog(null, "Motorcycle has been added successfully.");
 			else
 				JOptionPane.showMessageDialog(null, "Sorry, the motorcycle has not been added.");

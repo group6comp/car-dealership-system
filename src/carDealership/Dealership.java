@@ -1,5 +1,8 @@
 package carDealership;
 
+import persistance.DealershipLayer;
+
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class Dealership {
@@ -10,8 +13,9 @@ public class Dealership {
 	private Vehicle[] inventory;
 	private Sale[] sales;
 	private int nextId;
+	private DealershipLayer m_dealershipLayer;
 
-	public Dealership(String name, String location, int maxInventory) {
+	public Dealership(String name, String location, int maxInventory) throws SQLException {
 		this.name = name;
 		this.location = location;
 		inventory = new Vehicle[maxInventory];
@@ -19,6 +23,8 @@ public class Dealership {
 		nv = 0;
 		ns = 0;
 		nextId = 0;
+
+		m_dealershipLayer = new DealershipLayer(name, location, maxInventory);
 	}
 
 	public void getInfo() {

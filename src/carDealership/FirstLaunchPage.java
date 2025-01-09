@@ -11,6 +11,7 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.awt.Toolkit;
 
 public class FirstLaunchPage extends JFrame {
@@ -118,6 +119,9 @@ public class FirstLaunchPage extends JFrame {
 					textField_1.setText("");
 					lblNewLabel_3.setVisible(false);
 					lblNewLabel_4.setVisible(true);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			}
 		});

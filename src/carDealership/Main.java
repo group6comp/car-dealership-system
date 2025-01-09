@@ -1,27 +1,26 @@
 package carDealership;
 
 import java.util.Scanner;
+
+import persistance.DealershipLayer;
+
 import java.io.*;
 import java.sql.SQLException;
 
 public class Main {
 	public static Scanner input = new Scanner(System.in);
-	public static Dealership dealership;
+	public static Dealership m_dealership;
 
 	public static void main(String args[]) throws IOException, ClassNotFoundException, SQLException {
-		DBManager dbManager = DBManager.getInstance();
+		var dealership = new DealershipLayer();
 
-		File saveFile = new File("save.data");
-
-		// TODO: Add a method in DBManager to tell if the database was just created and use it here
-		if (saveFile.exists()) {
-			FileInputStream inFileStream = new FileInputStream(saveFile);
-			ObjectInputStream inObjStream = new ObjectInputStream(inFileStream);
-			dealership = (Dealership) inObjStream.readObject();
-			inObjStream.close();
-			Frame myFrame = new Frame();
-		} else {
+		// TODO: Add a method in DBManager to tell if the database was just created and
+		// use it here
+		if (!dealership.existsAndSet()) {
 			FirstLaunchPage newPage = new FirstLaunchPage();
+		} else {
+			m_dealership = new Dealership(dealership.getNname(), dealership.getLocation(), dealership.getCapacity());
+			Frame myFrame = new Frame();
 		}
 	}
 
@@ -72,7 +71,7 @@ public class Main {
 		input.nextLine();
 		String type = input.nextLine();
 
-		if (dealership.addVehicle(new Car(make, model, color, year, price, type))) {
+		if (m_dealership.addVehicle(new Car(make, model, color, year, price, type))) {
 			System.out.println("Car added succesfully.");
 		} else {
 			System.out.println("Couldn't add car.");
@@ -102,7 +101,7 @@ public class Main {
 		System.out.print("Enter the handlebar type: ");
 		String handlebarType = input.nextLine();
 
-		if (dealership.addVehicle(new Motorcycle(make, model, color, year, price, handlebarType))) {
+		if (m_dealership.addVehicle(new Motorcycle(make, model, color, year, price, handlebarType))) {
 			System.out.println("Motorcycle added successfully.");
 		} else {
 			System.out.println("Couldn't add Motorcycle.");
@@ -117,7 +116,7 @@ public class Main {
 		int id = input.nextInt();
 		input.nextLine();
 
-		if (dealership.getIndexFromId(id) == -1) {
+		if (m_dealership.getIndexFromId(id) == -1) {
 			System.out.println("\nVehicle not found!");
 			return;
 		}
@@ -128,9 +127,9 @@ public class Main {
 		System.out.print("Enter the buyer's contact: ");
 		String buyerContact = input.nextLine();
 
-		Vehicle vehicle = dealership.getVehicleFromId(id);
+		Vehicle vehicle = m_dealership.getVehicleFromId(id);
 
-		if (dealership.sellVehicle(vehicle, buyerName, buyerContact)) {
+		if (m_dealership.sellVehicle(vehicle, buyerName, buyerContact)) {
 			System.out.println("Vehicle sold successfully.");
 		} else {
 			System.out.println("Couldn't sell vehicle");
@@ -146,14 +145,14 @@ public class Main {
 		int id = input.nextInt();
 		input.nextLine();
 
-		if (dealership.getIndexFromId(id) == -1) {
+		if (m_dealership.getIndexFromId(id) == -1) {
 			System.out.println("\nVehicle not found!");
 			return;
 		}
 
-		Vehicle vehicle = dealership.getVehicleFromId(id);
+		Vehicle vehicle = m_dealership.getVehicleFromId(id);
 
-		if (dealership.removeVehicle(vehicle)) {
+		if (m_dealership.removeVehicle(vehicle)) {
 			System.out.println("Vehicle removed successfully.");
 		} else {
 			System.out.println("Couldn't remove vehicle");
@@ -168,12 +167,12 @@ public class Main {
 		int id = input.nextInt();
 		input.nextLine();
 
-		if (dealership.getIndexFromId(id) == -1) {
+		if (m_dealership.getIndexFromId(id) == -1) {
 			System.out.println("\nVehicle not found!");
 			return;
 		}
 		System.out.println("\nEnter the new information");
-		Vehicle vehicle = dealership.getVehicleFromId(id);
+		Vehicle vehicle = m_dealership.getVehicleFromId(id);
 		vehicle.displayInfo();
 
 		if (vehicle instanceof Car) {
@@ -243,12 +242,12 @@ public class Main {
 	}
 
 	public static void searchCarMenu() {
-		if (!(dealership.isEmpty())) {
+		if (!(m_dealership.isEmpty())) {
 
 			System.out.println("Enter type: ");
 			String s = input.nextLine();
 
-			Car[] v = dealership.searchCar(s);
+			Car[] v = m_dealership.searchCar(s);
 			int total = 0;
 			if (v != null) {
 				for (int i = 0; i < v.length; i++) {
@@ -295,7 +294,7 @@ public class Main {
 	}
 
 	public static void budgetCarMenu() {
-		if (!(dealership.isEmpty())) {
+		if (!(m_dealership.isEmpty())) {
 
 			System.out.println("Enter budget: ");
 			String budget = input.nextLine();
@@ -307,7 +306,7 @@ public class Main {
 				}
 			}
 			{
-				int total = dealership.carBudget(Double.parseDouble(budget)); // Calling carBudget Method.
+				int total = m_dealership.carBudget(Double.parseDouble(budget)); // Calling carBudget Method.
 				System.out.printf("Total [%d]\n", total);
 			}
 
@@ -315,11 +314,12 @@ public class Main {
 			System.out.println("Sorry the inventory is empty.");
 	}
 
-	public static void createDealership(String name, String location, int capacity) throws IllegalCapacityException {
+	public static void createDealership(String name, String location, int capacity)
+			throws IllegalCapacityException, SQLException {
 		if (capacity < 1 || capacity > 100) {
 			throw new IllegalCapacityException();
 		}
-		dealership = new Dealership(name, location, capacity);
+		m_dealership = new Dealership(name, location, capacity);
 	}
 
 	public static void save() throws IOException {
@@ -339,7 +339,7 @@ public class Main {
 			e1.printStackTrace();
 		}
 
-		outObjStream.writeObject(dealership);
+		outObjStream.writeObject(m_dealership);
 		outObjStream.close();
 
 	}

@@ -22,9 +22,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 public class Frame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -4235592661347719465L;
 	private JFrame jf1;
@@ -140,7 +137,7 @@ public class Frame extends JFrame implements ActionListener {
 		}
 		if (e.getSource() == m_addVehicleButton) {
 			SwingUtilities.invokeLater(() -> {
-				if (!(Main.dealership.isFull())) {
+				if (!(Main.m_dealership.isFull())) {
 					VehicleMenu VehicleMenu = new VehicleMenu();
 					VehicleMenu.setVisible(true);
 				} else
@@ -195,7 +192,7 @@ public class Frame extends JFrame implements ActionListener {
 
 	private void displayDealerInfo() {
 		JTextArea textArea = new JTextArea();
-		textArea.setText(Main.dealership.getInfoGUI());
+		textArea.setText(Main.m_dealership.getInfoGUI());
 		textArea.setEditable(false);
 
 		// Wrap the text area in a scroll pane
@@ -207,10 +204,10 @@ public class Frame extends JFrame implements ActionListener {
 	}
 
 	private void displayInventory() {
-		if (Main.dealership.isEmpty()) {
+		if (Main.m_dealership.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Inventory is empty!");
 		} else {
-			textArea = new JTextArea(Main.dealership.displayAlls());
+			textArea = new JTextArea(Main.m_dealership.displayAlls());
 			textArea.setEditable(false);
 			scrollPane = new JScrollPane(textArea);
 			scrollPane.setPreferredSize(new Dimension(400, 300));
@@ -225,15 +222,15 @@ public class Frame extends JFrame implements ActionListener {
 				return;
 			}
 			int id = Integer.parseInt(idString);
-			if (Main.dealership.getIndexFromId(id) == -1) {
+			if (Main.m_dealership.getIndexFromId(id) == -1) {
 				JOptionPane.showMessageDialog(null, "Vehicle not found!");
 				return;
 			}
 			String buyerName = JOptionPane.showInputDialog(null, "Enter the buyer's name:");
 			String buyerContact = JOptionPane.showInputDialog(null, "Enter the buyer's contact:");
-			Vehicle vehicle = Main.dealership.getVehicleFromId(id);
+			Vehicle vehicle = Main.m_dealership.getVehicleFromId(id);
 
-			if (Main.dealership.sellVehicle(vehicle, buyerName, buyerContact)) {
+			if (Main.m_dealership.sellVehicle(vehicle, buyerName, buyerContact)) {
 				JOptionPane.showMessageDialog(null, "Vehicle sold successfully.");
 			} else {
 				JOptionPane.showMessageDialog(null, "Couldn't sell vehicle.");
@@ -244,7 +241,7 @@ public class Frame extends JFrame implements ActionListener {
 	}
 
 	private void displaySalesHistory() {
-		textArea = new JTextArea(Main.dealership.showSalesHistory());
+		textArea = new JTextArea(Main.m_dealership.showSalesHistory());
 		textArea.setEditable(false);
 		scrollPane = new JScrollPane(textArea);
 		scrollPane.setPreferredSize(new Dimension(400, 300));
@@ -259,15 +256,15 @@ public class Frame extends JFrame implements ActionListener {
 			}
 			int id = Integer.parseInt(idString);
 
-			if (Main.dealership.getIndexFromId(id) == -1) {
+			if (Main.m_dealership.getIndexFromId(id) == -1) {
 				JOptionPane.showMessageDialog(null, "Vehicle not found!");
 			} else {
-				Vehicle vehicle = Main.dealership.getVehicleFromId(id);
+				Vehicle vehicle = Main.m_dealership.getVehicleFromId(id);
 				int confirm = JOptionPane.showConfirmDialog(null,
 						"Are you sure you want to delete this vehicle\nwith id: " + id, "Confirm Deletion",
 						JOptionPane.YES_NO_OPTION);
 				if (confirm == JOptionPane.YES_OPTION) {
-					if (Main.dealership.removeVehicle(vehicle)) {
+					if (Main.m_dealership.removeVehicle(vehicle)) {
 						JOptionPane.showMessageDialog(null, "Vehicle removed successfully.");
 					} else {
 						JOptionPane.showMessageDialog(null, "Couldn't remove vehicle.");
@@ -289,11 +286,11 @@ public class Frame extends JFrame implements ActionListener {
 
 			int id = Integer.parseInt(idString);
 
-			if (Main.dealership.getIndexFromId(id) == -1) { // check if exist
+			if (Main.m_dealership.getIndexFromId(id) == -1) { // check if exist
 				JOptionPane.showMessageDialog(null, "Vehicle not found!");
 				return;
 			}
-			Vehicle vehicle = Main.dealership.getVehicleFromId(id);
+			Vehicle vehicle = Main.m_dealership.getVehicleFromId(id);
 
 			JTextField makeField = new JTextField();
 			JTextField modelField = new JTextField();
@@ -402,7 +399,7 @@ public class Frame extends JFrame implements ActionListener {
 				return;
 			}
 
-			Car[] carsWithinBudget = Main.dealership.carsWithinBudget(budget);
+			Car[] carsWithinBudget = Main.m_dealership.carsWithinBudget(budget);
 			if (carsWithinBudget.length == 0) {
 				JOptionPane.showMessageDialog(null, "No cars found within the budget of " + budget + " SAR.");
 			} else {
