@@ -62,7 +62,13 @@ public class DBManager {
 
 		var stmt = m_connection.createStatement();
 		stmt.execute(dealershipSQL);
+
+		var userSQL = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY,"
+				+ " name text NOT NULL, passWord text NOT NULL, role text NOT NULL);";
+
+		stmt.execute(userSQL);
 		m_connection.commit();
+
 	}
 
 	public static DBManager getInstance() throws SQLException {
