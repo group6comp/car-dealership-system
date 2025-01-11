@@ -57,16 +57,32 @@ public class DBManager {
 
 	private void createTables() throws SQLException {
 		System.out.println("Creating the dealerships table");
-		var dealershipSQL = "CREATE TABLE IF NOT EXISTS dealerships (id INTEGER PRIMARY KEY,"
+		var dealershipSQL = "CREATE TABLE IF NOT EXISTS dealerships (id INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ " name text NOT NULL, location text NOT NULL, capacity INTEGER);";
 
 		var stmt = m_connection.createStatement();
 		stmt.execute(dealershipSQL);
 
-		var userSQL = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY,"
-				+ " name text NOT NULL, passWord text NOT NULL, role text NOT NULL);";
+		var userSQL = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ " name text NOT NULL, passWord text NOT NULL, roleId INTEGER);";
 
 		stmt.execute(userSQL);
+		
+
+		var roleSQL = "CREATE TABLE IF NOT EXISTS roles (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+		+ " role text NOT NULL);";
+
+		stmt.execute(roleSQL);
+
+		var addAdminRoleSQL = "INSERT INTO roles (role) VALUES ('Admin');";
+		stmt.execute(addAdminRoleSQL);
+
+		var addManagerRoleSQL = "INSERT INTO roles (role) VALUES ('Manager');";
+		stmt.execute(addManagerRoleSQL);
+		
+		var addSalesPersonRoleSQL = "INSERT INTO roles (role) VALUES ('Salesperson');";
+		stmt.execute(addSalesPersonRoleSQL);
+
 		m_connection.commit();
 
 	}
