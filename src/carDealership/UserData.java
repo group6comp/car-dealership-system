@@ -24,5 +24,14 @@ public class UserData {
         }
         return null; // not found or password mismatch
     }
+
+    public static User getUser(String username) {
+        for(User u : userList) {
+            if(u.getUsername().equalsIgnoreCase(username)) {
+                return u;
+            }
+        }
+        return null; // not found
+    }
 }
 

@@ -27,6 +27,10 @@ public class Dealership {
 		m_dealershipLayer = new DealershipLayer(name, location, maxInventory);
 	}
 
+	public Vehicle[] getInventory() {
+		return inventory;
+	}
+
 	public void getInfo() {
 		System.out.printf("Name: [%s]\nLocation: [%s]\nInventory Size: [%d]\n", name, location, inventory.length);
 
