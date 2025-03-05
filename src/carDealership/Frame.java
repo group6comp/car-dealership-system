@@ -102,7 +102,7 @@ public class Frame extends JFrame implements ActionListener {
 		jf1.getContentPane().setBackground(Color.decode("#ADD8E6"));
 
 		jf1.setVisible(true);
-		jf1.setBounds(0, 0, 1170, 600);
+		jf1.setBounds(0, 0, 1500, 900);
 		jf1.setResizable(false);
 		jf1.setIconImage(Toolkit.getDefaultToolkit().getImage(FirstLaunchPage.class.getResource("/images/icon.jpg")));
 

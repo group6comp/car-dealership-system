@@ -5,20 +5,34 @@ import persistance.DealershipLayer;
 import java.io.*;
 import java.sql.SQLException;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.CardLayout;
 
 public class Main {
     public static Scanner input = new Scanner(System.in);
     public static Dealership m_dealership;
     public static User user;
+    public static JFrame mainFrame;
+    public static JPanel contentPane;
+    public static CardLayout cardLayout;
 
     public static void main(String args[]) throws IOException, ClassNotFoundException, SQLException {
-        var dealership = new DealershipLayer();
+        mainFrame = new JFrame("Dealership System");
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setBounds(100, 100, 650, 400);
 
-        // TODO: Add a method in DBManager to tell if the database was just created and
-        // use it here
+        contentPane = new JPanel();
+        cardLayout = new CardLayout();
+        contentPane.setLayout(cardLayout);
+        mainFrame.setContentPane(contentPane);
+
+        // If there is not an existing dealership
+        var dealership = new DealershipLayer();
         if (!dealership.existsAndSet()) {
+            // Launch dealership creation page
             FirstLaunchPage newPage = new FirstLaunchPage();
         } else {
+            // Load the existing dealership object
             m_dealership = new Dealership(dealership.getNname(), dealership.getLocation(), dealership.getCapacity());
             if (user == null) {
                 new VisitorMainUI();
@@ -26,30 +40,41 @@ public class Main {
                 showRoleUI();
             }
         }
+
+        mainFrame.setVisible(true);
     }
 
     public static void showRoleUI() {
         String role = user.getRole();
-        JFrame frame = null;
+        JPanel panel = null;
         switch (role.toLowerCase()) {
             case "admin":
-                frame = new AdminMainUI();
+				if (contentPane.getComponentCount() > 0 && contentPane.getComponent(0) instanceof AdminMainUI) {
+				}
+				else {
+					contentPane.add(new AdminMainUI(), "adminMainUI");
+				}
+				cardLayout.show(contentPane, "adminMainUI");
                 break;
             case "manager":
-                frame = new ManagerMainUI();
+                //panel = new ManagerMainUI();
                 break;
             case "salesperson":
-                frame = new SalespersonMainUI();
+               // panel = new SalespersonMainUI();
                 break;
             case "customer":
-                frame = new CustomerMainUI();
+                //panel = new CustomerMainUI();
                 break;
             default:
-                frame = new VisitorMainUI();
+                panel = new VisitorMainUI();
                 break;
         }
-        if (frame != null) {
-            frame.setVisible(true);
+        if (panel != null) {
+            contentPane.removeAll();
+            contentPane.add(panel, role + "Panel");
+            cardLayout.show(contentPane, role + "Panel");
+            mainFrame.revalidate();
+            mainFrame.repaint();
         }
     }
 
