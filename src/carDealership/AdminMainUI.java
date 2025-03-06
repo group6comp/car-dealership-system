@@ -34,7 +34,7 @@ public class AdminMainUI extends JPanel {
                 if (contentPane.getComponentCount() > 0 && contentPane.getComponent(0) instanceof ManageUsersPanel) {
                     cardLayout.show(contentPane, "manageUsersPanel");
                 } else {
-                    contentPane.add(new ManageUsersPanel(contentPane, cardLayout, Main.m_dealership), "manageUsersPanel");
+                    contentPane.add(new ManageUsersPanel(contentPane, cardLayout), "manageUsersPanel");
                     cardLayout.show(contentPane, "manageUsersPanel");
                 }
             }

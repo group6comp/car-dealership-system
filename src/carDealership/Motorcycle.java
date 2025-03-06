@@ -4,13 +4,13 @@ public class Motorcycle extends Vehicle {
 	private static final long serialVersionUID = -3762021630826741458L;
 	private String handlebarType;
 
-	public Motorcycle(String make, String model, String color, int year, double price, String handlebarType) {
-		super(make, model, color, year, price);
+	public Motorcycle(int id, String make, String model, String color, int year, double price, String handlebarType) {
+		super(id, make, model, color, year, price);
 		this.handlebarType = handlebarType;
 	}
 
 	public Motorcycle(Motorcycle m) {
-		this(m.make, m.model, m.color, m.year, m.price, m.handlebarType);
+		this(m.id, m.make, m.model, m.color, m.year, m.price, m.handlebarType);
 	}
 
 	public void displayInfo() {
@@ -35,4 +35,7 @@ public class Motorcycle extends Vehicle {
 		return super.toString() + "\nHandelbarType: " + handlebarType;
 	}
 
+	public String getType() {
+		return handlebarType;
+	}
 }

@@ -12,6 +12,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.CardLayout;
@@ -44,21 +45,39 @@ public class ManageInventoryPanel extends JPanel {
         lblTitle.setBounds(250, 20, 150, 30);
         add(lblTitle);
 
-        JButton btnAddVehicle = new JButton("Add Vehicle");
-        btnAddVehicle.setBounds(50, 300, 150, 30);
-        add(btnAddVehicle);
+        addButton( "Add Vehicle", new int[]{50, 300, 150, 30}, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addVehicle();
+            }
+        });
 
-        JButton btnEditVehicle = new JButton("Edit Vehicle");
-        btnEditVehicle.setBounds(250, 300, 150, 30);
-        add(btnEditVehicle);
+        addButton("Edit Vehicle", new int[]{250, 300, 150, 30}, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    editVehicle(selectedRow);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a vehicle to edit.");
+                }
+            }
+        });
 
-        JButton btnDeleteVehicle = new JButton("Delete Vehicle");
-        btnDeleteVehicle.setBounds(450, 300, 150, 30);
-        add(btnDeleteVehicle);
+        addButton("Delete Vehicle", new int[]{450, 300, 150, 30}, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    deleteVehicle(selectedRow);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a vehicle to delete.");
+                }
+            }
+        });
 
-        JButton btnBack = new JButton("Back");
-        btnBack.setBounds(50, 350, 150, 30);
-        add(btnBack);
+        addButton("Back", new int[]{50, 350, 150, 30}, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPane, "adminMainUI");
+            }
+        });
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(50, 70, 550, 200);
@@ -73,70 +92,25 @@ public class ManageInventoryPanel extends JPanel {
         scrollPane.setViewportView(table);
 
         populateTable();
-
-        btnAddVehicle.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                addVehicle();
-            }
-        });
-
-        btnEditVehicle.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                    editVehicle(selectedRow);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Please select a vehicle to edit.");
-                }
-            }
-        });
-
-        btnDeleteVehicle.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                    deleteVehicle(selectedRow);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Please select a vehicle to delete.");
-                }
-            }
-        });
-
-        btnBack.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(contentPane, "adminMainUI");
-            }
-        });
     }
 
     private void populateTable() {
         String[] columnNames = {"ID", "Make", "Model", "Color", "Year", "Price", "Type"};
         model = new DefaultTableModel(columnNames, 0);
 
-        String csvFile = "src/data/inventory.csv";
-        String line;
-        String csvSplitBy = ",";
+        Vehicle[] vehicles = InventoryData.getVehicles();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            // Skip the header line
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] vehicleData = line.split(csvSplitBy);
-
-                Object[] rowData = {
-                    Integer.parseInt(vehicleData[0]),
-                    vehicleData[1],
-                    vehicleData[2],
-                    vehicleData[3],
-                    Integer.parseInt(vehicleData[4]),
-                    Double.parseDouble(vehicleData[5]),
-                    vehicleData[6]
-                };
-                model.addRow(rowData);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (Vehicle vehicle : vehicles) {
+            Object[] rowData = {
+                vehicle.getId(),
+                vehicle.getMake(),
+                vehicle.getModel(),
+                vehicle.getColor(),
+                vehicle.getYear(),
+                vehicle.getPrice(),
+                vehicle.getType()
+            };
+            model.addRow(rowData);
         }
 
         table.setModel(model);
@@ -182,15 +156,8 @@ public class ManageInventoryPanel extends JPanel {
 
         if (result == JOptionPane.OK_OPTION) {
             // Update the table with the new values
-            table.setValueAt(txtMake.getText(), selectedRow, 1);
-            table.setValueAt(txtModel.getText(), selectedRow, 2);
-            table.setValueAt(txtColor.getText(), selectedRow, 3);
-            table.setValueAt(Integer.parseInt(txtYear.getText()), selectedRow, 4);
-            table.setValueAt(Double.parseDouble(txtPrice.getText()), selectedRow, 5);
-            table.setValueAt(txtType.getText(), selectedRow, 6);
-
-            // Update the CSV file
-            updateCSV();
+            InventoryData.updateVehicle(id, txtMake.getText(), txtModel.getText(), txtColor.getText(), Integer.parseInt(txtYear.getText()), Double.parseDouble(txtPrice.getText()), txtType.getText());
+            populateTable();
 
             // Show confirmation dialog with new details
             JOptionPane.showMessageDialog(null, "Vehicle information successfully saved:\n" +
@@ -311,5 +278,14 @@ public class ManageInventoryPanel extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void addButton(String text,  int[] bounds, ActionListener a ) {
+        JButton btn = new JButton(text);
+        btn.setForeground(Color.WHITE);
+        btn.setBackground(new Color(241, 57, 83));
+        btn.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
+        add(btn);
+        btn.addActionListener(a);
     }
 }

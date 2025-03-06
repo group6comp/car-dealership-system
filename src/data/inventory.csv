@@ -4,7 +4,6 @@ ID,Make,Model,Color,Year,Price,Type
 4,Audi,Malibu,Blue,2012,18000.0,car,
 5,Nissan,Altima,Gray,2020,21000.0,car,
 6,BMW,3 Series,White,2021,40000.0,car,
-7,Mercedes-Benz,C-Class,Black,2020,42000.0,car,
 8,Audi,A8,Blue,2019,38000.0,car,
 9,Volkswagen,Passat,Gray,2018,19000.0,car,
 10,Hyundai,Elantra,Red,2020,17000.0,car,
