@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.CardLayout;
+import java.io.IOException;
 
 public class VisitorMainUI extends JPanel {
 
@@ -153,9 +154,9 @@ public class VisitorMainUI extends JPanel {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
 
-                if (UserData.validateLogin(username, password) != null) {
+                if (validateLogin(username, password) != null) {
                     System.out.println("Login successful!");
-                    Main.user = UserData.getUser(username);
+                    Main.user = validateLogin(username, password);
                     Main.showRoleUI();
                 } else {
                     lblErrorMessage.setVisible(true);
@@ -164,5 +165,13 @@ public class VisitorMainUI extends JPanel {
         });
 
         return panel;
+    }
+
+    public User validateLogin(String username, String password) {
+        User user = Main.m_dealership.getUser(username);
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
+        }
+        return null;
     }
 }

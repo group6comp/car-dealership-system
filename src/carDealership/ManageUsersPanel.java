@@ -1,38 +1,22 @@
 package carDealership;
+import carDealership.User.Role;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.CardLayout;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Vector;
-import java.awt.Color;
+import java.util.List;
 
 public class ManageUsersPanel extends JPanel {
-
     private static final long serialVersionUID = 1L;
     private JTable table;
     private JPanel contentPane;
     private CardLayout cardLayout;
-    private DefaultTableModel model;
+    private UserTableModel model;
+    private Dealership m_dealership = Main.m_dealership;
 
-    /**
-     * Create the panel.
-     */
     public ManageUsersPanel(JPanel contentPane, CardLayout cardLayout) {
         this.contentPane = contentPane;
         this.cardLayout = cardLayout;
@@ -95,40 +79,28 @@ public class ManageUsersPanel extends JPanel {
     }
 
     private void populateTable() {
-        String[] columnNames = {"Username", "Password", "Role"};
-        model = new DefaultTableModel(columnNames, 0);
-
-        User[] users = UserData.getUsers();
-
-        for (User user : users) {
-            Object[] rowData = {
-                user.getUsername(),
-                user.getPassword().replaceAll(".", "*"), // Blur the password with stars
-                user.getRole()
-            };
-            model.addRow(rowData);
-        }
-
+        List<User> users = m_dealership.getUsers();
+        model = new UserTableModel(users);
         table.setModel(model);
-        table.setRowSorter(new TableRowSorter<TableModel>(model));
+        table.setRowSorter(new TableRowSorter<>(model));
     }
 
     private void editUser(int selectedRow) {
-        User user = UserData.getUser((String) table.getValueAt(selectedRow, 0));
+        User user = model.getUserAt(selectedRow);
 
         // Get the current values
         String username = user.getUsername();
         String password = user.getPassword();
-        String role = user.getRole();
+        Role role = user.getRole();
 
         // Create text fields for editing
         JTextField txtUsername = new JTextField(username);
         JTextField txtPassword = new JTextField(password);
-        JTextField txtRole = new JTextField(role);
+        JTextField txtRole = new JTextField(role.toString());
 
         // Create a panel to hold the text fields
         JPanel panel = new JPanel();
-        panel.setLayout(new java.awt.GridLayout(4, 2));
+        panel.setLayout(new GridLayout(4, 2));
         panel.add(new JLabel("Username:"));
         panel.add(txtUsername);
         panel.add(new JLabel("Password:"));
@@ -140,8 +112,10 @@ public class ManageUsersPanel extends JPanel {
         int result = JOptionPane.showConfirmDialog(null, panel, "Edit User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            // Update the user  and table
-            UserData.updateUser(user, txtUsername.getText(), txtPassword.getText(), txtRole.getText());
+            // Update the user and table
+            user.setUsername(txtUsername.getText());
+            user.setPassword(txtPassword.getText());
+            user.setRole(txtRole.getText());
             populateTable();
 
             // Show confirmation dialog with new details
@@ -160,7 +134,7 @@ public class ManageUsersPanel extends JPanel {
 
         // Create a panel to hold the text fields
         JPanel panel = new JPanel();
-        panel.setLayout(new java.awt.GridLayout(4, 2));
+        panel.setLayout(new GridLayout(4, 2));
         panel.add(new JLabel("Username:"));
         panel.add(txtUsername);
         panel.add(new JLabel("Password:"));
@@ -172,8 +146,9 @@ public class ManageUsersPanel extends JPanel {
         int result = JOptionPane.showConfirmDialog(null, panel, "Add User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            // Add the new user to the user array
-            UserData.addUser(txtUsername.getText(), txtPassword.getText(), txtRole.getText());
+            // Add the new user to the user list
+            User newUser = new User(txtUsername.getText(), txtPassword.getText(), User.roleFromString(txtRole.getText()));
+            m_dealership.getUsers().add(newUser);
             populateTable();
 
             // Show confirmation dialog with new details
@@ -185,16 +160,16 @@ public class ManageUsersPanel extends JPanel {
     }
 
     private void deleteUser(int selectedRow) {
-        // Get the current values
-        User user = UserData.getUser((String) table.getValueAt(selectedRow, 0));
+        // Get the current user
+        User user = model.getUserAt(selectedRow);
 
         // Show confirmation dialog
         int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the following user?\n" +
                 "Username: " + user.getUsername(), "Delete User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            // Remove the user from the user array
-            UserData.removeUser(user);
+            // Remove the user from the user list
+            m_dealership.getUsers().remove(user);
             populateTable();
 
             // Show confirmation dialog

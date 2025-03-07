@@ -76,8 +76,7 @@ public class AdminMainUI extends JPanel {
 
         addButton("Logout", new int[]{225, 280, 200, 30}, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Main.user = null;
-                Main.showRoleUI();
+                Main.logout();
             }
         });
 

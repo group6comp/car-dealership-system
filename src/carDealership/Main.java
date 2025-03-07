@@ -1,9 +1,9 @@
 package carDealership;
 
+import static carDealership.User.Role;
+
 import java.util.Scanner;
-import persistance.DealershipLayer;
 import java.io.*;
-import java.sql.SQLException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.CardLayout;
@@ -16,7 +16,7 @@ public class Main {
     public static JPanel contentPane;
     public static CardLayout cardLayout;
 
-    public static void main(String args[]) throws IOException, ClassNotFoundException, SQLException {
+    public static void main(String args[]) throws IOException, ClassNotFoundException {
         mainFrame = new JFrame("Dealership System");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setBounds(100, 100, 650, 400);
@@ -26,14 +26,12 @@ public class Main {
         contentPane.setLayout(cardLayout);
         mainFrame.setContentPane(contentPane);
 
-        // If there is not an existing dealership
-        var dealership = new DealershipLayer();
-        if (!dealership.existsAndSet()) {
-            // Launch dealership creation page
-            FirstLaunchPage newPage = new FirstLaunchPage();
+        // Load the existing dealership object
+        load();
+        if (m_dealership == null) {
+            contentPane.add(new FirstLaunchPage(), "firstLaunchPage");
+            cardLayout.show(contentPane, "firstLaunchPage");
         } else {
-            // Load the existing dealership object
-            m_dealership = new Dealership(dealership.getNname(), dealership.getLocation(), dealership.getCapacity());
             if (user == null) {
                 new VisitorMainUI();
             } else {
@@ -41,26 +39,40 @@ public class Main {
             }
         }
         mainFrame.setVisible(true);
+
+        // Add shutdown hook to save data on close
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                save();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
     }
 
-
     public static void showRoleUI() {
-        String role = user.getRole();
+        if (user == null || user.getRole() == null) {
+            // Handle the case where the user or role is null
+            new VisitorMainUI();
+            return;
+        }
+
+        Role role = user.getRole();
         JPanel panel = null;
-        switch (role.toLowerCase()) {
-			case "admin":
-				if (contentPane.getComponentCount() == 0 || !isPanelAdded("adminMainUI")) {
-					contentPane.add(new AdminMainUI(), "adminMainUI");
-				}
-				cardLayout.show(contentPane, "adminMainUI");
-				break;
-            case "manager":
+        switch (role) {
+            case ADMIN:
+                if (contentPane.getComponentCount() == 0 || !isPanelAdded("adminMainUI")) {
+                    contentPane.add(new AdminMainUI(), "adminMainUI");
+                }
+                cardLayout.show(contentPane, "adminMainUI");
+                break;
+            case MANAGER:
                 //panel = new ManagerMainUI();
                 break;
-            case "salesperson":
+            case SALESPERSON:
                // panel = new SalespersonMainUI();
                 break;
-            case "customer":
+            case CUSTOMER:
                 //panel = new CustomerMainUI();
                 break;
             default:
@@ -76,17 +88,17 @@ public class Main {
         }
     }
 
-	private static boolean isPanelAdded(String panelName) {
+    private static boolean isPanelAdded(String panelName) {
         for (java.awt.Component comp : contentPane.getComponents()) {
-			if (comp.getName() != null && comp.getName().equals(panelName)) {
-				return true;
-			}
-		}
-		return false;
-	}
+            if (comp.getName() != null && comp.getName().equals(panelName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static void createDealership(String name, String location, int capacity)
-            throws IllegalCapacityException, SQLException {
+            throws IllegalCapacityException {
         if (capacity < 1 || capacity > 100) {
             throw new IllegalCapacityException();
         }
@@ -95,22 +107,34 @@ public class Main {
 
     public static void save() throws IOException {
         File saveFile = new File("save.data");
-        FileOutputStream outFileStream = null;
-        try {
-            outFileStream = new FileOutputStream(saveFile);
-        } catch (FileNotFoundException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+        try (FileOutputStream outFileStream = new FileOutputStream(saveFile);
+             ObjectOutputStream outObjStream = new ObjectOutputStream(outFileStream)) {
+            outObjStream.writeObject(m_dealership);
         }
-        ObjectOutputStream outObjStream = null;
-        try {
-            outObjStream = new ObjectOutputStream(outFileStream);
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+    }
+
+    public static void load() throws IOException, ClassNotFoundException {
+        File saveFile = new File("save.data");
+        if (!saveFile.exists()) {
+            m_dealership = null;
+            return;
         }
 
-        outObjStream.writeObject(m_dealership);
-        outObjStream.close();
+        try (FileInputStream inFileStream = new FileInputStream(saveFile);
+             ObjectInputStream inObjStream = new ObjectInputStream(inFileStream)) {
+            m_dealership = (Dealership) inObjStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            m_dealership = null;
+        }
+    }
+
+    public static void showMainFrame() {
+        mainFrame.setVisible(true);
+    }
+
+    public static void logout() {
+        user = null;
+        showRoleUI();
     }
 }

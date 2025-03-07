@@ -1,5 +1,8 @@
 package carDealership;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -16,6 +19,9 @@ public class Sale implements Serializable {
 		this.buyerContact = buyerContact;
 		this.saleDate = saleDate;
 	}
+
+	private List<Sale> sales = new ArrayList<Sale>();
+
 
 	public Vehicle getVehicle() {
 		return vehicle;

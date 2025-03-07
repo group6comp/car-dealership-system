@@ -3,6 +3,7 @@ package carDealership;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import java.awt.CardLayout;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -15,6 +16,7 @@ public class ManagerMainUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
+    private CardLayout cardLayout = new CardLayout();
 
     /**
      * Create the frame.
@@ -81,8 +83,12 @@ public class ManagerMainUI extends JFrame {
 
         btnManageInventory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Implement Manage Inventory functionality
-                System.out.println("Manage Inventory clicked");
+                if (contentPane.getComponentCount() > 0 && contentPane.getComponent(0) instanceof ManageInventoryPanel) {
+                    cardLayout.show(contentPane, "manageInventoryPanel");
+                } else {
+                    contentPane.add(new ManageInventoryPanel(contentPane, cardLayout), "manageInventoryPanel");
+                    cardLayout.show(contentPane, "manageInventoryPanel");
+                }
             }
         });
 

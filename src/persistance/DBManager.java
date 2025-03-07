@@ -1,4 +1,7 @@
 package persistance;
+import carDealership.Vehicle;
+import carDealership.Car;
+import carDealership.Motorcycle;
 
 import java.io.*;
 import java.nio.file.*;
@@ -6,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 public class DBManager {
 
@@ -34,6 +38,20 @@ public class DBManager {
 		return stmt.executeQuery(query);
 	}
 
+	public void runUpdate(String query) throws SQLException {
+		System.out.println("Will run update query: " + query);
+		var stmt = m_connection.createStatement();
+		stmt.execute(query);
+		m_connection.commit();
+	}
+
+	public void runDelete(String query) throws SQLException {
+		System.out.println("Will run delete query: " + query);
+		var stmt = m_connection.createStatement();
+		stmt.execute(query);
+		m_connection.commit();
+	}
+
 	private void initDB() throws SQLException {
 		var dbFile = new File(m_dbPath);
 		var mustCreateTables = !dbFile.exists();
@@ -55,36 +73,41 @@ public class DBManager {
 		}
 	}
 
+	public Connection getConnection() {
+		return m_connection;
+	}
+
 	private void createTables() throws SQLException {
 		System.out.println("Creating the dealerships table");
 		var dealershipSQL = "CREATE TABLE IF NOT EXISTS dealerships (id INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ " name text NOT NULL, location text NOT NULL, capacity INTEGER);";
-
+	
 		var stmt = m_connection.createStatement();
 		stmt.execute(dealershipSQL);
-
-		var userSQL = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,"
-				+ " name text NOT NULL, passWord text NOT NULL, roleId INTEGER);";
-
+	
+        var userSQL = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + " username text NOT NULL, password text NOT NULL, role TEXT CHECK(role IN ('Admin', 'Manager', 'Salesperson', 'Customer')) NOT NULL);";
+	
 		stmt.execute(userSQL);
-		
+	
+		// Create the vehicles table
+		var vehicleSQL = "CREATE TABLE IF NOT EXISTS vehicles ("
+				+ "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ "make TEXT NOT NULL, "
+				+ "model TEXT NOT NULL, "
+				+ "color TEXT, "
+				+ "year INTEGER, "
+				+ "price REAL, "
+				+ "mileage INTEGER, "
+				+ "status TEXT, "
+				+ "type TEXT, "
+				+ "handlebarType TEXT);";
+	
+		stmt.execute(vehicleSQL);
 
-		var roleSQL = "CREATE TABLE IF NOT EXISTS roles (id INTEGER PRIMARY KEY AUTOINCREMENT,"
-		+ " role text NOT NULL);";
-
-		stmt.execute(roleSQL);
-
-		var addAdminRoleSQL = "INSERT INTO roles (role) VALUES ('Admin');";
-		stmt.execute(addAdminRoleSQL);
-
-		var addManagerRoleSQL = "INSERT INTO roles (role) VALUES ('Manager');";
-		stmt.execute(addManagerRoleSQL);
-		
-		var addSalesPersonRoleSQL = "INSERT INTO roles (role) VALUES ('Salesperson');";
-		stmt.execute(addSalesPersonRoleSQL);
-
+		// Create the sales table
+	
 		m_connection.commit();
-
 	}
 
 	public static DBManager getInstance() throws SQLException {

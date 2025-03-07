@@ -16,11 +16,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.CardLayout;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Vector;
 
 public class ManageInventoryPanel extends JPanel {
 
@@ -45,7 +41,7 @@ public class ManageInventoryPanel extends JPanel {
         lblTitle.setBounds(250, 20, 150, 30);
         add(lblTitle);
 
-        addButton( "Add Vehicle", new int[]{50, 300, 150, 30}, new ActionListener() {
+        addButton("Add Vehicle", new int[]{50, 300, 150, 30}, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addVehicle();
             }
@@ -98,19 +94,20 @@ public class ManageInventoryPanel extends JPanel {
         String[] columnNames = {"ID", "Make", "Model", "Color", "Year", "Price", "Type"};
         model = new DefaultTableModel(columnNames, 0);
 
-        Vehicle[] vehicles = InventoryData.getVehicles();
-
+        Vehicle[] vehicles = Main.m_dealership.getInventory();
         for (Vehicle vehicle : vehicles) {
-            Object[] rowData = {
-                vehicle.getId(),
-                vehicle.getMake(),
-                vehicle.getModel(),
-                vehicle.getColor(),
-                vehicle.getYear(),
-                vehicle.getPrice(),
-                vehicle.getType()
-            };
-            model.addRow(rowData);
+            if (vehicle != null) {
+                Object[] rowData = {
+                    vehicle.getId(),
+                    vehicle.getMake(),
+                    vehicle.getModel(),
+                    vehicle.getColor(),
+                    vehicle.getYear(),
+                    vehicle.getPrice(),
+                    vehicle.getType()
+                };
+                model.addRow(rowData);
+            }
         }
 
         table.setModel(model);
@@ -121,7 +118,7 @@ public class ManageInventoryPanel extends JPanel {
         // Get the current values
         int id = (int) table.getValueAt(selectedRow, 0);
         String make = (String) table.getValueAt(selectedRow, 1);
-        String model = (String) table.getValueAt(selectedRow, 2);
+        String modelValue = (String) table.getValueAt(selectedRow, 2);
         String color = (String) table.getValueAt(selectedRow, 3);
         int year = (int) table.getValueAt(selectedRow, 4);
         double price = (double) table.getValueAt(selectedRow, 5);
@@ -129,7 +126,7 @@ public class ManageInventoryPanel extends JPanel {
 
         // Create text fields for editing
         JTextField txtMake = new JTextField(make);
-        JTextField txtModel = new JTextField(model);
+        JTextField txtModel = new JTextField(modelValue);
         JTextField txtColor = new JTextField(color);
         JTextField txtYear = new JTextField(String.valueOf(year));
         JTextField txtPrice = new JTextField(String.valueOf(price));
@@ -155,8 +152,15 @@ public class ManageInventoryPanel extends JPanel {
         int result = JOptionPane.showConfirmDialog(null, panel, "Edit Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            // Update the table with the new values
-            InventoryData.updateVehicle(id, txtMake.getText(), txtModel.getText(), txtColor.getText(), Integer.parseInt(txtYear.getText()), Double.parseDouble(txtPrice.getText()), txtType.getText());
+            // Update the vehicle in the dealership
+            Vehicle vehicle = new Car(id, txtMake.getText(), txtModel.getText(), txtColor.getText(), Integer.parseInt(txtYear.getText()), Double.parseDouble(txtPrice.getText()), txtType.getText());
+            Main.m_dealership.removeVehicle(Main.m_dealership.getVehicleFromId(id));
+            Main.m_dealership.addVehicle(vehicle);
+            try {
+                Main.save();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error saving data: " + ex.getMessage());
+            }
             populateTable();
 
             // Show confirmation dialog with new details
@@ -202,20 +206,15 @@ public class ManageInventoryPanel extends JPanel {
         int result = JOptionPane.showConfirmDialog(null, panel, "Add Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            // Add the new vehicle to the table
-            Object[] rowData = {
-                Integer.parseInt(txtID.getText()),
-                txtMake.getText(),
-                txtModel.getText(),
-                txtColor.getText(),
-                Integer.parseInt(txtYear.getText()),
-                Double.parseDouble(txtPrice.getText()),
-                txtType.getText()
-            };
-            model.addRow(rowData);
-
-            // Update the CSV file
-            updateCSV();
+            // Add the new vehicle to the dealership
+            Vehicle vehicle = new Car(Integer.parseInt(txtID.getText()), txtMake.getText(), txtModel.getText(), txtColor.getText(), Integer.parseInt(txtYear.getText()), Double.parseDouble(txtPrice.getText()), txtType.getText());
+            Main.m_dealership.addVehicle(vehicle);
+            try {
+                Main.save();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error saving data: " + ex.getMessage());
+            }
+            populateTable();
 
             // Show confirmation dialog with new details
             JOptionPane.showMessageDialog(null, "New vehicle successfully added:\n" +
@@ -250,37 +249,21 @@ public class ManageInventoryPanel extends JPanel {
                 "Type: " + type, "Delete Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            // Remove the vehicle from the table
-            model.removeRow(selectedRow);
-
-            // Update the CSV file
-            updateCSV();
+            // Remove the vehicle from the dealership
+            Main.m_dealership.removeVehicle(Main.m_dealership.getVehicleFromId(id));
+            try {
+                Main.save();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error saving data: " + ex.getMessage());
+            }
+            populateTable();
 
             // Show confirmation dialog
             JOptionPane.showMessageDialog(null, "Vehicle successfully deleted.");
         }
     }
 
-    private void updateCSV() {
-        String csvFile = "src/data/inventory.csv";
-        try (FileWriter writer = new FileWriter(csvFile)) {
-            // Write the header
-            writer.append("ID,Make,Model,Color,Year,Price,Type\n");
-
-            // Write the data
-            for (int i = 0; i < model.getRowCount(); i++) {
-                Vector<?> row = model.getDataVector().elementAt(i);
-                for (Object field : row) {
-                    writer.append(field.toString()).append(",");
-                }
-                writer.append("\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addButton(String text,  int[] bounds, ActionListener a ) {
+    private void addButton(String text, int[] bounds, ActionListener a) {
         JButton btn = new JButton(text);
         btn.setForeground(Color.WHITE);
         btn.setBackground(new Color(241, 57, 83));
