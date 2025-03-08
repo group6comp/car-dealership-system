@@ -127,9 +127,15 @@ public class Dealership implements Serializable {
         save();
     }
 
-    public void sellVehicle(Vehicle vehicle, String buyerName, String buyerContact) {
+    public void sellVehicle(Vehicle vehicle, User salesperson, String buyerName, String buyerContact) {
         vehicle.setStatus(Vehicle.Status.SOLD);
-        sales.add(new Sale(vehicle, buyerName, buyerContact, LocalDate.now()));
+        sales.add(new Sale(vehicle, salesperson, buyerName, buyerContact, LocalDate.now()));
+        save();
+    }
+
+    public void sellVehicle(Vehicle vehicle, User salesperson, String buyerName, String buyerContact, LocalDate saleDate) {
+        vehicle.setStatus(Vehicle.Status.SOLD);
+        sales.add(new Sale(vehicle, salesperson, buyerName, buyerContact, saleDate));
         save();
     }
 

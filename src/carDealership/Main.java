@@ -44,7 +44,10 @@ public class Main {
 
     public static void showRoleUI() {
         if (user == null) {
-            new VisitorMainUI();
+            if (contentPane.getComponentCount() == 0 || !isPanelAdded("visitorMainUI")) {
+                contentPane.add(new VisitorMainUI(), "visitorMainUI");
+            }
+            cardLayout.show(contentPane, "visitorMainUI");
             return;
         }
         Role role = user.getRole();
@@ -57,10 +60,16 @@ public class Main {
                 cardLayout.show(contentPane, "adminMainUI");
                 break;
             case MANAGER:
-                //panel = new ManagerMainUI();
+            if (contentPane.getComponentCount() == 0 || !isPanelAdded("adminMainUI")) {
+                contentPane.add(new AdminMainUI(), "adminMainUI");
+            }
+            cardLayout.show(contentPane, "adminMainUI");
                 break;
             case SALESPERSON:
-               // panel = new SalespersonMainUI();
+            if (contentPane.getComponentCount() == 0 || !isPanelAdded("salespersonMainUI")) {
+                contentPane.add(new SalespersonMainUI(), "salespersonMainUI");
+            }
+            cardLayout.show(contentPane, "salespersonMainUI");
                 break;
             case CUSTOMER:
                 //panel = new CustomerMainUI();
@@ -98,6 +107,13 @@ public class Main {
     public static void logout() {
         user = null;
         showRoleUI();
+    }
+
+    public static User getCurrentUser() {
+        if (user == null) {
+            return null;
+        }
+        return user;
     }
 
     public static Dealership load() throws IOException, ClassNotFoundException {

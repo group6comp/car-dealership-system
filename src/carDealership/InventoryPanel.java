@@ -1,5 +1,6 @@
 package carDealership;
 import carDealership.Filter;
+import carDealership.User.Role;
 
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -27,21 +28,23 @@ import java.awt.CardLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.time.LocalDate;
 
-public class ManageInventoryPanel extends JPanel {
+public class InventoryPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JTable table;
     private JPanel contentPane;
     private CardLayout cardLayout;
     private Dealership m_dealership = Main.m_dealership;
-    private DefaultTableModel model;
+    private VehicleTableModel model;
     private Filter filter = new Filter();
+    private Role userRole;
 
     /**
      * Create the panel.
      */
-    public ManageInventoryPanel(JPanel contentPane, CardLayout cardLayout) {
+    public InventoryPanel(JPanel contentPane, CardLayout cardLayout) {
         this.contentPane = contentPane;
         this.cardLayout = cardLayout;
 
@@ -73,11 +76,28 @@ public class ManageInventoryPanel extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        if (Main.getCurrentUser() == null) {
+            userRole = null;
+        } else {
+            userRole = Main.getCurrentUser().getRole();
+        }
         addButton("Filter", buttonPanel, gbc, 0, 0, e -> filterInventory());
-        addButton("Add", buttonPanel, gbc, 1, 0, e -> addVehicle());
-        addButton("Edit", buttonPanel, gbc, 2, 0, e -> editSelectedVehicle());
-        addButton("Delete", buttonPanel, gbc, 3, 0, e -> deleteSelectedVehicle());
-        addButton("Back", buttonPanel, gbc, 4, 0, e -> Main.showRoleUI());
+        if (userRole == Role.ADMIN) {
+            addButton("Add", buttonPanel, gbc, 1, 0, e -> addVehicle());
+            addButton("Edit", buttonPanel, gbc, 2, 0, e -> editSelectedVehicle());
+            addButton("Delete", buttonPanel, gbc, 3, 0, e -> deleteSelectedVehicle());
+            addButton("Back", buttonPanel, gbc, 4, 0, e -> {filter.reset(); Main.showRoleUI();});
+        } else if (userRole == Role.MANAGER) {
+            addButton("Add", buttonPanel, gbc, 1, 0, e -> addVehicle());
+            addButton("Edit", buttonPanel, gbc, 2, 0, e -> editSelectedVehicle());
+            addButton("Delete", buttonPanel, gbc, 3, 0, e -> deleteSelectedVehicle());
+            addButton("Back", buttonPanel, gbc, 4, 0, e -> {filter.reset(); Main.showRoleUI();});
+        } else if (userRole == Role.SALESPERSON) {
+            addButton("Sell", buttonPanel, gbc, 1, 0, e -> sellSelectedVehicle());
+            addButton("Back", buttonPanel, gbc, 2, 0, e -> {filter.reset(); Main.showRoleUI();});
+        } else if (userRole == null) {
+            addButton("Back", buttonPanel, gbc, 1, 0, e -> {filter.reset(); Main.showRoleUI();});
+        }
     }
 
 
@@ -93,48 +113,35 @@ public class ManageInventoryPanel extends JPanel {
 
     private void populateTable() {
         String[] columnNames = {"ID", "Make", "Model", "Color", "Year", "Price", "Type", "Mileage", "Status"};
-        model = new DefaultTableModel(columnNames, 0);
-        List<Vehicle> vehicles = filter.filterInventory();
-        for (Vehicle vehicle : vehicles) {
-            if (vehicle != null) {
-                Object[] rowData = {
-                    vehicle.getId(),
-                    vehicle.getMake(),
-                    vehicle.getModel(),
-                    vehicle.getColor(),
-                    vehicle.getYear(),
-                    vehicle.getPrice(),
-                    vehicle.getType(),
-                    vehicle.getMileage(),
-                    vehicle.getStatus()
-                };
-                model.addRow(rowData);
-            }
+        if (userRole == null || userRole == Role.CUSTOMER || userRole == Role.SALESPERSON) {
+            filter.setStatus(Vehicle.Status.AVAILABLE);
         }
-    
+        filter.setStatus(Vehicle.Status.AVAILABLE);
+        List<Vehicle> vehicles = filter.filterInventory();
+        this.model = new VehicleTableModel(vehicles, columnNames);
         table.setModel(model);
         table.setRowSorter(new TableRowSorter<>(model));
     }
 
     private void filterInventory() {
-        JCheckBox carFilter = new JCheckBox("Car", true);
-        JCheckBox motorcycleFilter = new JCheckBox("Motorcycle", true);
-        JTextField makeFilter = new JTextField();
-        JTextField modelFilter = new JTextField();
-        JTextField colorFilter = new JTextField();
-        JTextField typeFilter = new JTextField();
-        JTextField yearMin = new JTextField();
-        JTextField yearMax = new JTextField();
-        JTextField priceMin = new JTextField();
-        JTextField priceMax = new JTextField();
-        JTextField mileageMin = new JTextField();
-        JTextField mileageMax = new JTextField();
-
+        JCheckBox carFilter = new JCheckBox("Car", filter.getCarSelected());
+        JCheckBox motorcycleFilter = new JCheckBox("Motorcycle", filter.getMotorcycleSelected());
+        JTextField makeFilter = new JTextField(filter.getMake());
+        JTextField modelFilter = new JTextField(filter.getModel());
+        JTextField colorFilter = new JTextField(filter.getColor());
+        JTextField typeFilter = new JTextField(filter.getType());
+        JTextField yearMin = new JTextField(filter.getMinYear() == 0 ? "" : String.valueOf(filter.getMinYear()));
+        JTextField yearMax = new JTextField(filter.getMaxYear() == Integer.MAX_VALUE ? "" : String.valueOf(filter.getMaxYear()));
+        JTextField priceMin = new JTextField(filter.getMinPrice() == 0 ? "" : String.valueOf(filter.getMinPrice()));
+        JTextField priceMax = new JTextField(filter.getMaxPrice() == Double.MAX_VALUE ? "" : String.valueOf(filter.getMaxPrice()));
+        JTextField mileageMin = new JTextField(filter.getMinMileage() == 0 ? "" : String.valueOf(filter.getMinMileage()));
+        JTextField mileageMax = new JTextField(filter.getMaxMileage() == Integer.MAX_VALUE ? "" : String.valueOf(filter.getMaxMileage()));
+    
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
+    
         addLabeledField("", carFilter, panel, gbc, 0, 0);
         addLabeledField("", motorcycleFilter, panel, gbc, 1, 0);
         addLabeledField("Make:", makeFilter, panel, gbc, 0, 1);
@@ -147,9 +154,9 @@ public class ManageInventoryPanel extends JPanel {
         addLabeledField(" - ", priceMax, panel, gbc, 1, 4);
         addLabeledField("Mileage:", mileageMin, mileageMax, panel, gbc, 0, 5);
         addLabeledField(" - ", mileageMax, panel, gbc, 1, 5);
-
+    
         int result = JOptionPane.showConfirmDialog(null, panel, "Filter Inventory", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
+    
         if (result == JOptionPane.OK_OPTION) {
             applyFilters(carFilter.isSelected(), motorcycleFilter.isSelected(), makeFilter.getText(), modelFilter.getText(), colorFilter.getText(), typeFilter.getText(), yearMin.getText(), yearMax.getText(), priceMin.getText(), priceMax.getText(), mileageMin.getText(), mileageMax.getText());
         }
@@ -204,34 +211,79 @@ public class ManageInventoryPanel extends JPanel {
     private void editSelectedVehicle() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
-            editVehicle(selectedRow);
+            Vehicle vehicle = model.getVehicleAt(table.convertRowIndexToModel(selectedRow));
+            JPanel panel = createVehicleEditPanel(vehicle, vehicle instanceof Car);
+    
+            int result = JOptionPane.showConfirmDialog(null, panel, "Edit Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        
+            if (result == JOptionPane.OK_OPTION) {
+                updateVehicleFromPanel(vehicle, panel);
+                populateTable();
+                showConfirmationDialog("Vehicle information successfully saved", vehicle);
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Please select a vehicle to edit.");
         }
     }
-
+    
     private void deleteSelectedVehicle() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
-            Vehicle vehicle = Main.m_dealership.getVehicleFromId((int) table.getValueAt(selectedRow, 0));
-            m_dealership.removeVehicle(vehicle);
+            Vehicle vehicle = model.getVehicleAt(table.convertRowIndexToModel(selectedRow));
+            String message = "Are you sure you want to delete this vehicle?\n\n" +
+                    "Make: " + vehicle.getMake() + "\n" +
+                    "Model: " + vehicle.getModel() + "\n" +
+                    "Color: " + vehicle.getColor() + "\n" +
+                    "Year: " + vehicle.getYear() + "\n" +
+                    "Price: " + vehicle.getPrice() + "\n" +
+                    "Type: " + vehicle.getType() + "\n" +
+                    "Mileage: " + vehicle.getMileage() + "\n" +
+                    "Status: " + vehicle.getStatus();
+    
+            int result = JOptionPane.showConfirmDialog(null, message, "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+    
+            if (result == JOptionPane.YES_OPTION) {
+                m_dealership.removeVehicle(vehicle);
+                populateTable();
+                showConfirmationDialog("Vehicle successfully deleted", vehicle);
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Please select a vehicle to delete.");
         }
     }
 
-    private void editVehicle(int selectedRow) {
-        Vehicle vehicle = Main.m_dealership.getVehicleFromId((int) table.getValueAt(selectedRow, 0));
-        JPanel panel = createVehicleEditPanel(vehicle, vehicle instanceof Car);
-
-        int result = JOptionPane.showConfirmDialog(null, panel, "Edit Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (result == JOptionPane.OK_OPTION) {
-            updateVehicleFromPanel(vehicle, panel);
-            populateTable();
-            showConfirmationDialog("Vehicle information successfully saved", vehicle);
+    private void sellSelectedVehicle() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            Vehicle vehicle = model.getVehicleAt(table.convertRowIndexToModel(selectedRow));
+            JTextField buyerNameField = new JTextField();
+            JTextField buyerContactField = new JTextField();
+        
+            JPanel panel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 5, 5, 5);
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+        
+            addLabeledField("Buyer Name:", buyerNameField, panel, gbc, 0, 0);
+            addLabeledField("Buyer Contact:", buyerContactField, panel, gbc, 0, 1);
+        
+            int result = JOptionPane.showConfirmDialog(null, panel, "Sell Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        
+            if (result == JOptionPane.OK_OPTION) {
+                String buyerName = buyerNameField.getText();
+                String buyerContact = buyerContactField.getText();
+                User currentUser = Main.getCurrentUser();
+                LocalDate currentDate = LocalDate.now();
+        
+                m_dealership.sellVehicle(vehicle, currentUser, buyerName, buyerContact, currentDate);
+                populateTable();
+                showConfirmationDialog("Vehicle successfully sold", vehicle);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a vehicle to sell.");
         }
     }
+
 
     private void addVehicle() {
         String[] options = {"Car", "Motorcycle"};
@@ -292,12 +344,23 @@ public class ManageInventoryPanel extends JPanel {
         JTextField txtTypeOrHandlebar = new JTextField(vehicle != null ? (isCar ? ((Car) vehicle).getType() : ((Motorcycle) vehicle).getType()) : "");
         JTextField txtMileage = new JTextField(vehicle != null ? Integer.toString(vehicle.getMileage()) : "");
         JTextField txtStatus = new JTextField(vehicle != null ? vehicle.getStatus().toString() : "");
-
+    
+        // Set preferred size for each JTextField
+        int fieldWidth = 10;
+        txtMake.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, txtMake.getPreferredSize().height));
+        txtModel.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, txtModel.getPreferredSize().height));
+        txtColor.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, txtColor.getPreferredSize().height));
+        txtYear.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, txtYear.getPreferredSize().height));
+        txtPrice.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, txtPrice.getPreferredSize().height));
+        txtTypeOrHandlebar.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, txtTypeOrHandlebar.getPreferredSize().height));
+        txtMileage.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, txtMileage.getPreferredSize().height));
+        txtStatus.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, txtStatus.getPreferredSize().height));
+    
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
+    
         addLabeledField("Make:", txtMake, panel, gbc, 0, 0);
         addLabeledField("Model:", txtModel, panel, gbc, 0, 1);
         addLabeledField("Color:", txtColor, panel, gbc, 0, 2);
@@ -306,7 +369,7 @@ public class ManageInventoryPanel extends JPanel {
         addLabeledField(isCar ? "Type:" : "Handlebar Type:", txtTypeOrHandlebar, panel, gbc, 0, 5);
         addLabeledField("Mileage:", txtMileage, panel, gbc, 0, 6);
         addLabeledField("Status:", txtStatus, panel, gbc, 0, 7);
-
+    
         return panel;
     }
 

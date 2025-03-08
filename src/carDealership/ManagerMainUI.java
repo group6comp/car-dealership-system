@@ -38,7 +38,7 @@ public class ManagerMainUI extends JFrame {
         lblTitle.setBounds(200, 20, 250, 30);
         contentPane.add(lblTitle);
 
-        JButton btnViewInventory = new JButton("View Inventory");
+        JButton btnViewInventory = new JButton("Approve Transactions");
         btnViewInventory.setForeground(Color.WHITE);
         btnViewInventory.setBackground(new Color(241, 57, 83));
         btnViewInventory.setBounds(225, 80, 200, 30);
@@ -83,10 +83,10 @@ public class ManagerMainUI extends JFrame {
 
         btnManageInventory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (contentPane.getComponentCount() > 0 && contentPane.getComponent(0) instanceof ManageInventoryPanel) {
+                if (contentPane.getComponentCount() > 0 && contentPane.getComponent(0) instanceof InventoryPanel) {
                     cardLayout.show(contentPane, "manageInventoryPanel");
                 } else {
-                    contentPane.add(new ManageInventoryPanel(contentPane, cardLayout), "manageInventoryPanel");
+                    contentPane.add(new InventoryPanel(contentPane, cardLayout), "manageInventoryPanel");
                     cardLayout.show(contentPane, "manageInventoryPanel");
                 }
             }

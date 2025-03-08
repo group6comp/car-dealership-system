@@ -4,10 +4,7 @@ import carDealership.Dealership;
 import carDealership.Vehicle.Status;
 import carDealership.User.Role;
 import carDealership.User;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.time.LocalDate;
 
 public class PopulateSaveData {
     public static void main(String[] args) {
@@ -105,23 +102,21 @@ public class PopulateSaveData {
         dealership.addUser(new User("customer5", "customer5", Role.CUSTOMER));
 
         // Add 15 sales to the dealership
-        dealership.sellVehicle(dealership.getVehicleFromId(7), "John Doe", "555-1234");
-        dealership.sellVehicle(dealership.getVehicleFromId(10), "Jane Smith", "555-5678");
-        dealership.sellVehicle(dealership.getVehicleFromId(14), "Alice Johnson", "555-8765");
-        dealership.sellVehicle(dealership.getVehicleFromId(19), "Bob Brown", "555-4321");
-        dealership.sellVehicle(dealership.getVehicleFromId(22), "Charlie Davis", "555-6789");
-        dealership.sellVehicle(dealership.getVehicleFromId(28), "Diana Evans", "555-9876");
-        dealership.sellVehicle(dealership.getVehicleFromId(31), "Ethan Foster", "555-3456");
-        dealership.sellVehicle(dealership.getVehicleFromId(36), "Fiona Green", "555-6543");
-        dealership.sellVehicle(dealership.getVehicleFromId(40), "George Harris", "555-7890");
-        dealership.sellVehicle(dealership.getVehicleFromId(44), "Hannah Irving", "555-0987");
-        dealership.sellVehicle(dealership.getVehicleFromId(47), "Ian Jackson", "555-5670");
-        dealership.sellVehicle(dealership.getVehicleFromId(52), "Jackie King", "555-8760");
-        dealership.sellVehicle(dealership.getVehicleFromId(56), "Karen Lewis", "555-4320");
-        dealership.sellVehicle(dealership.getVehicleFromId(65), "Liam Martin", "555-6780");
-        dealership.sellVehicle(dealership.getVehicleFromId(59), "Mia Nelson", "555-9870");
-
-        
+        dealership.sellVehicle(dealership.getVehicleFromId(7), dealership.getUser("salesperson1"), "John Doe", "555-1234", LocalDate.of(2024, 1, 15));
+        dealership.sellVehicle(dealership.getVehicleFromId(10), dealership.getUser("salesperson4"), "Jane Smith", "555-5678", LocalDate.of(2024, 2, 10));
+        dealership.sellVehicle(dealership.getVehicleFromId(14), dealership.getUser("salesperson1"), "Alice Johnson", "555-8765", LocalDate.of(2024, 3, 5));
+        dealership.sellVehicle(dealership.getVehicleFromId(19), dealership.getUser("salesperson5"), "Bob Brown", "555-4321", LocalDate.of(2024, 4, 20));
+        dealership.sellVehicle(dealership.getVehicleFromId(22), dealership.getUser("salesperson1"), "Charlie Davis", "555-6789", LocalDate.of(2024, 5, 15));
+        dealership.sellVehicle(dealership.getVehicleFromId(28), dealership.getUser("salesperson4"), "Diana Evans", "555-9876", LocalDate.of(2024, 6, 10));
+        dealership.sellVehicle(dealership.getVehicleFromId(31), dealership.getUser("salesperson1"), "Ethan Foster", "555-3456", LocalDate.of(2024, 7, 25));
+        dealership.sellVehicle(dealership.getVehicleFromId(36), dealership.getUser("salesperson4"), "Fiona Green", "555-6543", LocalDate.of(2024, 8, 30));
+        dealership.sellVehicle(dealership.getVehicleFromId(40), dealership.getUser("salesperson1"), "George Harris", "555-7890", LocalDate.of(2024, 9, 15));
+        dealership.sellVehicle(dealership.getVehicleFromId(44), dealership.getUser("salesperson2"), "Hannah Irving", "555-0987", LocalDate.of(2024, 10, 10));
+        dealership.sellVehicle(dealership.getVehicleFromId(47), dealership.getUser("salesperson3"), "Ian Jackson", "555-5670", LocalDate.of(2024, 11, 5));
+        dealership.sellVehicle(dealership.getVehicleFromId(52), dealership.getUser("salesperson2"), "Jackie King", "555-8760", LocalDate.of(2024, 12, 20));
+        dealership.sellVehicle(dealership.getVehicleFromId(56), dealership.getUser("salesperson1"), "Karen Lewis", "555-4320", LocalDate.of(2024, 1, 30));
+        dealership.sellVehicle(dealership.getVehicleFromId(65), dealership.getUser("salesperson2"), "Liam Martin", "555-6780", LocalDate.of(2024, 2, 25));
+        dealership.sellVehicle(dealership.getVehicleFromId(59), dealership.getUser("salesperson2"), "Mia Nelson", "555-9870", LocalDate.of(2024, 3, 20));
 
         // Save the dealership object to the save.data file
         dealership.save();

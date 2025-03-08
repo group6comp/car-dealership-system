@@ -54,4 +54,9 @@ public class User implements Serializable {
                 return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return username;
+    }
 }

@@ -3,7 +3,6 @@ package carDealership;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,13 +11,14 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.CardLayout;
-import java.io.IOException;
 
 public class VisitorMainUI extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JPanel mainPanel;
     private JPanel loginPanel;
+    private JPanel contentPane;
+    private CardLayout cardLayout;
 
     /**
      * Create the panel.
@@ -28,6 +28,8 @@ public class VisitorMainUI extends JPanel {
 
         mainPanel = createMainPanel();
         loginPanel = createLoginPanel();
+        contentPane = Main.contentPane;
+        cardLayout = Main.cardLayout;
 
         add(mainPanel, "mainPanel");
         add(loginPanel, "loginPanel");
@@ -84,7 +86,12 @@ public class VisitorMainUI extends JPanel {
 
         btnBrowseInventory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Implement Browse Inventory functionality
+                if (Main.contentPane.getComponentCount() > 0 && Main.contentPane.getComponent(0) instanceof InventoryPanel) {
+                    Main.cardLayout.show(Main.contentPane, "visitInventoryPanel");
+                } else {
+                    Main.contentPane.add(new InventoryPanel(Main.contentPane, Main.cardLayout), "visitInventoryPanel");
+                    Main.cardLayout.show(Main.contentPane, "visitInventoryPanel");
+                }
                 System.out.println("Browse Inventory clicked");
             }
         });
@@ -156,7 +163,7 @@ public class VisitorMainUI extends JPanel {
 
                 if (validateLogin(username, password) != null) {
                     System.out.println("Login successful!");
-                    Main.user = validateLogin(username, password);
+                    Main.user = Main.m_dealership.getUser(username);
                     Main.showRoleUI();
                 } else {
                     lblErrorMessage.setVisible(true);

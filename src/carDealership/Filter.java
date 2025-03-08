@@ -94,6 +94,22 @@ public class Filter {
 
     }
 
+    public void reset(){
+        this.carSelected = true;
+        this.motorcycleSelected = true;
+        this.make = "";
+        this.model = "";
+        this.color = "";
+        this.type = "";
+        this.minYear = 0;
+        this.maxYear = Integer.MAX_VALUE;
+        this.minPrice = 0;
+        this.maxPrice = Double.MAX_VALUE;
+        this.minMileage = 0;
+        this.maxMileage = Integer.MAX_VALUE;
+        this.status = null;
+    }
+
     public Boolean getCarSelected() {
         return carSelected;
     }

@@ -43,10 +43,10 @@ public class AdminMainUI extends JPanel {
         
         addButton("Manage Inventory", new int[]{225, 130, 200, 30}, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (contentPane.getComponentCount() > 0 && contentPane.getComponent(0) instanceof ManageInventoryPanel) {
+                if (contentPane.getComponentCount() > 0 && contentPane.getComponent(0) instanceof InventoryPanel) {
                     cardLayout.show(contentPane, "manageInventoryPanel");
                 } else {
-                    contentPane.add(new ManageInventoryPanel(contentPane, cardLayout), "manageInventoryPanel");
+                    contentPane.add(new InventoryPanel(contentPane, cardLayout), "manageInventoryPanel");
                     cardLayout.show(contentPane, "manageInventoryPanel");
                 }
             }

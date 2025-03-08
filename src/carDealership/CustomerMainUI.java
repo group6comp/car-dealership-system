@@ -42,12 +42,6 @@ public class CustomerMainUI extends JFrame {
         btnBrowseInventory.setBounds(225, 80, 200, 30);
         contentPane.add(btnBrowseInventory);
 
-        JButton btnSearch = new JButton("Search");
-        btnSearch.setForeground(Color.WHITE);
-        btnSearch.setBackground(new Color(241, 57, 83));
-        btnSearch.setBounds(225, 130, 200, 30);
-        contentPane.add(btnSearch);
-
         JButton btnWishlist = new JButton("Wishlist");
         btnWishlist.setForeground(Color.WHITE);
         btnWishlist.setBackground(new Color(241, 57, 83));
@@ -68,15 +62,13 @@ public class CustomerMainUI extends JFrame {
 
         btnBrowseInventory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Implement Browse Inventory functionality
+                if (Main.contentPane.getComponentCount() > 0 && Main.contentPane.getComponent(0) instanceof InventoryPanel) {
+                    Main.cardLayout.show(Main.contentPane, "visitInventoryPanel");
+                } else {
+                    Main.contentPane.add(new InventoryPanel(Main.contentPane, Main.cardLayout), "visitInventoryPanel");
+                    Main.cardLayout.show(Main.contentPane, "visitInventoryPanel");
+                }
                 System.out.println("Browse Inventory clicked");
-            }
-        });
-
-        btnSearch.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Implement Search functionality
-                System.out.println("Search clicked");
             }
         });
 
