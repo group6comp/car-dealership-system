@@ -1,7 +1,6 @@
 package carDealership;
 
-import java.io.Serializable;
-import java.sql.SQLException;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,37 +10,31 @@ public class Dealership implements Serializable {
 
     private String name;
     private String location;
-    private int nv;
-    private int ns;
-    private Vehicle[] inventory;
-    private Sale[] sales;
-    private int nextId;
+    private List<Vehicle> inventory;
+    private int maxInventory;
+    private List<Sale> sales;
     private List<User> userData;
+    private int nextId = 1; // Add nextId attribute
 
     public Dealership(String name, String location, int maxInventory) {
         this.name = name;
-        this.location = location;
-        inventory = new Vehicle[maxInventory];
-        sales = new Sale[maxInventory * 2];
-        nv = 0;
-        ns = 0;
-        nextId = 0;
+        this.maxInventory = maxInventory;
+        inventory = new ArrayList<>(maxInventory);
+        sales = new ArrayList<>();
         userData = new ArrayList<>();
     }
 
-    public Vehicle[] getInventory() {
-        return inventory;
-    }
-
+    // DEALERSHIP INFORMATION METHODS
     public void getInfo() {
-        System.out.printf("Name: [%s]\nLocation: [%s]\nInventory Size: [%d]\n", name, location, inventory.length);
+        System.out.printf("Name: [%s]\nLocation: [%s]\nInventory Size: [%d]\n", name, location, inventory.size());
     }
 
     public String getInfoGUI() {
         return String.format("Dealership name: [%s]\nLocation: [%s]\nInventory Size: [%d]\n\nAvailable space: %d\nTotal Cars: %d\nTotal Motorcycles: %d\n\nTotal sales profit: %d\nTotal vehicles sold: %d",
-                name, location, inventory.length, inventory.length - nv, getTotalCars(), getTotalMotorcycles(), salesProfit(), ns);
+                name, location, inventory.size(), inventory.size(), getTotalCars(), getTotalMotorcycles(), salesProfit(), sales.size());
     }
 
+    // USER METHODS
     public List<User> getUsers() {
         return userData;
     }
@@ -57,82 +50,119 @@ public class Dealership implements Serializable {
 
     public void addUser(User user) {
         userData.add(user);
+        save();
     }
 
     public void removeUser(User user) {
         userData.remove(user);
+        save();
+    }
+
+    public void editUser(User user, String username, String password, User.Role role) {
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setRole(role);
+        save();
+    }
+
+    // INVENTORY METHODS
+    public List<Vehicle> getVehicles() {
+        return inventory;
+    }
+
+    public Vehicle getVehicle(int id) {
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getId() == id) {
+                return vehicle;
+            }
+        }
+        System.out.println("Vehicle with id: " + id + " not found.");
+        return null;
+    }
+
+    public Vehicle addCar(String make, String model, String color, int year, double price, int mileage, Vehicle.Status status, String type) {
+        if (isFull()) {
+            System.out.println("Failed to add vehicle: inventory is full.");
+            return null;
+        }
+        Car car = new Car(nextId++, make, model, color, year, price, mileage, status, type);
+        inventory.add(car);
+        save();
+        return car;
+    }
+
+    public Vehicle addMotorcycle(String make, String model, String color, int year, double price, int mileage, Vehicle.Status status, String handlebarType) {
+        if (isFull()) {
+            System.out.println("Failed to add vehicle: inventory is full.");
+            return null;
+        }
+        Motorcycle motorcycle = new Motorcycle(nextId++, make, model, color, year, price, mileage, status, handlebarType);
+        inventory.add(motorcycle);
+        save();
+        return motorcycle;
+    }
+
+    public void removeVehicle(Vehicle vehicle) {
+        if (inventory.remove(vehicle)) {
+            save();
+        } else {
+            System.out.println("Unable to remove vehicle.");
+        }
+    }
+
+    public void editVehicle(Vehicle vehicle, String make, String model, String color, int year, double price, 
+                        int mileage, String status, String type) {
+        vehicle.setMake(make);
+        vehicle.setModel(model);
+        vehicle.setColor(color);
+        vehicle.setYear(year);
+        vehicle.setPrice(price);
+        vehicle.setMileage(mileage);
+        vehicle.setStatus(Vehicle.Status.valueOf(status.toUpperCase()));
+        if (vehicle instanceof Car) {
+            ((Car) vehicle).setType(type);
+        } else if (vehicle instanceof Motorcycle) {
+            ((Motorcycle) vehicle).setHandlebarType(type);
+        }
+        save();
+    }
+
+    public void sellVehicle(Vehicle vehicle, String buyerName, String buyerContact) {
+        vehicle.setStatus(Vehicle.Status.SOLD);
+        sales.add(new Sale(vehicle, buyerName, buyerContact, LocalDate.now()));
+        save();
+    }
+
+    public void vehicleMaintenance(Vehicle vehicle) {
+        vehicle.setStatus(Vehicle.Status.MAINTENANCE);
+        save();
+    }
+
+    // SALES INFORMATION
+    public List<Sale> getSales() {
+        return sales;
     }
 
     private int salesProfit() {
-        int total = 0;
-        for (int i = 0; i < ns; i++) {
-            total += sales[i].getVehicle().getPrice();
+        int totalProfit = 0;
+        for (Sale sale : sales) {
+            totalProfit += sale.getVehicle().getPrice();
         }
-        return total;
-    }
-
-    public boolean addVehicle(Vehicle vehicle) {
-        if (nv == inventory.length) {
-            return false;
-        }
-
-        if (vehicle instanceof Car) {
-            Car c = new Car((Car) vehicle);
-            c.setId(nextId++);
-            inventory[nv++] = c;
-        } else if (vehicle instanceof Motorcycle) {
-            Motorcycle m = new Motorcycle((Motorcycle) vehicle);
-            m.setId(nextId++);
-            inventory[nv++] = m;
-        }
-
-        return true;
-    }
-
-    public boolean removeVehicle(Vehicle vehicle) {
-        if (vehicle == null) {
-            return false;
-        }
-        int index = getIndexFromId(vehicle.id);
-
-        if (index == -1) {
-            return false;
-        }
-
-        System.arraycopy(inventory, index + 1, inventory, index, nv - index - 1);
-        nv--;
-        return true;
-    }
-
-    public int getIndexFromId(int id) {
-        for (int i = 0; i < nv; i++) {
-            if (inventory[i].id == id) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public boolean sellVehicle(Vehicle vehicle, String buyerName, String buyerContact) {
-        if (!removeVehicle(vehicle)) {
-            return false;
-        }
-        sales[ns++] = new Sale(vehicle, buyerName, buyerContact, LocalDate.now());
-        return true;
+        return totalProfit;
     }
 
     public double getInventoryGrossValue() {
-        double totalValue = 0.0;
-        for (int i = 0; i < nv; i++) {
-            totalValue += inventory[i].price;
+        double totalValue = 0;
+        for (Vehicle vehicle : inventory) {
+            totalValue += vehicle.getPrice();
         }
         return totalValue;
     }
 
     public int getTotalCars() {
         int totalCars = 0;
-        for (int i = 0; i < nv; i++) {
-            if (inventory[i] instanceof Car) {
+        for (Vehicle vehicle : inventory) {
+            if (vehicle instanceof Car) {
                 totalCars++;
             }
         }
@@ -141,8 +171,8 @@ public class Dealership implements Serializable {
 
     public int getTotalMotorcycles() {
         int totalMotorcycles = 0;
-        for (int i = 0; i < nv; i++) {
-            if (inventory[i] instanceof Motorcycle) {
+        for (Vehicle vehicle : inventory) {
+            if (vehicle instanceof Motorcycle) {
                 totalMotorcycles++;
             }
         }
@@ -152,38 +182,38 @@ public class Dealership implements Serializable {
     public void displayAll() {
         System.out.println("Inventory Details:");
         System.out.println("Total inventory value: " + getInventoryGrossValue());
-        for (int i = 0; i < nv; i++) {
+        for (Vehicle vehicle : inventory) {
             System.out.println("-------------------");
-            inventory[i].displayInfo();
+            vehicle.displayInfo();
             System.out.println("-------------------");
         }
-        System.out.printf("Size: [%d/%d]\n", nv, inventory.length);
+        System.out.printf("Size: [%d/%d]\n", inventory.size(), inventory.size());
     }
 
     public String displayAlls() {
         StringBuilder sb = new StringBuilder("Inventory Details:\n");
         sb.append("Total inventory value: ").append(getInventoryGrossValue()).append("\n");
 
-        for (int i = 0; i < nv; i++) {
+        for (Vehicle vehicle : inventory) {
             sb.append("-------------------\n");
-            sb.append(inventory[i].toString()).append("\n");
+            sb.append(vehicle.toString()).append("\n");
         }
-        sb.append("-------------------\nSize: [").append(nv).append("/").append(inventory.length).append("]\n");
+        sb.append("-------------------\nSize: [").append(inventory.size()).append("/").append(inventory.size()).append("]\n");
         return sb.toString();
     }
 
     public boolean isFull() {
-        return nv == inventory.length;
+        return inventory.size() == maxInventory;
     }
 
     public boolean isEmpty() {
-        return nv == 0;
+        return inventory.isEmpty();
     }
 
     public Vehicle getVehicleFromId(int id) {
-        for (int i = 0; i < nv; i++) {
-            if (inventory[i].id == id) {
-                return inventory[i];
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getId() == id) {
+                return vehicle;
             }
         }
         return null;
@@ -191,47 +221,45 @@ public class Dealership implements Serializable {
 
     public void displaySalesHistory() {
         System.out.println("Sales History:");
-        if (ns == 0) {
+        if (sales.isEmpty()) {
             System.out.println("No sales recorded.");
             return;
         }
-        for (int i = 0; i < ns; i++) {
+        for (Sale sale : sales) {
             System.out.println("-------------------");
-            sales[i].getVehicle().displayInfo();
-            System.out.println("Buyer Name: " + sales[i].getBuyerName());
-            System.out.println("Buyer Contact: " + sales[i].getBuyerContact());
-            System.out.println("Sale Date: " + sales[i].getSaleDate());
+            sale.getVehicle().displayInfo();
+            System.out.println("Buyer Name: " + sale.getBuyerName());
+            System.out.println("Buyer Contact: " + sale.getBuyerContact());
+            System.out.println("Sale Date: " + sale.getSaleDate());
             System.out.println("-------------------");
         }
     }
 
     public String showSalesHistory() {
-        if (ns == 0) {
+        if (sales.isEmpty()) {
             return "No sales recorded.";
         }
 
         StringBuilder sb = new StringBuilder("Sales History:\n");
-        for (int i = 0; i < ns; i++) {
+        for (Sale sale : sales) {
             sb.append("-------------------\n");
-            sb.append(sales[i].getVehicle().toString()).append("\n");
-            sb.append("Buyer Name: ").append(sales[i].getBuyerName()).append("\n");
-            sb.append("Buyer Contact: ").append(sales[i].getBuyerContact()).append("\n");
-            sb.append("Sale Date: ").append(sales[i].getSaleDate()).append("\n");
+            sb.append(sale.getVehicle().toString()).append("\n");
+            sb.append("Buyer Name: ").append(sale.getBuyerName()).append("\n");
+            sb.append("Buyer Contact: ").append(sale.getBuyerContact()).append("\n");
+            sb.append("Sale Date: ").append(sale.getSaleDate()).append("\n");
         }
         sb.append("-------------------\n");
         return sb.toString();
     }
 
-    public Car[] searchCar(String type) {
-        Car[] types = new Car[getTotalCars()];
-        int counter = 0;
-
-        for (int i = 0; i < nv; i++) {
-            if (inventory[i] instanceof Car && ((Car) inventory[i]).getType().equalsIgnoreCase(type)) {
-                types[counter++] = (Car) inventory[i];
+    public List<Car> searchCar(String type) {
+        List<Car> types = new ArrayList<>();
+        for (Vehicle vehicle : inventory) {
+            if (vehicle instanceof Car && ((Car) vehicle).getType().equalsIgnoreCase(type)) {
+                types.add((Car) vehicle);
             }
         }
-        if (counter == 0) {
+        if (types.isEmpty()) {
             System.out.println("Sorry, didn't find car with type: " + type);
         }
         return types;
@@ -241,11 +269,11 @@ public class Dealership implements Serializable {
         int total = 0;
         boolean notChecked = true;
 
-        for (int i = 0; i < nv; i++) {
-            if (inventory[i] instanceof Car) {
+        for (Vehicle vehicle : inventory) {
+            if (vehicle instanceof Car) {
                 notChecked = false;
-                if (inventory[i].getPrice() <= budget) {
-                    inventory[i].displayInfo();
+                if (vehicle.getPrice() <= budget) {
+                    vehicle.displayInfo();
                     System.out.println("---------------------");
                     total++;
                 }
@@ -261,22 +289,39 @@ public class Dealership implements Serializable {
         return total;
     }
 
-    public Car[] carsWithinBudget(double budget) {
-        Car[] cars = new Car[getTotalCars()];
-        int counter = 0;
-        for (int i = 0; i < nv; i++) {
-            if (inventory[i] instanceof Car && inventory[i].getPrice() <= budget) {
-                cars[counter++] = (Car) inventory[i];
+    public List<Car> carsWithinBudget(double budget) {
+        List<Car> cars = new ArrayList<>();
+        for (Vehicle vehicle : inventory) {
+            if (vehicle instanceof Car && vehicle.getPrice() <= budget) {
+                cars.add((Car) vehicle);
             }
         }
         return cars;
     }
 
-    public List<User> getUserData() {
-        return userData;
+    // LOAD AND SAVE METHODS
+    public void save() {
+        File saveFile = new File("save.data");
+        try (FileOutputStream outFileStream = new FileOutputStream(saveFile);
+             ObjectOutputStream outObjStream = new ObjectOutputStream(outFileStream)) {
+            outObjStream.writeObject(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setUserData(List<User> userData) {
-        this.userData = userData;
+    public static Dealership load() throws IOException, ClassNotFoundException {
+        File saveFile = new File("save.data");
+        if (!saveFile.exists()) {
+            return null;
+        }
+
+        try (FileInputStream inFileStream = new FileInputStream(saveFile);
+             ObjectInputStream inObjStream = new ObjectInputStream(inFileStream)) {
+            return (Dealership) inObjStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

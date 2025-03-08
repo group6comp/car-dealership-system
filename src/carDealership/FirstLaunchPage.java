@@ -2,7 +2,6 @@ package carDealership;
 
 import static carDealership.User.Role.ADMIN;
 
-import carDealership.IllegalCapacityException;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
@@ -116,9 +115,6 @@ public class FirstLaunchPage extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 try {
                     int capacity = Integer.parseInt(textField_1.getText());
-                    if (capacity < 1 || capacity > 100) {
-                        throw new IllegalCapacityException();
-                    }
                     Main.createDealership(textField.getText(), textField_2.getText(), capacity);
                     CardLayout cl = (CardLayout) (FirstLaunchPage.this.getLayout());
                     cl.show(FirstLaunchPage.this, "adminPanel");
@@ -126,13 +122,8 @@ public class FirstLaunchPage extends JPanel {
                     textField_1.setText("");
                     lblNewLabel_4.setVisible(false);
                     lblNewLabel_3.setVisible(true);
-                } catch (IllegalCapacityException ex2) {
-                    textField_1.setText("");
-                    lblNewLabel_3.setVisible(false);
-                    lblNewLabel_4.setVisible(true);
-                }
             }
-        });
+        }});
 
         return panel;
     }
@@ -188,11 +179,6 @@ public class FirstLaunchPage extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 User adminUser = new User(adminUsernameField.getText(), new String(adminPasswordField.getPassword()), ADMIN);
                 Main.m_dealership.addUser(adminUser);
-                try {
-                    Main.save();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
                 new VisitorMainUI();
             }
         });

@@ -55,7 +55,7 @@ public class VisitorMainUI extends JPanel {
         JLabel lblNewLabel_2 = new JLabel("Get Started");
         lblNewLabel_2.setFont(new Font("HP Simplified Hans", Font.PLAIN, 20));
         lblNewLabel_2.setForeground(new Color(192, 192, 192));
-        lblNewLabel_2.setBounds(83, 299, 153, 42);
+        lblNewLabel_2.setBounds(83, 299, 200, 42);
         sidePanel.add(lblNewLabel_2);
 
         JButton btnBrowseInventory = new JButton("Browse Inventory");
