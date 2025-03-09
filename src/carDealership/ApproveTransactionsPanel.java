@@ -1,6 +1,7 @@
 package carDealership;
 
 import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -18,7 +19,7 @@ import java.awt.Insets;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ViewSalesPanel extends JPanel {
+public class ApproveTransactionsPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JTable table;
@@ -30,19 +31,14 @@ public class ViewSalesPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public ViewSalesPanel(JPanel parentPanel, CardLayout cardLayout) {
-        this.contentPane = contentPane;
+    public ApproveTransactionsPanel(JPanel parentPanel, CardLayout cardLayout) {
+        this.contentPane = parentPanel;
         this.cardLayout = cardLayout;
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setLayout(new BorderLayout());
-        
-        JLabel lblTitle;
-        if (Main.role == User.Role.SALESPERSON) {
-            lblTitle = new JLabel("My Sales");
-        } else {
-            lblTitle = new JLabel("View Sales");
-        }
+
+        JLabel lblTitle = new JLabel("Approve Transactions");
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
         add(lblTitle, BorderLayout.NORTH);
@@ -67,23 +63,40 @@ public class ViewSalesPanel extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        addButton("Back", buttonPanel, gbc, 1, 0, e -> Main.showMainUI());
+        addButton("Approve", buttonPanel, gbc, 0, 0, e -> approveSelectedTransaction());
+        addButton("Reject", buttonPanel, gbc, 1, 0, e -> rejectSelectedTransaction());
+        addButton("Back", buttonPanel, gbc, 2, 0, e -> Main.showMainUI());
     }
 
     private void populateTable() {
-        List<Sale> sales;
-        if (Main.role == User.Role.SALESPERSON) {
-            sales = m_dealership.getSales(Main.user);
-        } else {
-            sales = m_dealership.getSales();
-        }
-        // Filter sales to only include those with pending set to false
-        sales = sales.stream()
-                     .filter(sale -> !sale.isPending())
-                     .collect(Collectors.toList());
+        List<Sale> sales = m_dealership.getSales().stream()
+                .filter(Sale::isPending)
+                .collect(Collectors.toList());
         model = new SalesTableModel(sales);
         table.setModel(model);
         table.setRowSorter(new TableRowSorter<>(model));
+    }
+
+    private void approveSelectedTransaction() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            Sale sale = model.getSaleAt(table.convertRowIndexToModel(selectedRow));
+            sale.setPending(false);
+            populateTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a transaction to approve.");
+        }
+    }
+
+    private void rejectSelectedTransaction() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            Sale sale = model.getSaleAt(table.convertRowIndexToModel(selectedRow));
+            m_dealership.rejectSale(sale);
+            populateTable();
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a transaction to reject.");
+        }
     }
 
     private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {

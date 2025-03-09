@@ -139,6 +139,12 @@ public class Dealership implements Serializable {
         save();
     }
 
+    public void rejectSale(Sale sale) {
+        sale.getVehicle().setStatus(Vehicle.Status.AVAILABLE);
+        sales.remove(sale);
+        save();
+    }
+
     public void vehicleMaintenance(Vehicle vehicle) {
         vehicle.setStatus(Vehicle.Status.MAINTENANCE);
         save();

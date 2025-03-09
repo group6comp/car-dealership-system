@@ -11,6 +11,7 @@ public class Sale implements Serializable {
 	private String buyerName;
 	private String buyerContact;
 	private LocalDate saleDate;
+	private boolean pending;
 
 	public Sale(Vehicle vehicle, User salesperson, String buyerName, String buyerContact, LocalDate saleDate) {
 		this.vehicle = vehicle;
@@ -18,6 +19,7 @@ public class Sale implements Serializable {
 		this.buyerName = buyerName;
 		this.buyerContact = buyerContact;
 		this.saleDate = saleDate;
+		this.pending = true;
 	}
 
 	public Vehicle getVehicle() {
@@ -60,4 +62,15 @@ public class Sale implements Serializable {
 		this.saleDate = saleDate;
 	}
 
+	public boolean isPending() {
+		return pending;
+	}
+
+	public void approve(){
+		this.pending = false;
+	}
+
+	public void setPending(boolean pending) {
+		this.pending = pending;
+	}
 }

@@ -1,5 +1,6 @@
 package carDealership;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.io.Serializable;
 
@@ -29,6 +30,7 @@ public class User implements Serializable {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.wishlist = new ArrayList<>();
     }
 
     public String getUsername() { return username; }

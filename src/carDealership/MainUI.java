@@ -58,7 +58,7 @@ public class MainUI extends JPanel {
     }
 
     private void addManagerButtons() {
-        //addButton("Approve Transactions", new int[]{225, 80, 200, 30}, ApproveTransactionsPanel.class, "approveTransactionsPanel");
+        addButton("Approve Transactions", new int[]{225, 80, 200, 30}, ApproveTransactionsPanel.class, "approveTransactionsPanel");
         addButton("Manage Inventory", new int[]{225, 130, 200, 30}, InventoryPanel.class, "manageInventoryPanel");
         addButton("View Sales", new int[]{225, 180, 200, 30}, ViewSalesPanel.class, "viewSalesPanel");
         addButton("Generate Reports", new int[]{225, 230, 200, 30}, GenerateReportsPanel.class, "generateReportsPanel");
@@ -73,7 +73,7 @@ public class MainUI extends JPanel {
 
     private void addCustomerButtons() {
         addButton("View Inventory", new int[]{225, 80, 200, 30}, InventoryPanel.class, "viewInventoryPanel");
-        //addButton("View Wishlist", new int[]{225, 130, 200, 30}, WishlistPanel.class, "wishlistPanel");
+        addButton("View Wishlist", new int[]{225, 130, 200, 30}, ViewWishlistPanel.class, "viewWishlistPanel");
         addButton("Logout", new int[]{225, 180, 200, 30}, e -> Main.logout());
     }
 
