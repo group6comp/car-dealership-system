@@ -10,7 +10,7 @@ public class User implements Serializable {
     private Role role; // Admin, Manager, Salesperson, Customer
 
     public enum Role {
-        ADMIN, MANAGER, SALESPERSON, CUSTOMER;
+        ADMIN, MANAGER, SALESPERSON, CUSTOMER, VISITOR;
 
         public String toString() {
             return switch (this) {
@@ -18,6 +18,7 @@ public class User implements Serializable {
                 case MANAGER -> "Manager";
                 case SALESPERSON -> "Salesperson";
                 case CUSTOMER -> "Customer";
+                case VISITOR -> "Visitor";
             };
         }
     }

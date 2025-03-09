@@ -1,5 +1,4 @@
 package carDealership;
-import carDealership.Filter;
 import carDealership.User.Role;
 
 import javax.swing.JPanel;
@@ -9,25 +8,20 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+
 import javax.swing.table.TableRowSorter;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
-
 import java.awt.Font;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.CardLayout;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.time.LocalDate;
 
 public class InventoryPanel extends JPanel {
@@ -39,7 +33,6 @@ public class InventoryPanel extends JPanel {
     private Dealership m_dealership = Main.m_dealership;
     private VehicleTableModel model;
     private Filter filter = new Filter();
-    private Role userRole;
 
     /**
      * Create the panel.
@@ -76,27 +69,25 @@ public class InventoryPanel extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        if (Main.getCurrentUser() == null) {
-            userRole = null;
-        } else {
-            userRole = Main.getCurrentUser().getRole();
-        }
         addButton("Filter", buttonPanel, gbc, 0, 0, e -> filterInventory());
-        if (userRole == Role.ADMIN) {
+        if (Main.role == Role.ADMIN) {
             addButton("Add", buttonPanel, gbc, 1, 0, e -> addVehicle());
             addButton("Edit", buttonPanel, gbc, 2, 0, e -> editSelectedVehicle());
             addButton("Delete", buttonPanel, gbc, 3, 0, e -> deleteSelectedVehicle());
-            addButton("Back", buttonPanel, gbc, 4, 0, e -> {filter.reset(); Main.showRoleUI();});
-        } else if (userRole == Role.MANAGER) {
+            addButton("Back", buttonPanel, gbc, 4, 0, e -> {filter.reset(); Main.showMainUI();});
+        } else if (Main.role == Role.MANAGER) {
             addButton("Add", buttonPanel, gbc, 1, 0, e -> addVehicle());
             addButton("Edit", buttonPanel, gbc, 2, 0, e -> editSelectedVehicle());
             addButton("Delete", buttonPanel, gbc, 3, 0, e -> deleteSelectedVehicle());
-            addButton("Back", buttonPanel, gbc, 4, 0, e -> {filter.reset(); Main.showRoleUI();});
-        } else if (userRole == Role.SALESPERSON) {
+            addButton("Back", buttonPanel, gbc, 4, 0, e -> {filter.reset(); Main.showMainUI();});
+        } else if (Main.role == Role.SALESPERSON) {
             addButton("Sell", buttonPanel, gbc, 1, 0, e -> sellSelectedVehicle());
-            addButton("Back", buttonPanel, gbc, 2, 0, e -> {filter.reset(); Main.showRoleUI();});
-        } else if (userRole == null) {
-            addButton("Back", buttonPanel, gbc, 1, 0, e -> {filter.reset(); Main.showRoleUI();});
+            addButton("Back", buttonPanel, gbc, 2, 0, e -> {filter.reset(); Main.showMainUI();});
+        } else if (Main.role == Role.CUSTOMER) {
+            //addButton("Wishlist", buttonPanel, gbc, 1, 0, e -> {filter.reset(); Main.showWishlistPanel();});
+            addButton("Back", buttonPanel, gbc, 2, 0, e -> {filter.reset(); Main.showMainUI();});
+        } else if (Main.role == Role.VISITOR) {
+            addButton("Back", buttonPanel, gbc, 1, 0, e -> {filter.reset(); Main.showMainUI();});
         }
     }
 
@@ -113,7 +104,7 @@ public class InventoryPanel extends JPanel {
 
     private void populateTable() {
         String[] columnNames = {"ID", "Make", "Model", "Color", "Year", "Price", "Type", "Mileage", "Status"};
-        if (userRole == null || userRole == Role.CUSTOMER || userRole == Role.SALESPERSON) {
+        if (Main.role == Role.VISITOR || Main.role == Role.CUSTOMER || Main.role == Role.SALESPERSON) {
             filter.setStatus(Vehicle.Status.AVAILABLE);
         }
         filter.setStatus(Vehicle.Status.AVAILABLE);
@@ -253,28 +244,33 @@ public class InventoryPanel extends JPanel {
     }
 
     private void sellSelectedVehicle() {
+        int fieldWidth = 10;
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
             Vehicle vehicle = model.getVehicleAt(table.convertRowIndexToModel(selectedRow));
             JTextField buyerNameField = new JTextField();
             JTextField buyerContactField = new JTextField();
-        
+    
+            // Set preferred size for each JTextField
+            buyerNameField.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, buyerNameField.getPreferredSize().height));
+            buyerContactField.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, buyerContactField.getPreferredSize().height));
+    
             JPanel panel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(5, 5, 5, 5);
             gbc.fill = GridBagConstraints.HORIZONTAL;
-        
+    
             addLabeledField("Buyer Name:", buyerNameField, panel, gbc, 0, 0);
             addLabeledField("Buyer Contact:", buyerContactField, panel, gbc, 0, 1);
-        
+    
             int result = JOptionPane.showConfirmDialog(null, panel, "Sell Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        
+    
             if (result == JOptionPane.OK_OPTION) {
                 String buyerName = buyerNameField.getText();
                 String buyerContact = buyerContactField.getText();
                 User currentUser = Main.getCurrentUser();
                 LocalDate currentDate = LocalDate.now();
-        
+    
                 m_dealership.sellVehicle(vehicle, currentUser, buyerName, buyerContact, currentDate);
                 populateTable();
                 showConfirmationDialog("Vehicle successfully sold", vehicle);

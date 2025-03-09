@@ -12,8 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
+import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.Color;
+import java.awt.Insets;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -30,41 +32,46 @@ import java.io.IOException;
 public class GenerateReportsPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private JPanel parentPanel;
+    private JPanel contentPane;
     private CardLayout cardLayout;
     private Dealership m_dealership = Main.m_dealership;
+    private JPanel report;
 
     /**
      * Create the panel.
      */
     public GenerateReportsPanel(JPanel parentPanel, CardLayout cardLayout) {
-        this.parentPanel = parentPanel;
+        this.contentPane = parentPanel;
         this.cardLayout = cardLayout;
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
 
-        JLabel lblTitle = new JLabel("Generate Reports");
+        JLabel lblTitle = new JLabel("Manage Inventory");
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(lblTitle, gbc);
+        lblTitle.setHorizontalAlignment(JLabel.CENTER);
+        add(lblTitle, BorderLayout.NORTH);
 
-        JButton btnBack = new JButton("Back");
-        addButton("Back", this, gbc, 1, 1, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(parentPanel, "mainPanel");
-            }
-        });
+        JScrollPane scrollPane = new JScrollPane();
+        add(scrollPane, BorderLayout.CENTER);
+
+        report = new JPanel(new GridBagLayout());
+        scrollPane.setViewportView(report);
 
         generateReport();
+
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        addButton("Save Report as Text File", buttonPanel, gbc, 0, 0, e -> saveReportAsTextFile(generateSalespersonReport()));
+        addButton("Back", buttonPanel, gbc, 1, 0, e -> Main.showMainUI());
     }
 
     private void generateReport() {
-        JPanel reportPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new java.awt.Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.BOTH;
@@ -77,23 +84,23 @@ public class GenerateReportsPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        reportPanel.add(lblGraphs, gbc);
+        report.add(lblGraphs, gbc);
 
         // Sales Over Time Graph
         JPanel salesOverTimeGraph = createSalesOverTimeGraph();
         gbc.gridy = 1;
-        reportPanel.add(salesOverTimeGraph, gbc);
+        report.add(salesOverTimeGraph, gbc);
 
         // Sales by Manufacturer Graph
         JPanel salesByManufacturerGraph = createSalesByManufacturerGraph();
         gbc.gridy = 2;
-        reportPanel.add(salesByManufacturerGraph, gbc);
+        report.add(salesByManufacturerGraph, gbc);
 
         // Section 2: Salesperson Report
         JLabel lblSalespersonReport = new JLabel("Salesperson Report");
         lblSalespersonReport.setFont(new Font("Dubai Medium", Font.PLAIN, 18));
         gbc.gridy = 3;
-        reportPanel.add(lblSalespersonReport, gbc);
+        report.add(lblSalespersonReport, gbc);
 
         JTextArea salespersonReport = new JTextArea(generateSalespersonReport());
         salespersonReport.setEditable(false);
@@ -101,19 +108,12 @@ public class GenerateReportsPanel extends JPanel {
         gbc.gridy = 4;
         gbc.gridwidth = 2;
         gbc.weighty = 1.0;
-        reportPanel.add(scrollPane, gbc);
+        report.add(scrollPane, gbc);
 
-        JScrollPane reportScrollPane = new JScrollPane(reportPanel);
+        JScrollPane reportScrollPane = new JScrollPane(report);
         reportScrollPane.setPreferredSize(new Dimension(600, 400));
 
-        GridBagConstraints mainGbc = new GridBagConstraints();
-        mainGbc.gridx = 0;
-        mainGbc.gridy = 2;
-        mainGbc.gridwidth = 2;
-        mainGbc.fill = GridBagConstraints.BOTH;
-        mainGbc.weightx = 1.0;
-        mainGbc.weighty = 1.0;
-        add(reportScrollPane, mainGbc);
+        add(reportScrollPane, BorderLayout.CENTER);
     }
 
     private JPanel createSalesOverTimeGraph() {
@@ -166,18 +166,6 @@ public class GenerateReportsPanel extends JPanel {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error saving report as text file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
-        gbc.gridx = x;
-        gbc.gridy = y;
-        gbc.gridwidth = 1;
-        gbc.insets = new java.awt.Insets(10, 10, 10, 10);
-        JButton btn = new JButton(text);
-        btn.setForeground(Color.WHITE);
-        btn.setBackground(new Color(241, 57, 83));
-        panel.add(btn, gbc);
-        btn.addActionListener(actionListener);
     }
 
     private static class SalespersonStats {
@@ -260,5 +248,15 @@ public class GenerateReportsPanel extends JPanel {
                 x += barWidth;
             }
         }
+    }
+
+    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
+        gbc.gridx = x;
+        gbc.gridy = y;
+        JButton btn = new JButton(text);
+        btn.setForeground(Color.WHITE);
+        btn.setBackground(new Color(241, 57, 83));
+        panel.add(btn, gbc);
+        btn.addActionListener(actionListener);
     }
 }

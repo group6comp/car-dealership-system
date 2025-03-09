@@ -8,17 +8,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.table.TableRowSorter;
 import java.awt.Font;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.util.List;
 
 public class ViewSalesPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JTable table;
-    private JPanel parentPanel;
+    private JPanel contentPane;
     private CardLayout cardLayout;
     private SalesTableModel model;
     private Dealership m_dealership = Main.m_dealership;
@@ -27,20 +31,19 @@ public class ViewSalesPanel extends JPanel {
      * Create the panel.
      */
     public ViewSalesPanel(JPanel parentPanel, CardLayout cardLayout) {
-        this.parentPanel = parentPanel;
+        this.contentPane = contentPane;
         this.cardLayout = cardLayout;
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
-        setLayout(null);
+        setLayout(new BorderLayout());
 
         JLabel lblTitle = new JLabel("View Sales");
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
-        lblTitle.setBounds(250, 20, 150, 30);
-        add(lblTitle);
+        lblTitle.setHorizontalAlignment(JLabel.CENTER);
+        add(lblTitle, BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(50, 70, 550, 200);
-        add(scrollPane);
+        add(scrollPane, BorderLayout.CENTER);
 
         table = new JTable() {
             @Override
@@ -50,19 +53,16 @@ public class ViewSalesPanel extends JPanel {
         };
         scrollPane.setViewportView(table);
 
-        JButton btnBack = new JButton("Back");
-        btnBack.setBounds(50, 300, 150, 30);
-        add(btnBack);
-
-        btnBack.setForeground(Color.WHITE);
-        btnBack.setBackground(new Color(241, 57, 83));
-        btnBack.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Main.showRoleUI();
-            }
-        });
-
         populateTable();
+
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        addButton("Back", buttonPanel, gbc, 1, 0, e -> Main.showMainUI());
     }
 
     private void populateTable() {
@@ -70,5 +70,15 @@ public class ViewSalesPanel extends JPanel {
         model = new SalesTableModel(sales);
         table.setModel(model);
         table.setRowSorter(new TableRowSorter<>(model));
+    }
+
+    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
+        gbc.gridx = x;
+        gbc.gridy = y;
+        JButton btn = new JButton(text);
+        btn.setForeground(Color.WHITE);
+        btn.setBackground(new Color(241, 57, 83));
+        panel.add(btn, gbc);
+        btn.addActionListener(actionListener);
     }
 }

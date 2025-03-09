@@ -179,7 +179,7 @@ public class FirstLaunchPage extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 User adminUser = new User(adminUsernameField.getText(), new String(adminPasswordField.getPassword()), ADMIN);
                 Main.m_dealership.addUser(adminUser);
-                new VisitorMainUI();
+                Main.showMainUI();
             }
         });
 

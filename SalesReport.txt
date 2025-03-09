@@ -1,124 +1,22 @@
-Sales Report
+Salesperson Report
 
-Vehicle ID: 7
-Make: Audi
-Model: A4
-Buyer Name: John Doe
-Sale Date: 2025-03-08
-Sale Price: $39000.0
-Profit: $0.0
+Salesperson: salesperson5
+Number of Sales: 1
+Total Sales Amount: $46000.0
 
-Vehicle ID: 10
-Make: Hyundai
-Model: Elantra
-Buyer Name: Jane Smith
-Sale Date: 2025-03-08
-Sale Price: $20000.0
-Profit: $0.0
+Salesperson: salesperson4
+Number of Sales: 3
+Total Sales Amount: $247500.0
 
-Vehicle ID: 14
-Make: Tesla
-Model: Model 3
-Buyer Name: Alice Johnson
-Sale Date: 2025-03-08
-Sale Price: $45000.0
-Profit: $0.0
+Salesperson: salesperson3
+Number of Sales: 1
+Total Sales Amount: $10000.0
 
-Vehicle ID: 19
-Make: Cadillac
-Model: CT5
-Buyer Name: Bob Brown
-Sale Date: 2025-03-08
-Sale Price: $46000.0
-Profit: $0.0
+Salesperson: salesperson2
+Number of Sales: 4
+Total Sales Amount: $29500.0
 
-Vehicle ID: 22
-Make: Alfa Romeo
-Model: Giulia
-Buyer Name: Charlie Davis
-Sale Date: 2025-03-08
-Sale Price: $45000.0
-Profit: $0.0
+Salesperson: salesperson1
+Number of Sales: 6
+Total Sales Amount: $3150000.0
 
-Vehicle ID: 28
-Make: Ferrari
-Model: Roma
-Buyer Name: Diana Evans
-Sale Date: 2025-03-08
-Sale Price: $220000.0
-Profit: $0.0
-
-Vehicle ID: 31
-Make: Bugatti
-Model: Chiron
-Buyer Name: Ethan Foster
-Sale Date: 2025-03-08
-Sale Price: $3000000.0
-Profit: $0.0
-
-Vehicle ID: 36
-Make: Harley-Davidson
-Model: Street 750
-Buyer Name: Fiona Green
-Sale Date: 2025-03-08
-Sale Price: $7500.0
-Profit: $0.0
-
-Vehicle ID: 40
-Make: Suzuki
-Model: GSX-R600
-Buyer Name: George Harris
-Sale Date: 2025-03-08
-Sale Price: $8000.0
-Profit: $0.0
-
-Vehicle ID: 44
-Make: KTM
-Model: Duke 390
-Buyer Name: Hannah Irving
-Sale Date: 2025-03-08
-Sale Price: $5500.0
-Profit: $0.0
-
-Vehicle ID: 47
-Make: Moto Guzzi
-Model: V7 III
-Buyer Name: Ian Jackson
-Sale Date: 2025-03-08
-Sale Price: $10000.0
-Profit: $0.0
-
-Vehicle ID: 52
-Make: Zero
-Model: SR/F
-Buyer Name: Jackie King
-Sale Date: 2025-03-08
-Sale Price: $19000.0
-Profit: $0.0
-
-Vehicle ID: 56
-Make: Victory
-Model: Octane
-Buyer Name: Karen Lewis
-Sale Date: 2025-03-08
-Sale Price: $13000.0
-Profit: $0.0
-
-Vehicle ID: 65
-Make: Keeway
-Model: RKF 125
-Buyer Name: Liam Martin
-Sale Date: 2025-03-08
-Sale Price: $2200.0
-Profit: $0.0
-
-Vehicle ID: 59
-Make: TVS
-Model: Apache RTR 200
-Buyer Name: Mia Nelson
-Sale Date: 2025-03-08
-Sale Price: $2800.0
-Profit: $0.0
-
-Total Sales: $3483000.0
-Total Profit: $0.0

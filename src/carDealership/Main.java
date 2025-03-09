@@ -14,7 +14,8 @@ import java.awt.CardLayout;
 public class Main {
     public static Scanner input = new Scanner(System.in);
     public static Dealership m_dealership;
-    public static User user = null;
+    public static User user;
+    public static Role role = Role.VISITOR;
     public static JFrame mainFrame;
     public static JPanel contentPane;
     public static CardLayout cardLayout;
@@ -38,53 +39,15 @@ public class Main {
             contentPane.add(new FirstLaunchPage(), "firstLaunchPage");
             cardLayout.show(contentPane, "firstLaunchPage");
         }
-        showRoleUI();
+        showMainUI();
         mainFrame.setVisible(true);
 }
 
-    public static void showRoleUI() {
-        if (user == null) {
-            if (contentPane.getComponentCount() == 0 || !isPanelAdded("visitorMainUI")) {
-                contentPane.add(new VisitorMainUI(), "visitorMainUI");
-            }
-            cardLayout.show(contentPane, "visitorMainUI");
-            return;
+    public static void showMainUI() {
+        if (contentPane.getComponentCount() == 0 || !isPanelAdded("mainUI")) {
+            contentPane.add(new MainUI(), "mainUI");
         }
-        Role role = user.getRole();
-        JPanel panel = null;
-        switch (role) {
-            case ADMIN:
-                if (contentPane.getComponentCount() == 0 || !isPanelAdded("adminMainUI")) {
-                    contentPane.add(new AdminMainUI(), "adminMainUI");
-                }
-                cardLayout.show(contentPane, "adminMainUI");
-                break;
-            case MANAGER:
-            if (contentPane.getComponentCount() == 0 || !isPanelAdded("adminMainUI")) {
-                contentPane.add(new AdminMainUI(), "adminMainUI");
-            }
-            cardLayout.show(contentPane, "adminMainUI");
-                break;
-            case SALESPERSON:
-            if (contentPane.getComponentCount() == 0 || !isPanelAdded("salespersonMainUI")) {
-                contentPane.add(new SalespersonMainUI(), "salespersonMainUI");
-            }
-            cardLayout.show(contentPane, "salespersonMainUI");
-                break;
-            case CUSTOMER:
-                //panel = new CustomerMainUI();
-                break;
-            default:
-                panel = new VisitorMainUI();
-                break;
-        }
-        if (panel != null) {
-            contentPane.removeAll();
-            contentPane.add(panel, role + "Panel");
-            cardLayout.show(contentPane, role + "Panel");
-            mainFrame.revalidate();
-            mainFrame.repaint();
-        }
+        cardLayout.show(contentPane, "mainUI");
     }
 
     private static boolean isPanelAdded(String panelName) {
@@ -100,13 +63,10 @@ public class Main {
         m_dealership = new Dealership(name, location, capacity);
     }
 
-    public static void showMainFrame() {
-        mainFrame.setVisible(true);
-    }
-
     public static void logout() {
         user = null;
-        showRoleUI();
+        role = Role.VISITOR;
+        showMainUI();
     }
 
     public static User getCurrentUser() {
