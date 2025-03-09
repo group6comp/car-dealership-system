@@ -1,7 +1,4 @@
 package persistance;
-import carDealership.Vehicle;
-import carDealership.Car;
-import carDealership.Motorcycle;
 
 import java.io.*;
 import java.nio.file.*;

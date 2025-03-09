@@ -9,7 +9,6 @@ import javax.swing.JButton;
 import javax.swing.table.TableRowSorter;
 import java.awt.Font;
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -36,8 +35,13 @@ public class ViewSalesPanel extends JPanel {
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setLayout(new BorderLayout());
-
-        JLabel lblTitle = new JLabel("View Sales");
+        
+        JLabel lblTitle;
+        if (Main.role == User.Role.SALESPERSON) {
+            lblTitle = new JLabel("My Sales");
+        } else {
+            lblTitle = new JLabel("View Sales");
+        }
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
         add(lblTitle, BorderLayout.NORTH);
@@ -66,7 +70,12 @@ public class ViewSalesPanel extends JPanel {
     }
 
     private void populateTable() {
-        List<Sale> sales = m_dealership.getSales();
+        List<Sale> sales;
+        if (Main.role == User.Role.SALESPERSON) {
+            sales = m_dealership.getSales(Main.user);
+        } else {
+            sales = m_dealership.getSales();
+        }
         model = new SalesTableModel(sales);
         table.setModel(model);
         table.setRowSorter(new TableRowSorter<>(model));

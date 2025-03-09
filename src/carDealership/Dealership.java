@@ -149,6 +149,16 @@ public class Dealership implements Serializable {
         return sales;
     }
 
+    public List<Sale> getSales(User salesperson) {
+        List<Sale> salespersonSales = new ArrayList<>();
+        for (Sale sale : sales) {
+            if (sale.getSalesperson().equals(salesperson)) {
+                salespersonSales.add(sale);
+            }
+        }
+        return salespersonSales;
+    }
+
     private int salesProfit() {
         int totalProfit = 0;
         for (Sale sale : sales) {

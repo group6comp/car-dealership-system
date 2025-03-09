@@ -1,5 +1,6 @@
 package carDealership;
-
+import java.util.List;
+import java.util.stream.Collectors;
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -8,6 +9,7 @@ public class User implements Serializable {
     private String username;
     private String password;
     private Role role; // Admin, Manager, Salesperson, Customer
+    private List<Vehicle> wishlist;
 
     public enum Role {
         ADMIN, MANAGER, SALESPERSON, CUSTOMER, VISITOR;
@@ -32,11 +34,21 @@ public class User implements Serializable {
     public String getUsername() { return username; }
     public String getPassword() { return password; }
     public Role getRole() { return role; }
+    public List<Vehicle> getWishlist() {
+        return wishlist.stream()
+                .filter(vehicle -> "available".equalsIgnoreCase(vehicle.getStatus().toString()) || "maintenance".equalsIgnoreCase(vehicle.getStatus().toString()))
+                .collect(Collectors.toList());
+    }
 
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
     public void setRole(Role role) { this.role = role; }
     public void setRole(String role) { this.role = roleFromString(role); }
+    public void setWishlist(List<Vehicle> wishlist) { }
+
+    public void addToWishlist(Vehicle vehicle) {
+        wishlist.add(vehicle);
+    }
 
     public static Role roleFromString(String role) {
         if (role == null) {

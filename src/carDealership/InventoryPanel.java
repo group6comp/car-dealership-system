@@ -84,7 +84,7 @@ public class InventoryPanel extends JPanel {
             addButton("Sell", buttonPanel, gbc, 1, 0, e -> sellSelectedVehicle());
             addButton("Back", buttonPanel, gbc, 2, 0, e -> {filter.reset(); Main.showMainUI();});
         } else if (Main.role == Role.CUSTOMER) {
-            //addButton("Wishlist", buttonPanel, gbc, 1, 0, e -> {filter.reset(); Main.showWishlistPanel();});
+            addButton("Wishlist", buttonPanel, gbc, 1, 0, e -> {wishlistSelectedVehicle();});
             addButton("Back", buttonPanel, gbc, 2, 0, e -> {filter.reset(); Main.showMainUI();});
         } else if (Main.role == Role.VISITOR) {
             addButton("Back", buttonPanel, gbc, 1, 0, e -> {filter.reset(); Main.showMainUI();});
@@ -280,7 +280,6 @@ public class InventoryPanel extends JPanel {
         }
     }
 
-
     private void addVehicle() {
         String[] options = {"Car", "Motorcycle"};
         int choice = JOptionPane.showOptionDialog(null, "Would you like to add a car or a motorcycle?", "Select Vehicle Type",
@@ -299,6 +298,17 @@ public class InventoryPanel extends JPanel {
             Vehicle vehicle = createVehicleFromPanel(panel, isCar);
             populateTable();
             showConfirmationDialog("New vehicle successfully added", vehicle);
+        }
+    }
+
+    private void wishlistSelectedVehicle() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            Vehicle vehicle = model.getVehicleAt(table.convertRowIndexToModel(selectedRow));
+            Main.user.addToWishlist(vehicle);
+            JOptionPane.showMessageDialog(null, "Vehicle successfully added to wishlist.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a vehicle to add to your wishlist.");
         }
     }
 
