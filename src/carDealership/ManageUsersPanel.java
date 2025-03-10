@@ -1,4 +1,5 @@
 package carDealership;
+
 import carDealership.User.Role;
 
 import javax.swing.*;
@@ -8,29 +9,35 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ * The ManageUsersPanel class is used to manage and edit user information.
+ */
 public class ManageUsersPanel extends JPanel {
+
     private static final long serialVersionUID = 1L;
     private JTable table;
-    private JPanel contentPane;
-    private CardLayout cardLayout;
     private UserTableModel model;
     private Dealership m_dealership = Main.m_dealership;
 
-    public ManageUsersPanel(JPanel contentPane, CardLayout cardLayout) {
-        this.contentPane = contentPane;
-        this.cardLayout = cardLayout;
+    /**
+     * Constructor for creating the ManageUsersPanel.
+     */
+    public ManageUsersPanel() {
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setLayout(new BorderLayout());
 
+        // Add title label
         JLabel lblTitle = new JLabel("Manage Users");
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
         add(lblTitle, BorderLayout.NORTH);
 
+        // Add scroll pane for the table
         JScrollPane scrollPane = new JScrollPane();
         add(scrollPane, BorderLayout.CENTER);
 
+        // Create the table and make cells non-editable
         table = new JTable() {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -39,8 +46,10 @@ public class ManageUsersPanel extends JPanel {
         };
         scrollPane.setViewportView(table);
 
+        // Populate the table with user data
         populateTable();
 
+        // Create button panel
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -48,13 +57,16 @@ public class ManageUsersPanel extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Add buttons to the button panel
         addButton("Add User", buttonPanel, gbc, 0, 0, e -> addUser());
         addButton("Edit User", buttonPanel, gbc, 1, 0, e -> editUser());
         addButton("Delete User", buttonPanel, gbc, 2, 0, e -> deleteUser());
         addButton("Back", buttonPanel, gbc, 3, 0, e -> Main.showMainUI());
     }
-        
 
+    /**
+     * Populate the table with user data.
+     */
     private void populateTable() {
         List<User> users = m_dealership.getUsers();
         model = new UserTableModel(users);
@@ -62,6 +74,16 @@ public class ManageUsersPanel extends JPanel {
         table.setRowSorter(new TableRowSorter<>(model));
     }
 
+    /**
+     * Add a button to the specified panel.
+     * 
+     * @param text the text of the button
+     * @param panel the panel to add the button to
+     * @param gbc the GridBagConstraints for the button
+     * @param x the x position of the button
+     * @param y the y position of the button
+     * @param actionListener the ActionListener for the button
+     */
     private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
         gbc.gridx = x;
         gbc.gridy = y;
@@ -71,7 +93,10 @@ public class ManageUsersPanel extends JPanel {
         panel.add(btn, gbc);
         btn.addActionListener(actionListener);
     }
-        
+
+    /**
+     * Edit the selected user.
+     */
     private void editUser() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
@@ -81,12 +106,12 @@ public class ManageUsersPanel extends JPanel {
             String username = user.getUsername();
             String password = user.getPassword();
             Role role = user.getRole();
-    
+
             // Create text fields for editing
             JTextField txtUsername = new JTextField(username);
             JTextField txtPassword = new JTextField(password);
             JTextField txtRole = new JTextField(role.toString());
-    
+
             // Create a panel to hold the text fields
             JPanel panel = new JPanel();
             panel.setLayout(new GridLayout(4, 2));
@@ -96,17 +121,17 @@ public class ManageUsersPanel extends JPanel {
             panel.add(txtPassword);
             panel.add(new JLabel("Role:"));
             panel.add(txtRole);
-    
+
             // Show the dialog
             int result = JOptionPane.showConfirmDialog(null, panel, "Edit User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-    
+
             if (result == JOptionPane.OK_OPTION) {
                 // Update the user and table
                 user.setUsername(txtUsername.getText());
                 user.setPassword(txtPassword.getText());
-                user.setRole(txtRole.getText());
+                user.setRole(Role.valueOf(txtRole.getText().toUpperCase()));
                 populateTable();
-    
+
                 // Show confirmation dialog with new details
                 JOptionPane.showMessageDialog(null, "User information successfully saved:\n" +
                         "Username: " + txtUsername.getText() + "\n" +
@@ -118,7 +143,10 @@ public class ManageUsersPanel extends JPanel {
         }
     }
 
-    public void deleteUser() {
+    /**
+     * Delete the selected user.
+     */
+    private void deleteUser() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
             // Get the current user
@@ -141,6 +169,9 @@ public class ManageUsersPanel extends JPanel {
         }
     }
 
+    /**
+     * Add a new user to the system.
+     */
     private void addUser() {
         // Create text fields for adding a new user
         JTextField txtUsername = new JTextField();
@@ -162,7 +193,7 @@ public class ManageUsersPanel extends JPanel {
 
         if (result == JOptionPane.OK_OPTION) {
             // Add the new user to the user list
-            User newUser = new User(txtUsername.getText(), txtPassword.getText(), User.roleFromString(txtRole.getText()));
+            User newUser = new User(txtUsername.getText(), txtPassword.getText(), Role.valueOf(txtRole.getText().toUpperCase()));
             m_dealership.getUsers().add(newUser);
             populateTable();
 

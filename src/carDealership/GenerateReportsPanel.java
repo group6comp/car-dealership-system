@@ -9,7 +9,6 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
@@ -26,37 +25,41 @@ import java.time.LocalDate;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * The GenerateReportsPanel class is used to generate and display various reports for the dealership.
+ */
 public class GenerateReportsPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
-    private CardLayout cardLayout;
     private Dealership m_dealership = Main.m_dealership;
     private JPanel report;
 
     /**
      * Create the panel.
      */
-    public GenerateReportsPanel(JPanel parentPanel, CardLayout cardLayout) {
-        this.contentPane = parentPanel;
-        this.cardLayout = cardLayout;
+    public GenerateReportsPanel() {
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setLayout(new BorderLayout());
 
+        // Add title label
         JLabel lblTitle = new JLabel("Manage Inventory");
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
         add(lblTitle, BorderLayout.NORTH);
 
+        // Add scroll pane for the report
         JScrollPane scrollPane = new JScrollPane();
         add(scrollPane, BorderLayout.CENTER);
 
+        // Create the report panel
         report = new JPanel(new GridBagLayout());
         scrollPane.setViewportView(report);
 
+        // Generate the report
         generateReport();
 
+        // Create button panel
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -64,10 +67,14 @@ public class GenerateReportsPanel extends JPanel {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Add buttons to the button panel
         addButton("Save Report as Text File", buttonPanel, gbc, 0, 0, e -> saveReportAsTextFile(generateSalespersonReport()));
         addButton("Back", buttonPanel, gbc, 1, 0, e -> Main.showMainUI());
     }
 
+    /**
+     * Generate the report and add it to the report panel.
+     */
     private void generateReport() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -113,6 +120,11 @@ public class GenerateReportsPanel extends JPanel {
         add(reportScrollPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Create the Sales Over Time graph panel.
+     * 
+     * @return the Sales Over Time graph panel
+     */
     private JPanel createSalesOverTimeGraph() {
         Map<LocalDate, Integer> salesOverTime = new HashMap<>();
         for (Sale sale : m_dealership.getSales()) {
@@ -123,6 +135,11 @@ public class GenerateReportsPanel extends JPanel {
         return new BarChartPanel(salesOverTime, "Sales Over Time", "Date", "Sales");
     }
 
+    /**
+     * Create the Sales by Manufacturer graph panel.
+     * 
+     * @return the Sales by Manufacturer graph panel
+     */
     private JPanel createSalesByManufacturerGraph() {
         Map<String, Integer> salesByManufacturer = new HashMap<>();
         for (Sale sale : m_dealership.getSales()) {
@@ -133,6 +150,11 @@ public class GenerateReportsPanel extends JPanel {
         return new BarChartPanel(salesByManufacturer, "Sales by Manufacturer", "Manufacturer", "Sales");
     }
 
+    /**
+     * Generate the salesperson report.
+     * 
+     * @return the salesperson report as a string
+     */
     private String generateSalespersonReport() {
         List<Sale> sales = m_dealership.getSales();
         Map<String, SalespersonStats> statsMap = new HashMap<>();
@@ -156,6 +178,11 @@ public class GenerateReportsPanel extends JPanel {
         return report.toString();
     }
 
+    /**
+     * Save the report as a text file.
+     * 
+     * @param reportContent the content of the report
+     */
     private void saveReportAsTextFile(String reportContent) {
         try (FileWriter writer = new FileWriter("SalesReport.txt")) {
             writer.write(reportContent);
@@ -165,6 +192,9 @@ public class GenerateReportsPanel extends JPanel {
         }
     }
 
+    /**
+     * Class to hold salesperson statistics.
+     */
     private static class SalespersonStats {
         private int salesCount;
         private double salesAmount;
@@ -186,6 +216,9 @@ public class GenerateReportsPanel extends JPanel {
         }
     }
 
+    /**
+     * Class to create a bar chart panel.
+     */
     private static class BarChartPanel extends JPanel {
         private Map<?, Integer> data;
         private String title;
@@ -247,6 +280,16 @@ public class GenerateReportsPanel extends JPanel {
         }
     }
 
+    /**
+     * Add a button to the specified panel.
+     * 
+     * @param text the text of the button
+     * @param panel the panel to add the button to
+     * @param gbc the GridBagConstraints for the button
+     * @param x the x position of the button
+     * @param y the y position of the button
+     * @param actionListener the ActionListener for the button
+     */
     private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
         gbc.gridx = x;
         gbc.gridy = y;

@@ -10,105 +10,170 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.BorderLayout;
 
+/**
+ * The MainUI class represents the main user interface panel for the dealership system.
+ * It displays different buttons and options based on the user's role.
+ */
 public class MainUI extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private CardLayout cardLayout;
 
+    /**
+     * Constructor for creating the MainUI panel.
+     */
     public MainUI() {
         contentPane = Main.contentPane;
         cardLayout = Main.cardLayout;
 
         setBackground(new Color(230, 230, 230));
         setBorder(new EmptyBorder(5, 5, 5, 5));
-        setLayout(null);
+        setLayout(new BorderLayout());
 
+        // Add title label
         JLabel lblTitle = new JLabel(Main.role.toString() + " Main Interface");
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
-        lblTitle.setBounds(210, 20, 250, 30);
-        add(lblTitle);
+        lblTitle.setHorizontalAlignment(JLabel.CENTER);
+        add(lblTitle, BorderLayout.NORTH);
 
+        // Create button panel
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        add(buttonPanel, BorderLayout.CENTER);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Add buttons based on the user's role
         if (Main.role == Role.ADMIN) {
-            addAdminButtons();
+            addAdminButtons(buttonPanel, gbc);
         } else if (Main.role == Role.MANAGER) {
-            addManagerButtons();
+            addManagerButtons(buttonPanel, gbc);
         } else if (Main.role == Role.SALESPERSON) {
-            addSalespersonButtons();
+            addSalespersonButtons(buttonPanel, gbc);
         } else if (Main.role == Role.CUSTOMER) {
-            addCustomerButtons();
+            addCustomerButtons(buttonPanel, gbc);
         } else if (Main.role == Role.VISITOR) {
-            addGuestButtons();
+            addGuestButtons(buttonPanel, gbc);
         }
     }
 
-    private void addAdminButtons() {
-        addButton("Manage Users", new int[]{225, 80, 200, 30}, ManageUsersPanel.class, "manageUsersPanel");
-        addButton("Manage Inventory", new int[]{225, 130, 200, 30}, InventoryPanel.class, "manageInventoryPanel");
-        addButton("View Sales", new int[]{225, 180, 200, 30}, ViewSalesPanel.class, "viewSalesPanel");
-        addButton("Generate Reports", new int[]{225, 230, 200, 30}, GenerateReportsPanel.class, "generateReportsPanel");
-        addButton("Logout", new int[]{225, 280, 200, 30}, e -> Main.logout());
+    /**
+     * Add buttons for the admin role.
+     */
+    private void addAdminButtons(JPanel buttonPanel, GridBagConstraints gbc) {
+        addButton("Manage Users", buttonPanel, gbc, 0, 0, ManageUsersPanel.class, "manageUsersPanel");
+        addButton("Manage Inventory", buttonPanel, gbc, 0, 1, InventoryPanel.class, "manageInventoryPanel");
+        addButton("View Sales", buttonPanel, gbc, 0, 2, ViewSalesPanel.class, "viewSalesPanel");
+        addButton("Generate Reports", buttonPanel, gbc, 0, 3, GenerateReportsPanel.class, "generateReportsPanel");
+        addButton("Logout", buttonPanel, gbc, 0, 4, e -> Main.logout());
 
+        // Add pending tasks label
         JLabel lblPendingTasks = new JLabel("Pending Tasks: 5 new user requests");
         lblPendingTasks.setFont(new Font("Dubai Medium", Font.PLAIN, 15));
         lblPendingTasks.setForeground(new Color(255, 128, 128));
-        lblPendingTasks.setBounds(200, 330, 250, 30);
-        add(lblPendingTasks);
+        gbc.gridy = 5;
+        buttonPanel.add(lblPendingTasks, gbc);
     }
 
-    private void addManagerButtons() {
-        addButton("Approve Transactions", new int[]{225, 80, 200, 30}, ApproveTransactionsPanel.class, "approveTransactionsPanel");
-        addButton("Manage Inventory", new int[]{225, 130, 200, 30}, InventoryPanel.class, "manageInventoryPanel");
-        addButton("View Sales", new int[]{225, 180, 200, 30}, ViewSalesPanel.class, "viewSalesPanel");
-        addButton("Generate Reports", new int[]{225, 230, 200, 30}, GenerateReportsPanel.class, "generateReportsPanel");
-        addButton("Logout", new int[]{225, 280, 200, 30}, e -> Main.logout());
+    /**
+     * Add buttons for the manager role.
+     */
+    private void addManagerButtons(JPanel buttonPanel, GridBagConstraints gbc) {
+        addButton("Approve Transactions", buttonPanel, gbc, 0, 0, ApproveTransactionsPanel.class, "approveTransactionsPanel");
+        addButton("Manage Inventory", buttonPanel, gbc, 0, 1, InventoryPanel.class, "manageInventoryPanel");
+        addButton("View Sales", buttonPanel, gbc, 0, 2, ViewSalesPanel.class, "viewSalesPanel");
+        addButton("Generate Reports", buttonPanel, gbc, 0, 3, GenerateReportsPanel.class, "generateReportsPanel");
+        addButton("Logout", buttonPanel, gbc, 0, 4, e -> Main.logout());
     }
 
-    private void addSalespersonButtons() {
-        addButton("View Inventory", new int[]{225, 80, 200, 30}, InventoryPanel.class, "viewInventoryPanel");
-        addButton("Resolve Enquiries", new int[]{225, 130, 200, 30}, ManageEnquiriesPanel.class, "manageEnquiriesPanel");
-        addButton("Sales History", new int[]{225, 180, 200, 30}, ViewSalesPanel.class, "salesHistoryPanel");
-        addButton("Logout", new int[]{225, 230, 200, 30}, e -> Main.logout());
+    /**
+     * Add buttons for the salesperson role.
+     */
+    private void addSalespersonButtons(JPanel buttonPanel, GridBagConstraints gbc) {
+        addButton("View Inventory", buttonPanel, gbc, 0, 0, InventoryPanel.class, "viewInventoryPanel");
+        addButton("Resolve Enquiries", buttonPanel, gbc, 0, 1, ManageEnquiriesPanel.class, "manageEnquiriesPanel");
+        addButton("Sales History", buttonPanel, gbc, 0, 2, ViewSalesPanel.class, "salesHistoryPanel");
+        addButton("Logout", buttonPanel, gbc, 0, 3, e -> Main.logout());
     }
 
-    private void addCustomerButtons() {
-        addButton("View Inventory", new int[]{225, 80, 200, 30}, InventoryPanel.class, "viewInventoryPanel");
-        addButton("View Wishlist", new int[]{225, 130, 200, 30}, ViewWishlistPanel.class, "viewWishlistPanel");
-        addButton("Logout", new int[]{225, 180, 200, 30}, e -> Main.logout());
+    /**
+     * Add buttons for the customer role.
+     */
+    private void addCustomerButtons(JPanel buttonPanel, GridBagConstraints gbc) {
+        addButton("View Inventory", buttonPanel, gbc, 0, 0, InventoryPanel.class, "viewInventoryPanel");
+        addButton("View Wishlist", buttonPanel, gbc, 0, 1, ViewWishlistPanel.class, "viewWishlistPanel");
+        addButton("Logout", buttonPanel, gbc, 0, 2, e -> Main.logout());
     }
 
-    private void addGuestButtons() {
-        addButton("View Inventory", new int[]{225, 80, 200, 30}, InventoryPanel.class, "viewInventoryPanel");
-        addButton("Sign Up", new int[]{225, 130, 200, 30}, SignUpPanel.class, "signUpPanel");
-        addButton("Login", new int[]{225, 180, 200, 30}, LoginPanel.class, "loginPanel");
+    /**
+     * Add buttons for the guest role.
+     */
+    private void addGuestButtons(JPanel buttonPanel, GridBagConstraints gbc) {
+        addButton("View Inventory", buttonPanel, gbc, 0, 0, InventoryPanel.class, "viewInventoryPanel");
+        addButton("Sign Up", buttonPanel, gbc, 0, 1, SignUpPanel.class, "signUpPanel");
+        addButton("Login", buttonPanel, gbc, 0, 2, LoginPanel.class, "loginPanel");
     }
 
-
-    private void addButton(String text, int[] bounds, Class<? extends JPanel> panelClass, String panelName) {
+    /**
+     * Add a button to the panel that navigates to another panel.
+     * 
+     * @param text the text of the button
+     * @param panel the panel to add the button to
+     * @param gbc the GridBagConstraints for the button
+     * @param x the x position of the button
+     * @param y the y position of the button
+     * @param panelClass the class of the panel to navigate to
+     * @param panelName the name of the panel to navigate to
+     */
+    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, Class<? extends JPanel> panelClass, String panelName) {
+        gbc.gridx = x;
+        gbc.gridy = y;
         JButton btn = new JButton(text);
         btn.setForeground(Color.WHITE);
         btn.setBackground(new Color(241, 57, 83));
-        btn.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
-        add(btn);
+        panel.add(btn, gbc);
         btn.addActionListener(e -> showPanel(panelClass, panelName));
     }
 
-    private void addButton(String text, int[] bounds, ActionListener actionListener) {
+    /**
+     * Add a button to the panel with a custom action listener.
+     * 
+     * @param text the text of the button
+     * @param panel the panel to add the button to
+     * @param gbc the GridBagConstraints for the button
+     * @param x the x position of the button
+     * @param y the y position of the button
+     * @param actionListener the action listener for the button
+     */
+    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
+        gbc.gridx = x;
+        gbc.gridy = y;
         JButton btn = new JButton(text);
         btn.setForeground(Color.WHITE);
         btn.setBackground(new Color(241, 57, 83));
-        btn.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
-        add(btn);
+        panel.add(btn, gbc);
         btn.addActionListener(actionListener);
     }
 
+    /**
+     * Show the specified panel.
+     * 
+     * @param panelClass the class of the panel to show
+     * @param panelName the name of the panel to show
+     */
     private void showPanel(Class<? extends JPanel> panelClass, String panelName) {
         if (contentPane.getComponentCount() > 0 && contentPane.getComponent(0).getClass().equals(panelClass)) {
             cardLayout.show(contentPane, panelName);
         } else {
             try {
-                JPanel panel = panelClass.getDeclaredConstructor(JPanel.class, CardLayout.class).newInstance(contentPane, cardLayout);
+                JPanel panel = panelClass.getDeclaredConstructor().newInstance();
                 contentPane.add(panel, panelName);
                 cardLayout.show(contentPane, panelName);
             } catch (Exception e) {

@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 public class PopulateSaveData {
     public static void main(String[] args) {
+        
         // Create a new Dealership object
         Dealership dealership = new Dealership("Centre-Ville", "Montreal", 90);
 
@@ -106,12 +107,12 @@ public class PopulateSaveData {
         dealership.sellVehicle(dealership.getVehicleFromId(10), dealership.getUser("salesperson4"), "Jane Smith", "555-5678", LocalDate.of(2024, 2, 10), false);
         dealership.sellVehicle(dealership.getVehicleFromId(14), dealership.getUser("salesperson1"), "Alice Johnson", "555-8765", LocalDate.of(2024, 3, 5), false);
         dealership.sellVehicle(dealership.getVehicleFromId(19), dealership.getUser("salesperson5"), "Bob Brown", "555-4321", LocalDate.of(2024, 4, 20), false);
-        dealership.sellVehicle(dealership.getVehicleFromId(22), dealership.getUser("salesperson1"), "Charlie Davis", "555-6789", LocalDate.of(2024, 5, 15));
+        dealership.sellVehicle(dealership.getVehicleFromId(22), dealership.getUser("salesperson1"), "Charlie Davis", "555-6789", LocalDate.of(2024, 5, 15), true);
         dealership.sellVehicle(dealership.getVehicleFromId(28), dealership.getUser("salesperson4"), "Diana Evans", "555-9876", LocalDate.of(2024, 6, 10), false);
         dealership.sellVehicle(dealership.getVehicleFromId(31), dealership.getUser("salesperson1"), "Ethan Foster", "555-3456", LocalDate.of(2024, 7, 25), false);
         dealership.sellVehicle(dealership.getVehicleFromId(36), dealership.getUser("salesperson4"), "Fiona Green", "555-6543", LocalDate.of(2024, 8, 30), false);
         dealership.sellVehicle(dealership.getVehicleFromId(40), dealership.getUser("salesperson1"), "George Harris", "555-7890", LocalDate.of(2024, 9, 15), false);
-        dealership.sellVehicle(dealership.getVehicleFromId(44), dealership.getUser("salesperson2"), "Hannah Irving", "555-0987", LocalDate.of(2024, 10, 10));
+        dealership.sellVehicle(dealership.getVehicleFromId(44), dealership.getUser("salesperson2"), "Hannah Irving", "555-0987", LocalDate.of(2024, 10, 10), true);
         dealership.sellVehicle(dealership.getVehicleFromId(47), dealership.getUser("salesperson3"), "Ian Jackson", "555-5670", LocalDate.of(2024, 11, 5), false);
         dealership.sellVehicle(dealership.getVehicleFromId(52), dealership.getUser("salesperson2"), "Jackie King", "555-8760", LocalDate.of(2024, 12, 20), false);
         dealership.sellVehicle(dealership.getVehicleFromId(56), dealership.getUser("salesperson1"), "Karen Lewis", "555-4320", LocalDate.of(2024, 1, 30), false);

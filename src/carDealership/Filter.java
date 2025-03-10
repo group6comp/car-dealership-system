@@ -2,21 +2,41 @@ package carDealership;
 
 import java.util.List;
 
+/**
+ * The Filter class is used to filter the vehicle inventory based on various criteria.
+ */
 public class Filter {
-    Boolean carSelected;
-    Boolean motorcycleSelected;
-    String make;
-    String model;
-    String color;
-    String type;
-    int minYear;
-    int maxYear;
-    double minPrice;
-    double maxPrice;
-    int minMileage;
-    int maxMileage;
-    Vehicle.Status status;
+    private Boolean carSelected;
+    private Boolean motorcycleSelected;
+    private String make;
+    private String model;
+    private String color;
+    private String type;
+    private int minYear;
+    private int maxYear;
+    private double minPrice;
+    private double maxPrice;
+    private int minMileage;
+    private int maxMileage;
+    private Vehicle.Status status;
 
+    /**
+     * Constructor for creating a Filter object with specific criteria.
+     * 
+     * @param carSelected whether cars are selected
+     * @param motorcycleSelected whether motorcycles are selected
+     * @param make the make of the vehicle
+     * @param model the model of the vehicle
+     * @param color the color of the vehicle
+     * @param type the type of the vehicle
+     * @param minYear the minimum year of the vehicle
+     * @param maxYear the maximum year of the vehicle
+     * @param minPrice the minimum price of the vehicle
+     * @param maxPrice the maximum price of the vehicle
+     * @param minMileage the minimum mileage of the vehicle
+     * @param maxMileage the maximum mileage of the vehicle
+     * @param status the status of the vehicle (e.g., available, sold)
+     */
     public Filter(Boolean carSelected, Boolean motorcycleSelected, String make, String model, String color, String type, int minYear, int maxYear, double minPrice, double maxPrice, int minMileage, int maxMileage, Vehicle.Status status) {
         this.carSelected = carSelected;
         this.motorcycleSelected = motorcycleSelected;
@@ -33,7 +53,10 @@ public class Filter {
         this.status = status;
     }
 
-    public Filter(){
+    /**
+     * Default constructor for creating a Filter object with default criteria.
+     */
+    public Filter() {
         this.carSelected = true;
         this.motorcycleSelected = true;
         this.make = "";
@@ -49,54 +72,65 @@ public class Filter {
         this.status = null;
     }
 
-    public List<Vehicle> filterInventory(){
+    /**
+     * Filter the inventory based on the criteria set in the Filter object.
+     * 
+     * @return a list of vehicles that match the filter criteria
+     */
+    public List<Vehicle> filterInventory() {
         List<Vehicle> inventory = Main.m_dealership.getVehicles();
         return inventory
-        .stream()
-        .filter(vehicle -> (carSelected && vehicle instanceof Car) || (motorcycleSelected && vehicle instanceof Motorcycle))
-        .filter(vehicle -> make.isEmpty() || vehicle.getMake().equalsIgnoreCase(make))
-        .filter(vehicle -> model.isEmpty() || vehicle.getModel().equalsIgnoreCase(model))
-        .filter(vehicle -> color.isEmpty() || vehicle.getColor().equalsIgnoreCase(color))
-        .filter(vehicle -> type.isEmpty() || vehicle.getType().equalsIgnoreCase(type))
-        .filter(vehicle -> isEmpty(minYear, "min") || vehicle.getYear() >= minYear)
-        .filter(vehicle -> isEmpty(maxYear, "max") || vehicle.getYear() <= maxYear)
-        .filter(vehicle -> isEmpty(minPrice, "min") || vehicle.getPrice() >= minPrice)
-        .filter(vehicle -> isEmpty(maxPrice, "max") || vehicle.getPrice() <= maxPrice)
-        .filter(vehicle -> isEmpty(minMileage, "min") || vehicle.getMileage() >= minMileage)
-        .filter(vehicle -> isEmpty(maxMileage, "max") || vehicle.getMileage() <= maxMileage)
-        .filter(vehicle -> status == null || vehicle.getStatus() == status)
-        .toList();
+                .stream()
+                .filter(vehicle -> (carSelected && vehicle instanceof Car) || (motorcycleSelected && vehicle instanceof Motorcycle))
+                .filter(vehicle -> make.isEmpty() || vehicle.getMake().equalsIgnoreCase(make))
+                .filter(vehicle -> model.isEmpty() || vehicle.getModel().equalsIgnoreCase(model))
+                .filter(vehicle -> color.isEmpty() || vehicle.getColor().equalsIgnoreCase(color))
+                .filter(vehicle -> type.isEmpty() || vehicle.getType().equalsIgnoreCase(type))
+                .filter(vehicle -> isEmpty(minYear, "min") || vehicle.getYear() >= minYear)
+                .filter(vehicle -> isEmpty(maxYear, "max") || vehicle.getYear() <= maxYear)
+                .filter(vehicle -> isEmpty(minPrice, "min") || vehicle.getPrice() >= minPrice)
+                .filter(vehicle -> isEmpty(maxPrice, "max") || vehicle.getPrice() <= maxPrice)
+                .filter(vehicle -> isEmpty(minMileage, "min") || vehicle.getMileage() >= minMileage)
+                .filter(vehicle -> isEmpty(maxMileage, "max") || vehicle.getMileage() <= maxMileage)
+                .filter(vehicle -> status == null || vehicle.getStatus() == status)
+                .toList();
     }
 
-    private boolean isEmpty(int num, String str){
-        if (str=="min"){
+    /**
+     * Check if a number is empty based on the specified type (min or max).
+     * 
+     * @param num the number to check
+     * @param str the type (min or max)
+     * @return true if the number is empty, false otherwise
+     */
+    private boolean isEmpty(int num, String str) {
+        if (str.equals("min")) {
             return num == 0;
-        }
-        else if (str=="max"){
+        } else if (str.equals("max")) {
             return num == Integer.MAX_VALUE;
-        }
-        else{
+        } else {
             return false;
         }
-
     }
 
-    private boolean isEmpty(double num, String str){
-        if (str=="min"){
+    /**
+     * Check if a number is empty based on the specified type (min or max).
+     * 
+     * @param num the number to check
+     * @param str the type (min or max)
+     * @return true if the number is empty, false otherwise
+     */
+    private boolean isEmpty(double num, String str) {
+        if (str.equals("min")) {
             return num == 0;
-        }
-        else if (str=="max"){
+        } else if (str.equals("max")) {
             return num == Double.MAX_VALUE;
-        }
-        else{
+        } else {
             return false;
         }
-
     }
 
-    public void reset(){
-        
-    }
+    // Getters and setters for the filter criteria
 
     public Boolean getCarSelected() {
         return carSelected;
