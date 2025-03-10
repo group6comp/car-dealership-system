@@ -43,14 +43,13 @@ public class Main {
         m_dealership = load();
         if (m_dealership != null) {
             System.out.println("Dealership loaded successfully.");
+            showMainUI();
         } else {
             System.out.println("No dealership found. Creating a new one.");
             contentPane.add(new FirstLaunchPage(), "firstLaunchPage");
             cardLayout.show(contentPane, "firstLaunchPage");
         }
 
-        // Show the main UI
-        showMainUI();
         mainFrame.setVisible(true);
     }
 

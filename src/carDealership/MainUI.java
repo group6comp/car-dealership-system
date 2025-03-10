@@ -73,13 +73,6 @@ public class MainUI extends JPanel {
         addButton("View Sales", buttonPanel, gbc, 0, 2, ViewSalesPanel.class, "viewSalesPanel");
         addButton("Generate Reports", buttonPanel, gbc, 0, 3, GenerateReportsPanel.class, "generateReportsPanel");
         addButton("Logout", buttonPanel, gbc, 0, 4, e -> Main.logout());
-
-        // Add pending tasks label
-        JLabel lblPendingTasks = new JLabel("Pending Tasks: 5 new user requests");
-        lblPendingTasks.setFont(new Font("Dubai Medium", Font.PLAIN, 15));
-        lblPendingTasks.setForeground(new Color(255, 128, 128));
-        gbc.gridy = 5;
-        buttonPanel.add(lblPendingTasks, gbc);
     }
 
     /**
@@ -91,6 +84,14 @@ public class MainUI extends JPanel {
         addButton("View Sales", buttonPanel, gbc, 0, 2, ViewSalesPanel.class, "viewSalesPanel");
         addButton("Generate Reports", buttonPanel, gbc, 0, 3, GenerateReportsPanel.class, "generateReportsPanel");
         addButton("Logout", buttonPanel, gbc, 0, 4, e -> Main.logout());
+        
+        // Add pending tasks label
+        int pendingSales = Main.m_dealership.getPendingSales();
+        JLabel lblPendingTasks = new JLabel("Pending Tasks: " + pendingSales + " pending sales transactions");
+        lblPendingTasks.setFont(new Font("Dubai Medium", Font.PLAIN, 15));
+        lblPendingTasks.setForeground(new Color(255, 128, 128));
+        gbc.gridy = 5;
+        buttonPanel.add(lblPendingTasks, gbc);
     }
 
     /**
@@ -101,6 +102,14 @@ public class MainUI extends JPanel {
         addButton("Resolve Enquiries", buttonPanel, gbc, 0, 1, ManageEnquiriesPanel.class, "manageEnquiriesPanel");
         addButton("Sales History", buttonPanel, gbc, 0, 2, ViewSalesPanel.class, "salesHistoryPanel");
         addButton("Logout", buttonPanel, gbc, 0, 3, e -> Main.logout());
+
+        // Add pending tasks label
+        int pendingEnquiries = Main.m_dealership.getPendingEnquiries();
+        JLabel lblPendingTasks = new JLabel("Pending Tasks: " + pendingEnquiries + " pending enquiries");
+        lblPendingTasks.setFont(new Font("Dubai Medium", Font.PLAIN, 15));
+        lblPendingTasks.setForeground(new Color(255, 128, 128));
+        gbc.gridy = 5;
+        buttonPanel.add(lblPendingTasks, gbc);
     }
 
     /**

@@ -406,6 +406,21 @@ public class Dealership implements Serializable {
         return null;
     }
 
+    /**
+     * Get the number of pending sales.
+     * 
+     * @return the number of pending sales
+     */
+    public int getPendingSales() {
+        int pendingSales = 0;
+        for (Sale sale : sales) {
+            if (sale.isPending()) {
+                pendingSales++;
+            }
+        }
+        return pendingSales;
+    }
+
     // ENQUIRY METHODS
 
     /**
@@ -439,6 +454,21 @@ public class Dealership implements Serializable {
      */
     public List<Enquiry> getEnquiries() {
         return enquiries;
+    }
+
+    /**
+     * Get the number of pending enquiries.
+     * 
+     * @return the number of pending enquiries
+     */
+    public int getPendingEnquiries() {
+        int pendingEnquiries = 0;
+        for (Enquiry enquiry : enquiries) {
+            if (enquiry.getStatus() == Enquiry.Status.pending) {
+                pendingEnquiries++;
+            }
+        }
+        return pendingEnquiries;
     }
 
     // LOAD AND SAVE METHODS
