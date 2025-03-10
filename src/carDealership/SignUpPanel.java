@@ -5,26 +5,27 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginPanel extends JPanel {
+public class SignUpPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private CardLayout cardLayout;
 
-    public LoginPanel(JPanel contentPane, CardLayout cardLayout) {
+    public SignUpPanel(JPanel contentPane, CardLayout cardLayout) {
         this.contentPane = contentPane;
         this.cardLayout = cardLayout;
 
         setBackground(new Color(230, 230, 230));
         setLayout(null);
 
-        JLabel lblHeader = new JLabel("User Login");
+        JLabel lblHeader = new JLabel("Create an Account");
         lblHeader.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
         lblHeader.setBounds(150, 10, 200, 30);
         add(lblHeader);
@@ -48,11 +49,11 @@ public class LoginPanel extends JPanel {
         passwordField.setBounds(150, 100, 200, 30);
         add(passwordField);
 
-        JButton btnLogin = new JButton("Login");
-        btnLogin.setForeground(Color.WHITE);
-        btnLogin.setBackground(new Color(241, 57, 83));
-        btnLogin.setBounds(150, 150, 90, 30);
-        add(btnLogin);
+        JButton btnSignUp = new JButton("Sign Up");
+        btnSignUp.setForeground(Color.WHITE);
+        btnSignUp.setBackground(new Color(241, 57, 83));
+        btnSignUp.setBounds(150, 150, 90, 30);
+        add(btnSignUp);
 
         JButton btnBack = new JButton("Back");
         btnBack.setForeground(Color.WHITE);
@@ -60,21 +61,24 @@ public class LoginPanel extends JPanel {
         btnBack.setBounds(260, 150, 90, 30);
         add(btnBack);
 
-        JLabel lblErrorMessage = new JLabel("Invalid username or password");
+        JLabel lblErrorMessage = new JLabel("Username already taken");
         lblErrorMessage.setForeground(new Color(255, 128, 128));
         lblErrorMessage.setBounds(150, 190, 200, 30);
         add(lblErrorMessage);
         lblErrorMessage.setVisible(false);
 
-        btnLogin.addActionListener(new ActionListener() {
+        btnSignUp.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
 
-                if (validateLogin(username, password) != null) {
-                    System.out.println("Login successful!");
-                    Main.user = Main.m_dealership.getUser(username);
-                    Main.role = Main.user.getRole();
+                if (Main.m_dealership.getUser(username) == null) {
+                    User newUser = new User(username, password, User.Role.CUSTOMER);
+                    Main.m_dealership.addUser(newUser);
+                    JOptionPane.showMessageDialog(contentPane, "Account successfully created! You are now being logged in.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    System.out.println("Sign up successful!");
+                    Main.user = newUser;
+                    Main.role = newUser.getRole();
                     Main.showMainUI();
                 } else {
                     lblErrorMessage.setVisible(true);
@@ -87,13 +91,5 @@ public class LoginPanel extends JPanel {
                 Main.showMainUI();
             }
         });
-    }
-
-    public User validateLogin(String username, String password) {
-        User user = Main.m_dealership.getUser(username);
-        if (user != null && user.getPassword().equals(password)) {
-            return user;
-        }
-        return null;
     }
 }

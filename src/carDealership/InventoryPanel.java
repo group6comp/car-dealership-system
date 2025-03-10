@@ -8,6 +8,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.swing.JComponent;
+import javax.swing.JTextArea;
 
 import javax.swing.table.TableRowSorter;
 import javax.swing.JOptionPane;
@@ -85,7 +87,8 @@ public class InventoryPanel extends JPanel {
             addButton("Back", buttonPanel, gbc, 2, 0, e -> {filter.reset(); Main.showMainUI();});
         } else if (Main.role == Role.CUSTOMER) {
             addButton("Wishlist", buttonPanel, gbc, 1, 0, e -> {wishlistSelectedVehicle();});
-            addButton("Back", buttonPanel, gbc, 2, 0, e -> {filter.reset(); Main.showMainUI();});
+            addButton("Enquire", buttonPanel, gbc, 2, 0, e -> {enquire();});
+            addButton("Back", buttonPanel, gbc, 3, 0, e -> {filter.reset(); Main.showMainUI();});
         } else if (Main.role == Role.VISITOR) {
             addButton("Back", buttonPanel, gbc, 1, 0, e -> {filter.reset(); Main.showMainUI();});
         }
@@ -197,6 +200,52 @@ public class InventoryPanel extends JPanel {
         filter.setMinMileage(mileageMin.isEmpty() ? 0 : Integer.parseInt(mileageMin));
         filter.setMaxMileage(mileageMax.isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(mileageMax));
         populateTable();
+    }
+
+    private void enquire() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            Vehicle vehicle = model.getVehicleAt(table.convertRowIndexToModel(selectedRow));
+            JTextArea messageField = new JTextArea(5, 20); // 5 rows tall
+            JTextField contactField = new JTextField();
+    
+            // Set preferred size for each JTextField
+            int fieldWidth = 20; // Increase the width to make the input boxes larger
+            messageField.setLineWrap(true);
+            messageField.setWrapStyleWord(true);
+            JScrollPane messageScrollPane = new JScrollPane(messageField);
+            contactField.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, contactField.getPreferredSize().height));
+    
+            JPanel panel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(5, 5, 5, 5);
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+    
+            addLabeledField("Message:", messageScrollPane, panel, gbc, 0, 0);
+            addLabeledField("Contact Info:", contactField, panel, gbc, 0, 1);
+    
+            int result = JOptionPane.showConfirmDialog(null, panel, "Enquire about Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    
+            if (result == JOptionPane.OK_OPTION) {
+                String message = messageField.getText();
+                String contactInfo = contactField.getText();
+                User currentUser = Main.getCurrentUser();
+    
+                m_dealership.addEnquiry(vehicle, currentUser, message, contactInfo);
+                JOptionPane.showMessageDialog(null, "Enquiry successfully sent. A salesperson will contact you shortly.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a vehicle to enquire about.");
+        }
+    }
+    
+    private void addLabeledField(String label, JComponent field, JPanel panel, GridBagConstraints gbc, int x, int y) {
+        gbc.gridx = x * 2;
+        gbc.gridy = y;
+        panel.add(new JLabel(label), gbc);
+    
+        gbc.gridx = x * 2 + 1;
+        panel.add(field, gbc);
     }
 
     private void editSelectedVehicle() {

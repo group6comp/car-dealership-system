@@ -14,6 +14,7 @@ public class Dealership implements Serializable {
     private int maxInventory;
     private List<Sale> sales;
     private List<User> userData;
+    private List<Enquiry> enquiries;
     private int nextId = 1; // Add nextId attribute
 
     public Dealership(String name, String location, int maxInventory) {
@@ -22,6 +23,7 @@ public class Dealership implements Serializable {
         inventory = new ArrayList<>(maxInventory);
         sales = new ArrayList<>();
         userData = new ArrayList<>();
+        enquiries = new ArrayList<>();
     }
 
     // DEALERSHIP INFORMATION METHODS
@@ -321,6 +323,21 @@ public class Dealership implements Serializable {
         return cars;
     }
 
+    public void addEnquiry(Vehicle vehicle, User user, String message, String contact) {
+        Enquiry enquiry = new Enquiry(vehicle, user, message, contact);
+        enquiries.add(enquiry);
+        save();
+    }
+
+    public void removeEnquiry(Enquiry enquiry) {
+        enquiries.remove(enquiry);
+        save();
+    }
+
+    public List<Enquiry> getEnquiries() {
+        return enquiries;
+    }
+    
     // LOAD AND SAVE METHODS
     public void save() {
         File saveFile = new File("save.data");
