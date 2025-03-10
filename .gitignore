@@ -1,3 +1,5 @@
 *.class
 *~
-sqlite-jdbc-3.49.1.0.jar
+SalesReport.txt
+save.data
+.project
