@@ -67,8 +67,8 @@ public class MainUI extends JPanel {
 
     private void addSalespersonButtons() {
         addButton("View Inventory", new int[]{225, 80, 200, 30}, InventoryPanel.class, "viewInventoryPanel");
-        addButton("Manage Enquiries", new int[]{225, 130, 200, 30}, ManageEnquiriesPanel.class, "manageEnquiriesPanel");
-        addButton("Sales History", new int[]{225, 200, 200, 30}, ViewSalesPanel.class, "salesHistoryPanel");
+        addButton("Resolve Enquiries", new int[]{225, 130, 200, 30}, ManageEnquiriesPanel.class, "manageEnquiriesPanel");
+        addButton("Sales History", new int[]{225, 180, 200, 30}, ViewSalesPanel.class, "salesHistoryPanel");
         addButton("Logout", new int[]{225, 230, 200, 30}, e -> Main.logout());
     }
 

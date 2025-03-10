@@ -1,15 +1,17 @@
 package carDealership;
 
-import java.io.ObjectInputFilter.Status;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Enquiry {
-    Vehicle vehicle;
-    User user;
-    String message;
-    String contact;
-    LocalDate date;
-    Status status;
+public class Enquiry implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    private Vehicle vehicle;
+    private User user;
+    private String message;
+    private String contact;
+    private LocalDate date;
+    private Status status;
 
     public enum Status {
         pending,

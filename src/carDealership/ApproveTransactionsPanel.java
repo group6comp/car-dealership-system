@@ -81,7 +81,7 @@ public class ApproveTransactionsPanel extends JPanel {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
             Sale sale = model.getSaleAt(table.convertRowIndexToModel(selectedRow));
-            sale.setPending(false);
+            m_dealership.approveSale(sale);
             populateTable();
         } else {
             JOptionPane.showMessageDialog(this, "Please select a transaction to approve.");

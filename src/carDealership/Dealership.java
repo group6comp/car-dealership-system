@@ -124,7 +124,7 @@ public class Dealership implements Serializable {
         if (vehicle instanceof Car) {
             ((Car) vehicle).setType(type);
         } else if (vehicle instanceof Motorcycle) {
-            ((Motorcycle) vehicle).setHandlebarType(type);
+            ((Motorcycle) vehicle).setType(type);
         }
         save();
     }
@@ -138,6 +138,18 @@ public class Dealership implements Serializable {
     public void sellVehicle(Vehicle vehicle, User salesperson, String buyerName, String buyerContact, LocalDate saleDate) {
         vehicle.setStatus(Vehicle.Status.SOLD);
         sales.add(new Sale(vehicle, salesperson, buyerName, buyerContact, saleDate));
+        save();
+    }
+
+    public void sellVehicle(Vehicle vehicle, User salesperson, String buyerName, String buyerContact, LocalDate saleDate, boolean pending) {
+        vehicle.setStatus(Vehicle.Status.SOLD);
+        sales.add(new Sale(vehicle, salesperson, buyerName, buyerContact, saleDate, pending));
+        save();
+    }
+
+    public void approveSale(Sale sale) {
+        sale.getVehicle().setStatus(Vehicle.Status.SOLD);
+        sale.setPending(false);
         save();
     }
 

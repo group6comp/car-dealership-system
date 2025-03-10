@@ -15,6 +15,18 @@ public class Car extends Vehicle {
     }
 
     @Override
+    public void update(String make, String model, String color, String type, int year, double price, int mileage, Status status){
+        this.make = make;
+        this.model = model;
+        this.color = color;
+        this.type = type;
+        this.year = year;
+        this.price = price;
+        this.mileage = mileage;
+        this.status = status;
+    }
+    
+    @Override
     public void displayInfo() {
         System.out.println(this.toString());
     }

@@ -22,6 +22,15 @@ public class Sale implements Serializable {
 		this.pending = true;
 	}
 
+	public Sale(Vehicle vehicle, User salesperson, String buyerName, String buyerContact, LocalDate saleDate, boolean pending) {
+		this.vehicle = vehicle;
+		this.salesperson = salesperson;
+		this.buyerName = buyerName;
+		this.buyerContact = buyerContact;
+		this.saleDate = saleDate;
+		this.pending = pending;
+	}
+
 	public Vehicle getVehicle() {
 		return vehicle;
 	}

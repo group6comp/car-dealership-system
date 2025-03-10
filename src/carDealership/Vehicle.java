@@ -2,6 +2,8 @@ package carDealership;
 
 import java.io.Serializable;
 
+import javax.swing.JOptionPane;
+
 public abstract class Vehicle implements Serializable {
     private static final long serialVersionUID = -8537773978564014927L;
     protected String make, model, color;
@@ -34,10 +36,51 @@ public abstract class Vehicle implements Serializable {
         this(id, make, model, color, year, price, 0, Status.AVAILABLE);
     }
 
+    public abstract void update(String make, String model, String color, String type, int year, double price, int mileage, Status status);
+    
     public abstract void displayInfo();
 
+    public String toStringRestricted() {
+        String classText;
+        String typeText;
+        if (this instanceof Car) {
+            classText = "Car";
+            typeText = "Type: " + ((Car) this).getType();
+        } else {
+            classText = "Motorcycle";
+            typeText = "Handlebar Type: " + ((Motorcycle) this).getType();
+        }
+        return (classText + "\n" +
+                "Make: " + make + "\n" +
+                "Model: " + model + "\n" +
+                "Color: " + color + "\n" +
+                "Year: " + year + "\n" +
+                "Price: " + price + "\n" +
+                typeText + "\n" +
+                "Mileage: " + mileage);
+    }
+
+    @Override
     public String toString() {
-        return "ID: " + id + "\nMake: " + make + "\nModel: " + model + "\nColor: " + color + "\nYear: " + year + "\nMileage: " + mileage + "\nPrice: " + price + "\nStatus: " + status;
+        String classText;
+        String typeText;
+        if (this instanceof Car) {
+            classText = "Car";
+            typeText = "Type: " + ((Car) this).getType();
+        } else {
+            classText = "Motorcycle";
+            typeText = "Handlebar Type: " + ((Motorcycle) this).getType();
+        }
+        return (classText + "\n" +
+                "ID: " + id + "\n" +
+                "Make: " + make + "\n" +
+                "Model: " + model + "\n" +
+                "Color: " + color + "\n" +
+                "Year: " + year + "\n" +
+                "Price: " + price + "\n" +
+                typeText + "\n" +
+                "Mileage: " + mileage + "\n" +
+                "Status: " + status);
     }
 
     // Getters and setters
@@ -58,4 +101,5 @@ public abstract class Vehicle implements Serializable {
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
     public abstract String getType();
+    public abstract void setType(String type);
 }
