@@ -16,9 +16,7 @@ public class Filter {
     private int maxYear;
     private double minPrice;
     private double maxPrice;
-    private int minMileage;
-    private int maxMileage;
-    private Vehicle.Status status;
+    private boolean inStock;
 
     /**
      * Constructor for creating a Filter object with specific criteria.
@@ -33,11 +31,9 @@ public class Filter {
      * @param maxYear the maximum year of the vehicle
      * @param minPrice the minimum price of the vehicle
      * @param maxPrice the maximum price of the vehicle
-     * @param minMileage the minimum mileage of the vehicle
-     * @param maxMileage the maximum mileage of the vehicle
-     * @param status the status of the vehicle (e.g., available, sold)
+     * @param inStock show only vehicles in stock
      */
-    public Filter(Boolean carSelected, Boolean motorcycleSelected, String make, String model, String color, String type, int minYear, int maxYear, double minPrice, double maxPrice, int minMileage, int maxMileage, Vehicle.Status status) {
+    public Filter(Boolean carSelected, Boolean motorcycleSelected, String make, String model, String color, String type, int minYear, int maxYear, double minPrice, double maxPrice, boolean inStock) {
         this.carSelected = carSelected;
         this.motorcycleSelected = motorcycleSelected;
         this.make = make;
@@ -48,9 +44,7 @@ public class Filter {
         this.maxYear = maxYear;
         this.minPrice = minPrice;
         this.maxPrice = maxPrice;
-        this.minMileage = minMileage;
-        this.maxMileage = maxMileage;
-        this.status = status;
+        this.inStock = inStock;
     }
 
     /**
@@ -67,9 +61,7 @@ public class Filter {
         this.maxYear = Integer.MAX_VALUE;
         this.minPrice = 0;
         this.maxPrice = Double.MAX_VALUE;
-        this.minMileage = 0;
-        this.maxMileage = Integer.MAX_VALUE;
-        this.status = null;
+        this.inStock = false;
     }
 
     /**
@@ -90,9 +82,7 @@ public class Filter {
                 .filter(vehicle -> isEmpty(maxYear, "max") || vehicle.getYear() <= maxYear)
                 .filter(vehicle -> isEmpty(minPrice, "min") || vehicle.getPrice() >= minPrice)
                 .filter(vehicle -> isEmpty(maxPrice, "max") || vehicle.getPrice() <= maxPrice)
-                .filter(vehicle -> isEmpty(minMileage, "min") || vehicle.getMileage() >= minMileage)
-                .filter(vehicle -> isEmpty(maxMileage, "max") || vehicle.getMileage() <= maxMileage)
-                .filter(vehicle -> status == null || vehicle.getStatus() == status)
+                .filter(vehicle -> !inStock || vehicle.isInStock())
                 .toList();
     }
 
@@ -212,27 +202,11 @@ public class Filter {
         this.maxPrice = maxPrice;
     }
 
-    public int getMinMileage() {
-        return minMileage;
+    public boolean getInStock() {
+        return inStock;
     }
 
-    public void setMinMileage(int minMileage) {
-        this.minMileage = minMileage;
-    }
-
-    public int getMaxMileage() {
-        return maxMileage;
-    }
-
-    public void setMaxMileage(int maxMileage) {
-        this.maxMileage = maxMileage;
-    }
-
-    public Vehicle.Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Vehicle.Status status) {
-        this.status = status;
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
     }
 }

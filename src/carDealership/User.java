@@ -80,14 +80,12 @@ public class User implements Serializable {
     }
 
     /**
-     * Get the user's wishlist, filtering out vehicles that are not available or in maintenance.
+     * Get the user's wishlist.
      * 
      * @return the filtered wishlist
      */
     public List<Vehicle> getWishlist() {
-        return wishlist.stream()
-                .filter(vehicle -> "available".equalsIgnoreCase(vehicle.getStatus().toString()) || "maintenance".equalsIgnoreCase(vehicle.getStatus().toString()))
-                .collect(Collectors.toList());
+        return wishlist;
     }
 
     /**

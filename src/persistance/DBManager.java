@@ -95,8 +95,6 @@ public class DBManager {
 				+ "color TEXT, "
 				+ "year INTEGER, "
 				+ "price REAL, "
-				+ "mileage INTEGER, "
-				+ "status TEXT, "
 				+ "type TEXT, "
 				+ "handlebarType TEXT);";
 	

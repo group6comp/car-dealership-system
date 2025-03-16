@@ -80,20 +80,18 @@ public class ViewWishlistPanel extends JPanel {
      */
     private void populateTable() {
         List<Vehicle> wishlist = currentUser.getWishlist();
-        String[] columnNames = {"ID", "Make", "Model", "Color", "Year", "Price", "Type", "Mileage", "Status"};
+        String[] columnNames = {"Make", "Model", "Color", "Year", "Price", "Type", "Stock"};
         model = new DefaultTableModel(columnNames, 0);
 
         for (Vehicle vehicle : wishlist) {
             Object[] row = {
-                vehicle.getId(),
                 vehicle.getMake(),
                 vehicle.getModel(),
                 vehicle.getColor(),
                 vehicle.getYear(),
                 vehicle.getPrice(),
                 vehicle.getType(),
-                vehicle.getMileage(),
-                vehicle.getStatus()
+                vehicle.getStock(),
             };
             model.addRow(row);
         }

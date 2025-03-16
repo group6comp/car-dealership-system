@@ -17,17 +17,16 @@ public class Motorcycle extends Vehicle {
      * @param color the color of the motorcycle
      * @param year the year of the motorcycle
      * @param price the price of the motorcycle
-     * @param mileage the mileage of the motorcycle
-     * @param status the status of the motorcycle
+     * @param stock the stock of the motorcycle
      * @param handlebarType the type of handlebar of the motorcycle
      */
-    public Motorcycle(int id, String make, String model, String color, int year, double price, int mileage, Status status, String handlebarType) {
-        super(id, make, model, color, year, price, mileage, status);
+    public Motorcycle(int id, String make, String model, String color, int year, double price, int stock, String handlebarType) {
+        super(id, make, model, color, year, price, stock);
         this.handlebarType = handlebarType;
     }
 
     /**
-     * Constructor for creating a Motorcycle object without mileage and status.
+     * Constructor for creating a Motorcycle object without stock.
      * 
      * @param id the ID of the motorcycle
      * @param make the make of the motorcycle
@@ -51,19 +50,17 @@ public class Motorcycle extends Vehicle {
      * @param type the type of handlebar of the motorcycle
      * @param year the year of the motorcycle
      * @param price the price of the motorcycle
-     * @param mileage the mileage of the motorcycle
-     * @param status the status of the motorcycle
+     * @param stock the stock of the motorcycle
      */
     @Override
-    public void update(String make, String model, String color, String type, int year, double price, int mileage, Status status) {
+    public void update(String make, String model, String color, String type, int year, double price, int stock) {
         this.make = make;
         this.model = model;
         this.color = color;
         this.handlebarType = type;
         this.year = year;
         this.price = price;
-        this.mileage = mileage;
-        this.status = status;
+        this.stock = stock;
     }
 
     /**

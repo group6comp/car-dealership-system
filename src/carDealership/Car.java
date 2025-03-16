@@ -17,17 +17,16 @@ public class Car extends Vehicle {
      * @param color the color of the car
      * @param year the year the car was manufactured
      * @param price the price of the car
-     * @param mileage the mileage of the car
-     * @param status the status of the car (e.g., available, sold)
+     * @param stock
      * @param type the type of the car (e.g., sedan, SUV)
      */
-    public Car(int id, String make, String model, String color, int year, double price, int mileage, Status status, String type) {
-        super(id, make, model, color, year, price, mileage, status);
+    public Car(int id, String make, String model, String color, int year, double price, int stock, String type) {
+        super(id, make, model, color, year, price, stock);
         this.type = type;
     }
 
     /**
-     * Constructor for creating a Car object without mileage and status.
+     * Constructor for creating a Car object without stock.
      * 
      * @param id the unique identifier for the car
      * @param make the make of the car
@@ -51,19 +50,17 @@ public class Car extends Vehicle {
      * @param type the new type of the car
      * @param year the new year of the car
      * @param price the new price of the car
-     * @param mileage the new mileage of the car
-     * @param status the new status of the car
+     * @param stock the new stock of the car
      */
     @Override
-    public void update(String make, String model, String color, String type, int year, double price, int mileage, Status status) {
+    public void update(String make, String model, String color, String type, int year, double price, int stock) {
         this.make = make;
         this.model = model;
         this.color = color;
         this.type = type;
         this.year = year;
         this.price = price;
-        this.mileage = mileage;
-        this.status = status;
+        this.stock = stock;
     }
 
     /**

@@ -9,23 +9,8 @@ import java.io.Serializable;
 public abstract class Vehicle implements Serializable {
     private static final long serialVersionUID = -8537773978564014927L;
     protected String make, model, color;
-    protected int year, mileage, id;
+    protected int year, stock, id;
     protected double price;
-    protected Status status;
-
-    /**
-     * The Status enum represents the different statuses a vehicle can have.
-     */
-    public enum Status {
-        AVAILABLE,
-        SOLD,
-        MAINTENANCE;
-
-        @Override
-        public String toString() {
-            return name().charAt(0) + name().substring(1).toLowerCase();
-        }
-    }
 
     /**
      * Constructor for creating a Vehicle object with all attributes.
@@ -36,22 +21,19 @@ public abstract class Vehicle implements Serializable {
      * @param color the color of the vehicle
      * @param year the year of the vehicle
      * @param price the price of the vehicle
-     * @param mileage the mileage of the vehicle
-     * @param status the status of the vehicle
      */
-    public Vehicle(int id, String make, String model, String color, int year, double price, int mileage, Status status) {
+    public Vehicle(int id, String make, String model, String color, int year, double price, int stock) {
         this.id = id;
         this.make = make;
         this.model = model;
         this.color = color;
         this.year = year;
         this.price = price;
-        this.mileage = mileage;
-        this.status = status;
+        this.stock = stock;
     }
 
     /**
-     * Constructor for creating a Vehicle object without mileage and status.
+     * Constructor for creating a Vehicle object without stock.
      * 
      * @param id the ID of the vehicle
      * @param make the make of the vehicle
@@ -61,7 +43,7 @@ public abstract class Vehicle implements Serializable {
      * @param price the price of the vehicle
      */
     public Vehicle(int id, String make, String model, String color, int year, double price) {
-        this(id, make, model, color, year, price, 0, Status.AVAILABLE);
+        this(id, make, model, color, year, price, 0);
     }
 
     /**
@@ -73,10 +55,8 @@ public abstract class Vehicle implements Serializable {
      * @param type the type of the vehicle
      * @param year the year of the vehicle
      * @param price the price of the vehicle
-     * @param mileage the mileage of the vehicle
-     * @param status the status of the vehicle
      */
-    public abstract void update(String make, String model, String color, String type, int year, double price, int mileage, Status status);
+    public abstract void update(String make, String model, String color, String type, int year, double price, int stock);
 
     /**
      * Abstract method to display the vehicle's information.
@@ -105,7 +85,7 @@ public abstract class Vehicle implements Serializable {
                 "Year: " + year + "\n" +
                 "Price: " + price + "\n" +
                 typeText + "\n" +
-                "Mileage: " + mileage);
+                "Stock: " + stock);
     }
 
     /**
@@ -132,8 +112,7 @@ public abstract class Vehicle implements Serializable {
                 "Year: " + year + "\n" +
                 "Price: " + price + "\n" +
                 typeText + "\n" +
-                "Mileage: " + mileage + "\n" +
-                "Status: " + status);
+                "Stock: " + stock);
     }
 
     // Getters and setters for Vehicle attributes
@@ -189,23 +168,19 @@ public abstract class Vehicle implements Serializable {
         this.id = id;
     }
 
-    public int getMileage() {
-        return mileage;
+    public int getStock() {
+        return stock;
     }
 
-    public void setMileage(int mileage) {
-        if (mileage < 0) {
-            mileage = 0;
+    public void setStock(int stock) {
+        if (stock < 0) {
+            stock = 0;
         }
-        this.mileage = mileage;
+        this.stock = stock;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+    public boolean isInStock() {
+        return stock > 0;
     }
 
     // Abstract methods for type-specific attributes
