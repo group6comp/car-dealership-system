@@ -1,111 +1,111 @@
 package carDealership;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 
-/**
- * The LoginPanel class represents the login panel for the dealership system.
- * It allows users to enter their username and password to log in.
- */
 public class LoginPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Constructor for creating the LoginPanel.
-     */
     public LoginPanel() {
-
         setBackground(new Color(230, 230, 230));
-        setLayout(null);
+        setLayout(new GridBagLayout()); // Use GridBagLayout for centering
 
-        // Add header label
+        // Form panel
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(new Color(230, 230, 230));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(15, 10, 15, 10); // Increased spacing
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        // Header label (larger font)
         JLabel lblHeader = new JLabel("User Login");
-        lblHeader.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
-        lblHeader.setBounds(150, 10, 200, 30);
-        add(lblHeader);
+        lblHeader.setFont(new Font("Dubai Medium", Font.BOLD, 22)); // Bigger and bold
+        formPanel.add(lblHeader, gbc);
 
-        // Add username label and text field
+        // Reset grid width for form fields
+        gbc.gridwidth = 1;
+        gbc.gridy++;
+
+        // Username label
+        gbc.anchor = GridBagConstraints.LINE_END;
         JLabel lblUsername = new JLabel("Username");
-        lblUsername.setFont(new Font("Dubai Medium", Font.PLAIN, 15));
-        lblUsername.setBounds(50, 50, 100, 30);
-        add(lblUsername);
+        lblUsername.setFont(new Font("Dubai Medium", Font.PLAIN, 16)); // Bigger font
+        formPanel.add(lblUsername, gbc);
 
-        JTextField usernameField = new JTextField();
-        usernameField.setBounds(150, 50, 200, 30);
-        add(usernameField);
-        usernameField.setColumns(10);
+        // Username text field
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        JTextField usernameField = new JTextField(15);
+        usernameField.setFont(new Font("Dubai Medium", Font.PLAIN, 16)); // Bigger text
+        usernameField.setPreferredSize(new Dimension(220, 30)); // Increased height
+        formPanel.add(usernameField, gbc);
 
-        // Add password label and password field
+        // Password label
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.anchor = GridBagConstraints.LINE_END;
         JLabel lblPassword = new JLabel("Password");
-        lblPassword.setFont(new Font("Dubai Medium", Font.PLAIN, 15));
-        lblPassword.setBounds(50, 100, 100, 30);
-        add(lblPassword);
+        lblPassword.setFont(new Font("Dubai Medium", Font.PLAIN, 16)); // Bigger font
+        formPanel.add(lblPassword, gbc);
 
-        JPasswordField passwordField = new JPasswordField();
-        passwordField.setBounds(150, 100, 200, 30);
-        add(passwordField);
+        // Password field
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        JPasswordField passwordField = new JPasswordField(15);
+        passwordField.setFont(new Font("Dubai Medium", Font.PLAIN, 16)); // Bigger text
+        passwordField.setPreferredSize(new Dimension(220, 30)); // Increased height
+        formPanel.add(passwordField, gbc);
 
-        // Add login button
+        // Error message label
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        JLabel lblErrorMessage = new JLabel("Invalid username or password");
+        lblErrorMessage.setFont(new Font("Dubai Medium", Font.PLAIN, 14)); // Bigger error text
+        lblErrorMessage.setForeground(new Color(255, 80, 80)); // Slightly darker red
+        lblErrorMessage.setVisible(false);
+        formPanel.add(lblErrorMessage, gbc);
+
+        // Buttons panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 5)); // More spacing
+        buttonPanel.setBackground(new Color(230, 230, 230));
+
         JButton btnLogin = new JButton("Login");
+        btnLogin.setFont(new Font("Dubai Medium", Font.BOLD, 16)); // Bigger button text
         btnLogin.setForeground(Color.WHITE);
         btnLogin.setBackground(new Color(241, 57, 83));
-        btnLogin.setBounds(150, 150, 90, 30);
-        add(btnLogin);
+        btnLogin.setPreferredSize(new Dimension(130, 35)); // Bigger button
 
-        // Add back button
-        JButton btnBack = new JButton("Back");
-        btnBack.setForeground(Color.WHITE);
-        btnBack.setBackground(new Color(241, 57, 83));
-        btnBack.setBounds(260, 150, 90, 30);
-        add(btnBack);
+        buttonPanel.add(btnLogin);
 
-        // Add error message label
-        JLabel lblErrorMessage = new JLabel("Invalid username or password");
-        lblErrorMessage.setForeground(new Color(255, 128, 128));
-        lblErrorMessage.setBounds(150, 190, 200, 30);
-        add(lblErrorMessage);
-        lblErrorMessage.setVisible(false);
+        // Add button panel to form
+        gbc.gridy++;
+        formPanel.add(buttonPanel, gbc);
 
-        // Add action listener to the login button
-        btnLogin.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String username = usernameField.getText();
-                String password = new String(passwordField.getPassword());
+        // Add form panel to main panel
+        add(formPanel);
 
-                if (validateLogin(username, password) != null) {
-                    System.out.println("Login successful!");
-                    Main.user = Main.m_dealership.getUser(username);
-                    Main.role = Main.user.getRole();
-                    Main.showMainUI();
-                } else {
-                    lblErrorMessage.setVisible(true);
-                }
-            }
-        });
+        // Action Listeners
+        btnLogin.addActionListener(e -> {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
 
-        // Add action listener to the back button
-        btnBack.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            if (validateLogin(username, password) != null) {
+                Main.user = Main.m_dealership.getUser(username);
+                Main.role = Main.user.getRole();
                 Main.showMainUI();
+            } else {
+                lblErrorMessage.setVisible(true);
             }
         });
     }
 
-    /**
-     * Validate the login credentials.
-     * 
-     * @param username the username entered by the user
-     * @param password the password entered by the user
-     * @return the User object if the credentials are valid, null otherwise
-     */
     public User validateLogin(String username, String password) {
         User user = Main.m_dealership.getUser(username);
         if (user != null && user.getPassword().equals(password)) {

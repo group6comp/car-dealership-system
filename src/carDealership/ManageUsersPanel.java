@@ -28,7 +28,7 @@ public class ManageUsersPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Add title label
-        JLabel lblTitle = new JLabel("Manage Users");
+        JLabel lblTitle = new JLabel("Users");
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
         add(lblTitle, BorderLayout.NORTH);
@@ -61,7 +61,6 @@ public class ManageUsersPanel extends JPanel {
         addButton("Add User", buttonPanel, gbc, 0, 0, e -> addUser());
         addButton("Edit User", buttonPanel, gbc, 1, 0, e -> editUser());
         addButton("Delete User", buttonPanel, gbc, 2, 0, e -> deleteUser());
-        addButton("Back", buttonPanel, gbc, 3, 0, e -> Main.showMainUI());
     }
 
     /**
@@ -77,14 +76,15 @@ public class ManageUsersPanel extends JPanel {
     /**
      * Add a button to the specified panel.
      * 
-     * @param text the text of the button
-     * @param panel the panel to add the button to
-     * @param gbc the GridBagConstraints for the button
-     * @param x the x position of the button
-     * @param y the y position of the button
+     * @param text           the text of the button
+     * @param panel          the panel to add the button to
+     * @param gbc            the GridBagConstraints for the button
+     * @param x              the x position of the button
+     * @param y              the y position of the button
      * @param actionListener the ActionListener for the button
      */
-    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
+    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y,
+            ActionListener actionListener) {
         gbc.gridx = x;
         gbc.gridy = y;
         JButton btn = new JButton(text);
@@ -123,7 +123,8 @@ public class ManageUsersPanel extends JPanel {
             panel.add(txtRole);
 
             // Show the dialog
-            int result = JOptionPane.showConfirmDialog(null, panel, "Edit User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(null, panel, "Edit User", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
                 // Update the user and table
@@ -154,7 +155,8 @@ public class ManageUsersPanel extends JPanel {
 
             // Show confirmation dialog
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the following user?\n" +
-                    "Username: " + user.getUsername(), "Delete User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                    "Username: " + user.getUsername(), "Delete User", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
                 // Remove the user from the user list
@@ -189,11 +191,13 @@ public class ManageUsersPanel extends JPanel {
         panel.add(txtRole);
 
         // Show the dialog
-        int result = JOptionPane.showConfirmDialog(null, panel, "Add User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Add User", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             // Add the new user to the user list
-            User newUser = new User(txtUsername.getText(), txtPassword.getText(), Role.valueOf(txtRole.getText().toUpperCase()));
+            User newUser = new User(txtUsername.getText(), txtPassword.getText(),
+                    Role.valueOf(txtRole.getText().toUpperCase()));
             m_dealership.getUsers().add(newUser);
             populateTable();
 

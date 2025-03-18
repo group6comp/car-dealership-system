@@ -8,8 +8,10 @@ import carDealership.User.Role;
 import java.awt.CardLayout;
 
 /**
- * The Main class serves as the entry point for the dealership system application.
- * It initializes the main frame, loads the dealership data, and manages the UI panels.
+ * The Main class serves as the entry point for the dealership system
+ * application.
+ * It initializes the main frame, loads the dealership data, and manages the UI
+ * panels.
  */
 public class Main {
     public static Scanner input = new Scanner(System.in);
@@ -24,8 +26,9 @@ public class Main {
      * The main method initializes the application.
      * 
      * @param args command-line arguments
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if the class of a serialized object cannot be found
+     * @throws IOException            if an I/O error occurs
+     * @throws ClassNotFoundException if the class of a serialized object cannot be
+     *                                found
      */
     public static void main(String args[]) throws IOException, ClassNotFoundException {
         // Initialize the main frame
@@ -81,7 +84,7 @@ public class Main {
     /**
      * Create a new dealership with the specified name, location, and capacity.
      * 
-     * @param name the name of the dealership
+     * @param name     the name of the dealership
      * @param location the location of the dealership
      * @param capacity the inventory capacity of the dealership
      */
@@ -111,8 +114,9 @@ public class Main {
      * Load the dealership data from a file.
      * 
      * @return the loaded Dealership object, or null if no data is found
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if the class of a serialized object cannot be found
+     * @throws IOException            if an I/O error occurs
+     * @throws ClassNotFoundException if the class of a serialized object cannot be
+     *                                found
      */
     public static Dealership load() throws IOException, ClassNotFoundException {
         File saveFile = new File("save.data");
@@ -121,7 +125,7 @@ public class Main {
         }
 
         try (FileInputStream inFileStream = new FileInputStream(saveFile);
-             ObjectInputStream inObjStream = new ObjectInputStream(inFileStream)) {
+                ObjectInputStream inObjStream = new ObjectInputStream(inFileStream)) {
             return (Dealership) inObjStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

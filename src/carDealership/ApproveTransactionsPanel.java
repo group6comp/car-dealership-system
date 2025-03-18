@@ -68,7 +68,6 @@ public class ApproveTransactionsPanel extends JPanel {
         // Add the buttons to the button panel
         addButton("Approve", buttonPanel, gbc, 0, 0, e -> approveSelectedTransaction());
         addButton("Reject", buttonPanel, gbc, 1, 0, e -> rejectSelectedTransaction());
-        addButton("Back", buttonPanel, gbc, 2, 0, e -> Main.showMainUI());
     }
 
     /**
@@ -121,14 +120,16 @@ public class ApproveTransactionsPanel extends JPanel {
 
     /**
      * Add a button to the panel.
-     * @param text the text of the button
-     * @param panel the panel to add the button to
-     * @param gbc the grid bag constraints
-     * @param x the x position in the grid
-     * @param y the y position in the grid
+     * 
+     * @param text           the text of the button
+     * @param panel          the panel to add the button to
+     * @param gbc            the grid bag constraints
+     * @param x              the x position in the grid
+     * @param y              the y position in the grid
      * @param actionListener the action listener for the button
      */
-    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
+    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y,
+            ActionListener actionListener) {
         gbc.gridx = x;
         gbc.gridy = y;
         JButton btn = new JButton(text);

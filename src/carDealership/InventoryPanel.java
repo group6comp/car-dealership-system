@@ -20,8 +20,10 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 /**
- * The InventoryPanel class represents the panel for managing the dealership's inventory.
- * It allows users to view, filter, add, edit, delete, sell, and enquire about vehicles.
+ * The InventoryPanel class represents the panel for managing the dealership's
+ * inventory.
+ * It allows users to view, filter, add, edit, delete, sell, and enquire about
+ * vehicles.
  */
 public class InventoryPanel extends JPanel {
 
@@ -37,12 +39,6 @@ public class InventoryPanel extends JPanel {
 
         setBorder(new EmptyBorder(5, 5, 5, 5));
         setLayout(new BorderLayout());
-
-        // Add title label
-        JLabel lblTitle = new JLabel("Manage Inventory");
-        lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
-        lblTitle.setHorizontalAlignment(JLabel.CENTER);
-        add(lblTitle, BorderLayout.NORTH);
 
         // Add scroll pane for the table
         JScrollPane scrollPane = new JScrollPane();
@@ -63,30 +59,26 @@ public class InventoryPanel extends JPanel {
             addButton("Add", buttonPanel, new Color(0, 180, 0), gbc, 1, 0, e -> addVehicle());
             addButton("Edit", buttonPanel, new Color(0, 180, 0), gbc, 2, 0, e -> editSelectedVehicle());
             addButton("Delete", buttonPanel, new Color(255, 80, 80), gbc, 3, 0, e -> deleteSelectedVehicle());
-            addButton("Back", buttonPanel, Color.LIGHT_GRAY, gbc, 4, 0, e -> Main.showMainUI());
         } else if (Main.role == Role.SALESPERSON) {
             addButton("Sell", buttonPanel, new Color(0, 204, 0), gbc, 1, 0, e -> sellSelectedVehicle());
-            addButton("Back", buttonPanel, Color.LIGHT_GRAY, gbc, 2, 0, e -> Main.showMainUI());
         } else if (Main.role == Role.CUSTOMER) {
             addButton("Wishlist", buttonPanel, new Color(0, 204, 0), gbc, 1, 0, e -> wishlistSelectedVehicle());
             addButton("Enquire", buttonPanel, new Color(51, 153, 255), gbc, 2, 0, e -> enquire());
-            addButton("Back", buttonPanel, Color.LIGHT_GRAY, gbc, 3, 0, e -> Main.showMainUI());
-        } else if (Main.role == Role.ADMIN || Main.role == Role.VISITOR) {
-            addButton("Back", buttonPanel, Color.LIGHT_GRAY, gbc, 1, 0, e -> Main.showMainUI());
         }
     }
 
     /**
      * Add a button to the specified panel.
      * 
-     * @param text the text of the button
-     * @param panel the panel to add the button to
-     * @param gbc the GridBagConstraints for the button
-     * @param x the x position of the button
-     * @param y the y position of the button
+     * @param text           the text of the button
+     * @param panel          the panel to add the button to
+     * @param gbc            the GridBagConstraints for the button
+     * @param x              the x position of the button
+     * @param y              the y position of the button
      * @param actionListener the ActionListener for the button
      */
-    private void addButton(String text, JPanel panel, Color color, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
+    private void addButton(String text, JPanel panel, Color color, GridBagConstraints gbc, int x, int y,
+            ActionListener actionListener) {
         gbc.gridx = x;
         gbc.gridy = y;
         JButton btn = new JButton(text);
@@ -107,9 +99,11 @@ public class InventoryPanel extends JPanel {
         JTextField colorFilter = new JTextField(filter.getColor());
         JTextField typeFilter = new JTextField(filter.getType());
         JTextField yearMin = new JTextField(filter.getMinYear() == 0 ? "" : String.valueOf(filter.getMinYear()));
-        JTextField yearMax = new JTextField(filter.getMaxYear() == Integer.MAX_VALUE ? "" : String.valueOf(filter.getMaxYear()));
+        JTextField yearMax = new JTextField(
+                filter.getMaxYear() == Integer.MAX_VALUE ? "" : String.valueOf(filter.getMaxYear()));
         JTextField priceMin = new JTextField(filter.getMinPrice() == 0 ? "" : String.valueOf(filter.getMinPrice()));
-        JTextField priceMax = new JTextField(filter.getMaxPrice() == Double.MAX_VALUE ? "" : String.valueOf(filter.getMaxPrice()));
+        JTextField priceMax = new JTextField(
+                filter.getMaxPrice() == Double.MAX_VALUE ? "" : String.valueOf(filter.getMaxPrice()));
         JCheckBox inStock = new JCheckBox("Only show vehicles in stock", filter.getInStock());
 
         JPanel panel = new JPanel(new GridBagLayout());
@@ -127,30 +121,33 @@ public class InventoryPanel extends JPanel {
         addLabeledField(" - ", priceMax, panel, gbc, 1, 4);
         addLabeledField("", inStock, panel, gbc, 0, 5);
 
-        int result = JOptionPane.showConfirmDialog(null, panel, "Filter Inventory", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Filter Inventory", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            applyFilters(carFilter.isSelected(), motorcycleFilter.isSelected(), makeFilter.getText(), modelFilter.getText(), colorFilter.getText(), typeFilter.getText(), yearMin.getText(), yearMax.getText(), priceMin.getText(), priceMax.getText(), inStock.isSelected());
+            applyFilters(carFilter.isSelected(), motorcycleFilter.isSelected(), makeFilter.getText(),
+                    modelFilter.getText(), colorFilter.getText(), typeFilter.getText(), yearMin.getText(),
+                    yearMax.getText(), priceMin.getText(), priceMax.getText(), inStock.isSelected());
         }
     }
-
 
     /**
      * Apply the filters to the inventory.
      * 
-     * @param carSelected whether cars are selected
+     * @param carSelected        whether cars are selected
      * @param motorcycleSelected whether motorcycles are selected
-     * @param make the make of the vehicle
-     * @param model the model of the vehicle
-     * @param color the color of the vehicle
-     * @param type the type of the vehicle
-     * @param yearMin the minimum year of the vehicle
-     * @param yearMax the maximum year of the vehicle
-     * @param priceMin the minimum price of the vehicle
-     * @param priceMax the maximum price of the vehicle
-     * @param inStock show only vehicles in stock
+     * @param make               the make of the vehicle
+     * @param model              the model of the vehicle
+     * @param color              the color of the vehicle
+     * @param type               the type of the vehicle
+     * @param yearMin            the minimum year of the vehicle
+     * @param yearMax            the maximum year of the vehicle
+     * @param priceMin           the minimum price of the vehicle
+     * @param priceMax           the maximum price of the vehicle
+     * @param inStock            show only vehicles in stock
      */
-    private void applyFilters(boolean carSelected, boolean motorcycleSelected, String make, String model, String color, String type, String yearMin, String yearMax, String priceMin, String priceMax, boolean inStock) {
+    private void applyFilters(boolean carSelected, boolean motorcycleSelected, String make, String model, String color,
+            String type, String yearMin, String yearMax, String priceMin, String priceMax, boolean inStock) {
         filter.setCarSelected(carSelected);
         filter.setMotorcycleSelected(motorcycleSelected);
         filter.setMake(make);
@@ -188,7 +185,8 @@ public class InventoryPanel extends JPanel {
         addLabeledField("Message:", messageScrollPane, panel, gbc, 0, 0);
         addLabeledField("Contact Info:", contactField, panel, gbc, 0, 1);
 
-        int result = JOptionPane.showConfirmDialog(null, panel, "Enquire about Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Enquire about Vehicle", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             String message = messageField.getText();
@@ -211,7 +209,8 @@ public class InventoryPanel extends JPanel {
         Vehicle vehicle = table.get();
         JPanel panel = createVehicleEditPanel(vehicle, vehicle instanceof Car);
 
-        int result = JOptionPane.showConfirmDialog(null, panel, "Edit Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Edit Vehicle", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             updateVehicleFromPanel(vehicle, panel);
             table.populate(filter);
@@ -230,7 +229,8 @@ public class InventoryPanel extends JPanel {
         Vehicle vehicle = table.get();
         String message = "Are you sure you want to delete this vehicle?\n\n" + vehicle.toString();
 
-        int result = JOptionPane.showConfirmDialog(null, message, "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, message, "Confirm Delete", JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
             m_dealership.removeVehicle(vehicle);
             table.populate(filter);
@@ -258,7 +258,8 @@ public class InventoryPanel extends JPanel {
         addLabeledField("Buyer Name:", buyerNameField, panel, gbc, 0, 0);
         addLabeledField("Buyer Contact:", buyerContactField, panel, gbc, 0, 1);
 
-        int result = JOptionPane.showConfirmDialog(null, panel, "Sell Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Sell Vehicle", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             String buyerName = buyerNameField.getText();
             String buyerContact = buyerContactField.getText();
@@ -274,8 +275,9 @@ public class InventoryPanel extends JPanel {
      * Add a new vehicle to the inventory.
      */
     private void addVehicle() {
-        String[] options = {"Car", "Motorcycle"};
-        int choice = JOptionPane.showOptionDialog(null, "Would you like to add a car or a motorcycle?", "Select Vehicle Type",
+        String[] options = { "Car", "Motorcycle" };
+        int choice = JOptionPane.showOptionDialog(null, "Would you like to add a car or a motorcycle?",
+                "Select Vehicle Type",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
         if (choice == JOptionPane.CLOSED_OPTION) {
@@ -285,7 +287,8 @@ public class InventoryPanel extends JPanel {
         boolean isCar = choice == 0;
         JPanel panel = createVehicleEditPanel(null, isCar);
 
-        int result = JOptionPane.showConfirmDialog(null, panel, "Add Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Add Vehicle", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             Vehicle vehicle = createVehicleFromPanel(panel, isCar);
@@ -293,7 +296,6 @@ public class InventoryPanel extends JPanel {
             JOptionPane.showMessageDialog(null, "Vehicle successfully added:\n" + vehicle.toString());
         }
     }
-
 
     /**
      * Add the selected vehicle to the user's wishlist.
@@ -305,7 +307,6 @@ public class InventoryPanel extends JPanel {
         }
         Main.user.addToWishlist(table.get());
     }
-
 
     /**
      * Create a new vehicle from the specified panel.
@@ -334,7 +335,7 @@ public class InventoryPanel extends JPanel {
      * Update the specified vehicle with the information from the panel.
      * 
      * @param vehicle the vehicle to update
-     * @param panel the panel containing the vehicle information
+     * @param panel   the panel containing the vehicle information
      */
     private void updateVehicleFromPanel(Vehicle vehicle, JPanel panel) {
         m_dealership.editVehicle(vehicle,
@@ -351,7 +352,7 @@ public class InventoryPanel extends JPanel {
      * Create a panel for editing a vehicle.
      * 
      * @param vehicle the vehicle to edit
-     * @param isCar whether the vehicle is a car
+     * @param isCar   whether the vehicle is a car
      * @return the panel for editing the vehicle
      */
     private JPanel createVehicleEditPanel(Vehicle vehicle, boolean isCar) {
@@ -360,7 +361,8 @@ public class InventoryPanel extends JPanel {
         JTextField txtColor = new JTextField(vehicle != null ? vehicle.getColor() : "");
         JTextField txtYear = new JTextField(vehicle != null ? Integer.toString(vehicle.getYear()) : "");
         JTextField txtPrice = new JTextField(vehicle != null ? Double.toString(vehicle.getPrice()) : "");
-        JTextField txtTypeOrHandlebar = new JTextField(vehicle != null ? (isCar ? ((Car) vehicle).getType() : ((Motorcycle) vehicle).getType()) : "");
+        JTextField txtTypeOrHandlebar = new JTextField(
+                vehicle != null ? (isCar ? ((Car) vehicle).getType() : ((Motorcycle) vehicle).getType()) : "");
         JTextField txtStock = new JTextField(vehicle != null ? Integer.toString(vehicle.getStock()) : "");
 
         // Set preferred size for each JTextField
@@ -371,10 +373,10 @@ public class InventoryPanel extends JPanel {
         txtPrice.setPreferredSize(new java.awt.Dimension(100, txtPrice.getPreferredSize().height));
         txtTypeOrHandlebar.setPreferredSize(new java.awt.Dimension(100, txtTypeOrHandlebar.getPreferredSize().height));
         txtPrice.setPreferredSize(new java.awt.Dimension(100, txtStock.getPreferredSize().height));
-    
+
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = createGbc(0, 0, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5));
-    
+
         addLabeledField("Make:", txtMake, panel, gbc, 0, 0);
         addLabeledField("Model:", txtModel, panel, gbc, 0, 1);
         addLabeledField("Color:", txtColor, panel, gbc, 0, 2);
@@ -382,20 +384,19 @@ public class InventoryPanel extends JPanel {
         addLabeledField("Price:", txtPrice, panel, gbc, 0, 4);
         addLabeledField(isCar ? "Type:" : "Handlebar Type:", txtTypeOrHandlebar, panel, gbc, 0, 5);
         addLabeledField("Stock:", txtStock, panel, gbc, 0, 6);
-    
+
         return panel;
     }
 
-    
     /**
      * Add a labeled field to the specified panel.
      * 
      * @param label the label text
      * @param field the field component
      * @param panel the panel to add the field to
-     * @param gbc the GridBagConstraints for the field
-     * @param x the x position of the field
-     * @param y the y position of the field
+     * @param gbc   the GridBagConstraints for the field
+     * @param x     the x position of the field
+     * @param y     the y position of the field
      */
     private void addLabeledField(String label, JComponent field, JPanel panel, GridBagConstraints gbc, int x, int y) {
         gbc.gridx = x * 2;
@@ -406,16 +407,15 @@ public class InventoryPanel extends JPanel {
         panel.add(field, gbc);
     }
 
-    
     /**
      * Add a labeled field to the specified panel.
      * 
      * @param label the label text
      * @param field the field component
      * @param panel the panel to add the field to
-     * @param gbc the GridBagConstraints for the field
-     * @param x the x position of the field
-     * @param y the y position of the field
+     * @param gbc   the GridBagConstraints for the field
+     * @param x     the x position of the field
+     * @param y     the y position of the field
      */
     private void addLabeledField(String label, JCheckBox field, JPanel panel, GridBagConstraints gbc, int x, int y) {
         gbc.gridx = x * 2;
@@ -432,9 +432,9 @@ public class InventoryPanel extends JPanel {
      * @param label the label text
      * @param field the field component
      * @param panel the panel to add the field to
-     * @param gbc the GridBagConstraints for the field
-     * @param x the x position of the field
-     * @param y the y position of the field
+     * @param gbc   the GridBagConstraints for the field
+     * @param x     the x position of the field
+     * @param y     the y position of the field
      */
     private void addLabeledField(String label, JTextField field, JPanel panel, GridBagConstraints gbc, int x, int y) {
         gbc.gridx = x * 2;
@@ -448,15 +448,16 @@ public class InventoryPanel extends JPanel {
     /**
      * Add a labeled field to the specified panel.
      * 
-     * @param label the label text
+     * @param label  the label text
      * @param field1 the first field component
      * @param field2 the second field component
-     * @param panel the panel to add the fields to
-     * @param gbc the GridBagConstraints for the fields
-     * @param x the x position of the fields
-     * @param y the y position of the fields
+     * @param panel  the panel to add the fields to
+     * @param gbc    the GridBagConstraints for the fields
+     * @param x      the x position of the fields
+     * @param y      the y position of the fields
      */
-    private void addLabeledField(String label, JTextField field1, JTextField field2, JPanel panel, GridBagConstraints gbc, int x, int y) {
+    private void addLabeledField(String label, JTextField field1, JTextField field2, JPanel panel,
+            GridBagConstraints gbc, int x, int y) {
         gbc.gridx = x * 2;
         gbc.gridy = y;
         panel.add(new JLabel(label), gbc);
