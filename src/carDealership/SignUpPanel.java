@@ -2,10 +2,6 @@ package carDealership;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Properties;
-import java.util.Random;
-import javax.mail.*;
-import javax.mail.internet.*;
 
 public class SignUpPanel extends JPanel {
 
@@ -102,14 +98,19 @@ public class SignUpPanel extends JPanel {
 
             if (Main.m_dealership.getUser(username) == null) {
                 // Generate a random password
-                String password = generateRandomPassword();
+                String password = User.generateRandomPassword();
 
                 // Create the new user
-                User newUser = new User(username, password, User.Role.CUSTOMER);
+                User newUser = new User(username, email, password, User.Role.CUSTOMER);
                 Main.m_dealership.addUser(newUser);
 
                 // Send an email to the user with their credentials
-                sendCredentialsEmail(email, username, password);
+                User.sendEmail(email, "Welcome to Car Dealership!",
+                        "Hello " + username + ",\n\n"
+                                + "Welcome to Car Dealership! Here are your login credentials:\n"
+                                + "Username: " + username + "\n"
+                                + "Password: " + password + "\n\n"
+                                + "Please log in to your account to start using our services.");
 
                 // Show a success message
                 JOptionPane.showMessageDialog(null,
@@ -123,116 +124,5 @@ public class SignUpPanel extends JPanel {
                 lblErrorMessage.setVisible(true);
             }
         });
-    }
-
-    /**
-     * Sends a welcome email to the new user containing their login credentials.
-     * 
-     * @param recipientEmail The email address of the new user
-     * @param username       The username of the new user
-     * @param password       The generated password
-     */
-    private void sendCredentialsEmail(String recipientEmail, String username, String password) {
-        try {
-            // Email configuration - should be moved to a configuration file
-            final String senderEmail = "lefrancmathis@gmail.com";
-
-            // Store credentials securely, e.g., in environment variables or a secure vault
-            final String senderPassword = "llhsvaasliosvxtz"; // no spaces!
-
-            // Set mail server properties
-            Properties properties = new Properties();
-            properties.put("mail.smtp.auth", "true");
-            properties.put("mail.smtp.starttls.enable", "true");
-            properties.put("mail.smtp.host", "smtp.gmail.com");
-            properties.put("mail.smtp.port", "587");
-
-            // Create a session with authentication
-            Session session = Session.getInstance(properties, new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(senderEmail, senderPassword);
-                }
-            });
-
-            // Create the email message
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(senderEmail));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject("Welcome to Our Dealership!");
-
-            // Create the email body
-            StringBuilder emailBody = new StringBuilder();
-            emailBody.append("Dear ").append(username).append(",\n\n");
-            emailBody.append("Welcome to Our Dealership! Here are your login credentials:\n");
-            emailBody.append("Username: ").append(username).append("\n");
-            emailBody.append("Password: ").append(password).append("\n\n");
-            emailBody.append("Best regards,\n");
-            emailBody.append("The Dealership Team");
-
-            // Set the email body
-            message.setText(emailBody.toString());
-            // Set the email content type
-            message.setHeader("Content-Type", "text/plain; charset=UTF-8");
-            // Set the email encoding
-            message.setHeader("Content-Transfer-Encoding", "8bit");
-
-            // Send message
-            Transport.send(message);
-
-            System.out.println("Welcome email sent successfully to " + recipientEmail);
-
-        } catch (Exception ex) {
-            System.err.println("Failed to send welcome email: " + ex.getMessage());
-            ex.printStackTrace();
-
-            // Log the error properly rather than just printing to console
-            // logger.error("Failed to send welcome email to " + recipientEmail, ex);
-
-            // Optionally show an error message to the user
-            JOptionPane.showMessageDialog(null,
-                    "Account created but failed to send email. Please contact support.",
-                    "Email Error", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
-    /**
-     * Generates a random password with at least one uppercase letter, one lowercase
-     * letter,
-     * one number, and one special character.
-     * 
-     * @return A secure random password
-     */
-    private String generateRandomPassword() {
-        String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
-        String numbers = "0123456789";
-        String specialChars = "!@#$%^&*()-_=+";
-
-        String allChars = upperAlphabet + lowerAlphabet + numbers + specialChars;
-        StringBuilder password = new StringBuilder();
-        Random random = new Random();
-
-        // Ensure at least one character from each category
-        password.append(upperAlphabet.charAt(random.nextInt(upperAlphabet.length())));
-        password.append(lowerAlphabet.charAt(random.nextInt(lowerAlphabet.length())));
-        password.append(numbers.charAt(random.nextInt(numbers.length())));
-        password.append(specialChars.charAt(random.nextInt(specialChars.length())));
-
-        // Add additional random characters to reach desired length (10 characters)
-        for (int i = 0; i < 6; i++) {
-            password.append(allChars.charAt(random.nextInt(allChars.length())));
-        }
-
-        // Shuffle the password to avoid predictable pattern
-        char[] passwordArray = password.toString().toCharArray();
-        for (int i = 0; i < passwordArray.length; i++) {
-            int j = random.nextInt(passwordArray.length);
-            char temp = passwordArray[i];
-            passwordArray[i] = passwordArray[j];
-            passwordArray[j] = temp;
-        }
-
-        return new String(passwordArray);
     }
 }

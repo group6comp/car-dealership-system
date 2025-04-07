@@ -11,7 +11,6 @@ import javax.swing.JComponent;
 import javax.swing.JTextArea;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.BorderLayout;

@@ -88,6 +88,49 @@ public class LoginPanel extends JPanel {
         gbc.gridy++;
         formPanel.add(buttonPanel, gbc);
 
+        // Email label
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.LINE_END;
+        JLabel lblEmail = new JLabel("Email");
+        lblEmail.setFont(new Font("Dubai Medium", Font.PLAIN, 16));
+        formPanel.add(lblEmail, gbc);
+
+        // Email text field
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.LINE_START;
+        JTextField emailField = new JTextField(15);
+        emailField.setFont(new Font("Dubai Medium", Font.PLAIN, 16));
+        emailField.setPreferredSize(new Dimension(220, 30));
+        formPanel.add(emailField, gbc); // ✅ Now added in the right place
+
+        // Email error message label
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        JLabel lblEmailErrorMessage = new JLabel("Invalid email address");
+        lblEmailErrorMessage.setFont(new Font("Dubai Medium", Font.PLAIN, 14));
+        lblEmailErrorMessage.setForeground(new Color(255, 80, 80));
+        lblEmailErrorMessage.setVisible(false);
+        formPanel.add(lblEmailErrorMessage, gbc);
+
+        // Reset Password button (in its own panel)
+        JPanel emailButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 5));
+        emailButtonPanel.setBackground(new Color(230, 230, 230));
+
+        JButton btnReset = new JButton("Reset Password");
+        btnReset.setFont(new Font("Dubai Medium", Font.BOLD, 16));
+        btnReset.setForeground(Color.WHITE);
+        btnReset.setBackground(new Color(241, 57, 83));
+        btnReset.setPreferredSize(new Dimension(160, 35)); // Wider for visual balance
+        emailButtonPanel.add(btnReset);
+
+        // Add reset password button panel to form
+        gbc.gridy++;
+        formPanel.add(emailButtonPanel, gbc);
+
         // Add form panel to main panel
         add(formPanel);
 
@@ -102,6 +145,22 @@ public class LoginPanel extends JPanel {
                 Main.showMainUI();
             } else {
                 lblErrorMessage.setVisible(true);
+            }
+        });
+
+        btnReset.addActionListener(e -> {
+            String email = emailField.getText();
+            User user = Main.m_dealership.getUserByEmail(email);
+
+            if (user != null) {
+                user.resetPassword();
+
+                JOptionPane.showMessageDialog(null,
+                        "A new password has been sent to " + email,
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                lblEmailErrorMessage.setVisible(true);
             }
         });
     }

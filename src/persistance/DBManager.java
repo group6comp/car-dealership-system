@@ -7,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public class DBManager {
 
 	private static DBManager m_dbManager;
@@ -78,15 +77,15 @@ public class DBManager {
 		System.out.println("Creating the dealerships table");
 		var dealershipSQL = "CREATE TABLE IF NOT EXISTS dealerships (id INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ " name text NOT NULL, location text NOT NULL, capacity INTEGER);";
-	
+
 		var stmt = m_connection.createStatement();
 		stmt.execute(dealershipSQL);
-	
-        var userSQL = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + " username text NOT NULL, password text NOT NULL, role TEXT CHECK(role IN ('Admin', 'Manager', 'Salesperson', 'Customer')) NOT NULL);";
-	
+
+		var userSQL = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ " username text NOT NULL, email text NOT NULL, password text NOT NULL, role TEXT CHECK(role IN ('Admin', 'Manager', 'Salesperson', 'Customer')) NOT NULL);";
+
 		stmt.execute(userSQL);
-	
+
 		// Create the vehicles table
 		var vehicleSQL = "CREATE TABLE IF NOT EXISTS vehicles ("
 				+ "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -97,11 +96,11 @@ public class DBManager {
 				+ "price REAL, "
 				+ "type TEXT, "
 				+ "handlebarType TEXT);";
-	
+
 		stmt.execute(vehicleSQL);
 
 		// Create the sales table
-	
+
 		m_connection.commit();
 	}
 

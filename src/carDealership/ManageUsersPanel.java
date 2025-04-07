@@ -177,6 +177,7 @@ public class ManageUsersPanel extends JPanel {
     private void addUser() {
         // Create text fields for adding a new user
         JTextField txtUsername = new JTextField();
+        JTextField txtEmail = new JTextField();
         JTextField txtPassword = new JTextField();
         JTextField txtRole = new JTextField();
 
@@ -185,6 +186,8 @@ public class ManageUsersPanel extends JPanel {
         panel.setLayout(new GridLayout(4, 2));
         panel.add(new JLabel("Username:"));
         panel.add(txtUsername);
+        panel.add(new JLabel("Email:"));
+        panel.add(txtEmail);
         panel.add(new JLabel("Password:"));
         panel.add(txtPassword);
         panel.add(new JLabel("Role:"));
@@ -196,7 +199,7 @@ public class ManageUsersPanel extends JPanel {
 
         if (result == JOptionPane.OK_OPTION) {
             // Add the new user to the user list
-            User newUser = new User(txtUsername.getText(), txtPassword.getText(),
+            User newUser = new User(txtUsername.getText(), txtEmail.getText(), txtPassword.getText(),
                     Role.valueOf(txtRole.getText().toUpperCase()));
             m_dealership.getUsers().add(newUser);
             populateTable();

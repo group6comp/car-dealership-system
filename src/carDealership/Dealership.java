@@ -24,8 +24,8 @@ public class Dealership implements Serializable {
     /**
      * Constructor for creating a Dealership object.
      * 
-     * @param name the name of the dealership
-     * @param location the location of the dealership
+     * @param name         the name of the dealership
+     * @param location     the location of the dealership
      * @param maxInventory the maximum number of vehicles the dealership can hold
      */
     public Dealership(String name, String location, int maxInventory) {
@@ -53,8 +53,10 @@ public class Dealership implements Serializable {
      * @return a string containing dealership information
      */
     public String getInfoGUI() {
-        return String.format("Dealership name: [%s]\nLocation: [%s]\nInventory Size: [%d]\n\nAvailable space: %d\nTotal Cars: %d\nTotal Motorcycles: %d\n\nTotal sales profit: %d\nTotal vehicles sold: %d",
-                name, location, getTotalVehicles(), maxInventory - getTotalVehicles(), getTotalCars(), getTotalMotorcycles(), salesProfit(), sales.size());
+        return String.format(
+                "Dealership name: [%s]\nLocation: [%s]\nInventory Size: [%d]\n\nAvailable space: %d\nTotal Cars: %d\nTotal Motorcycles: %d\n\nTotal sales profit: %d\nTotal vehicles sold: %d",
+                name, location, getTotalVehicles(), maxInventory - getTotalVehicles(), getTotalCars(),
+                getTotalMotorcycles(), salesProfit(), sales.size());
     }
 
     // USER METHODS
@@ -77,6 +79,15 @@ public class Dealership implements Serializable {
     public User getUser(String username) {
         for (User user : userData) {
             if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public User getUserByEmail(String email) {
+        for (User user : userData) {
+            if (user.getEmail().equals(email)) {
                 return user;
             }
         }
@@ -106,16 +117,31 @@ public class Dealership implements Serializable {
     /**
      * Edit a user's information.
      * 
-     * @param user the user to edit
+     * @param user     the user to edit
      * @param username the new username
      * @param password the new password
-     * @param role the new role
+     * @param role     the new role
      */
     public void editUser(User user, String username, String password, User.Role role) {
         user.setUsername(username);
         user.setPassword(password);
         user.setRole(role);
         save();
+    }
+
+    /**
+     * Check if a user with the specified email already exists in the dealership.
+     * 
+     * @param email the email address of the user
+     * @return true if the user exists, false otherwise
+     */
+    public boolean userEmailExists(String email) {
+        for (User user : userData) {
+            if (user.getEmail().equals(email)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // INVENTORY METHODS
@@ -145,23 +171,21 @@ public class Dealership implements Serializable {
         return null;
     }
 
-
     public void adjustStock(Vehicle vehicle, int stock) {
         vehicle.setStock(stock);
         save();
     }
 
-
     /**
      * Add a car to the inventory.
      * 
-     * @param make the make of the car
+     * @param make  the make of the car
      * @param model the model of the car
      * @param color the color of the car
-     * @param year the year the car was manufactured
+     * @param year  the year the car was manufactured
      * @param price the price of the car
      * @param stock the stock of the car
-     * @param type the type of the car (e.g., sedan, SUV)
+     * @param type  the type of the car (e.g., sedan, SUV)
      * @return the added car, or null if the inventory is full
      */
     public Car addCar(String make, String model, String color, int year, double price, int stock, String type) {
@@ -175,13 +199,14 @@ public class Dealership implements Serializable {
             if (vehicle instanceof Car) {
                 Car car = (Car) vehicle;
                 if (car.getMake().equals(make) && car.getModel().equals(model) &&
-                    car.getColor().equals(color) && car.getYear() == year) {
-                    System.out.println("Failed to add vehicle: a car with the same make, model, color, and year already exists.");
+                        car.getColor().equals(color) && car.getYear() == year) {
+                    System.out.println(
+                            "Failed to add vehicle: a car with the same make, model, color, and year already exists.");
                     return null;
                 }
             }
         }
-    
+
         Car car = new Car(nextId++, make, model, color, year, price, stock, type);
         inventory.add(car);
         save();
@@ -191,38 +216,39 @@ public class Dealership implements Serializable {
     /**
      * Add a motorcycle to the inventory.
      * 
-     * @param make the make of the motorcycle
-     * @param model the model of the motorcycle
-     * @param color the color of the motorcycle
-     * @param year the year the motorcycle was manufactured
-     * @param price the price of the motorcycle
-     * @param stock the stock of the motorcycle
+     * @param make          the make of the motorcycle
+     * @param model         the model of the motorcycle
+     * @param color         the color of the motorcycle
+     * @param year          the year the motorcycle was manufactured
+     * @param price         the price of the motorcycle
+     * @param stock         the stock of the motorcycle
      * @param handlebarType the type of handlebar of the motorcycle
      * @return the added motorcycle, or null if the inventory is full
      */
-    public Motorcycle addMotorcycle(String make, String model, String color, int year, double price, int stock, String handlebarType) {
+    public Motorcycle addMotorcycle(String make, String model, String color, int year, double price, int stock,
+            String handlebarType) {
         if (isFull()) {
             System.out.println("Failed to add vehicle: inventory is full.");
             return null;
         }
-    
+
         for (Vehicle vehicle : inventory) {
             if (vehicle instanceof Motorcycle) {
                 Motorcycle motorcycle = (Motorcycle) vehicle;
                 if (motorcycle.getMake().equals(make) && motorcycle.getModel().equals(model) &&
-                    motorcycle.getColor().equals(color) && motorcycle.getYear() == year) {
-                    System.out.println("Failed to add vehicle: a motorcycle with the same make, model, color, and year already exists.");
+                        motorcycle.getColor().equals(color) && motorcycle.getYear() == year) {
+                    System.out.println(
+                            "Failed to add vehicle: a motorcycle with the same make, model, color, and year already exists.");
                     return null;
                 }
             }
         }
-    
+
         Motorcycle motorcycle = new Motorcycle(nextId++, make, model, color, year, price, stock, handlebarType);
         inventory.add(motorcycle);
         save();
         return motorcycle;
     }
-
 
     /**
      * Remove a vehicle from the inventory.
@@ -241,14 +267,16 @@ public class Dealership implements Serializable {
      * Edit a vehicle's information.
      * 
      * @param vehicle the vehicle to edit
-     * @param make the new make of the vehicle
-     * @param model the new model of the vehicle
-     * @param color the new color of the vehicle
-     * @param year the new year of the vehicle
-     * @param price the new price of the vehicle
-     * @param type the new type of the vehicle (for cars) or handlebar type (for motorcycles)
+     * @param make    the new make of the vehicle
+     * @param model   the new model of the vehicle
+     * @param color   the new color of the vehicle
+     * @param year    the new year of the vehicle
+     * @param price   the new price of the vehicle
+     * @param type    the new type of the vehicle (for cars) or handlebar type (for
+     *                motorcycles)
      */
-    public void editVehicle(Vehicle vehicle, String make, String model, String color, int year, double price, int stock, String type) {
+    public void editVehicle(Vehicle vehicle, String make, String model, String color, int year, double price, int stock,
+            String type) {
         if (vehicle instanceof Car) {
             ((Car) vehicle).update(make, model, color, type, year, price, stock);
         } else if (vehicle instanceof Motorcycle) {
@@ -260,9 +288,9 @@ public class Dealership implements Serializable {
     /**
      * Mark a vehicle as sold and add a sale record.
      * 
-     * @param vehicle the vehicle to sell
-     * @param salesperson the salesperson who sold the vehicle
-     * @param buyerName the name of the buyer
+     * @param vehicle      the vehicle to sell
+     * @param salesperson  the salesperson who sold the vehicle
+     * @param buyerName    the name of the buyer
      * @param buyerContact the contact information of the buyer
      */
     public void sellVehicle(Vehicle vehicle, User salesperson, String buyerName, String buyerContact) {
@@ -272,16 +300,18 @@ public class Dealership implements Serializable {
     }
 
     /**
-     * Mark a vehicle as sold and add a sale record with a specified sale date and pending status.
+     * Mark a vehicle as sold and add a sale record with a specified sale date and
+     * pending status.
      * 
-     * @param vehicle the vehicle to sell
-     * @param salesperson the salesperson who sold the vehicle
-     * @param buyerName the name of the buyer
+     * @param vehicle      the vehicle to sell
+     * @param salesperson  the salesperson who sold the vehicle
+     * @param buyerName    the name of the buyer
      * @param buyerContact the contact information of the buyer
-     * @param saleDate the date of the sale
-     * @param pending whether the sale is pending approval
+     * @param saleDate     the date of the sale
+     * @param pending      whether the sale is pending approval
      */
-    public void sellVehicle(Vehicle vehicle, User salesperson, String buyerName, String buyerContact, LocalDate saleDate, boolean pending) {
+    public void sellVehicle(Vehicle vehicle, User salesperson, String buyerName, String buyerContact,
+            LocalDate saleDate, boolean pending) {
         sales.add(new Sale(vehicle, salesperson, buyerName, buyerContact, saleDate, pending));
         vehicle.setStock(vehicle.getStock() - 1);
         save();
@@ -363,6 +393,7 @@ public class Dealership implements Serializable {
 
     /**
      * Get the total number of vehicles in the inventory
+     * 
      * @return
      */
     public int getTotalVehicles() {
@@ -372,7 +403,6 @@ public class Dealership implements Serializable {
         }
         return totalVehicles;
     }
-
 
     /**
      * Get the total number of cars in the inventory.
@@ -458,7 +488,7 @@ public class Dealership implements Serializable {
      * Add an enquiry.
      * 
      * @param vehicle the vehicle the enquiry is about
-     * @param user the user making the enquiry
+     * @param user    the user making the enquiry
      * @param message the enquiry message
      * @param contact the contact information of the user
      */
@@ -502,9 +532,7 @@ public class Dealership implements Serializable {
         return pendingEnquiries;
     }
 
-
-
-    // LOAD AND SAVE METHODS 
+    // LOAD AND SAVE METHODS
 
     /**
      * Save the dealership data to a file.
@@ -512,7 +540,7 @@ public class Dealership implements Serializable {
     public void save() {
         File saveFile = new File("save.data");
         try (FileOutputStream outFileStream = new FileOutputStream(saveFile);
-             ObjectOutputStream outObjStream = new ObjectOutputStream(outFileStream)) {
+                ObjectOutputStream outObjStream = new ObjectOutputStream(outFileStream)) {
             outObjStream.writeObject(this);
         } catch (IOException e) {
             e.printStackTrace();
@@ -522,9 +550,11 @@ public class Dealership implements Serializable {
     /**
      * Load the dealership data from a file.
      * 
-     * @return the loaded dealership object, or null if the file does not exist or an error occurs
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if the class of a serialized object cannot be found
+     * @return the loaded dealership object, or null if the file does not exist or
+     *         an error occurs
+     * @throws IOException            if an I/O error occurs
+     * @throws ClassNotFoundException if the class of a serialized object cannot be
+     *                                found
      */
     public static Dealership load() throws IOException, ClassNotFoundException {
         File saveFile = new File("save.data");
@@ -533,7 +563,7 @@ public class Dealership implements Serializable {
         }
 
         try (FileInputStream inFileStream = new FileInputStream(saveFile);
-             ObjectInputStream inObjStream = new ObjectInputStream(inFileStream)) {
+                ObjectInputStream inObjStream = new ObjectInputStream(inFileStream)) {
             return (Dealership) inObjStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
