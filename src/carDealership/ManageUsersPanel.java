@@ -106,11 +106,15 @@ public class ManageUsersPanel extends JPanel {
             String username = user.getUsername();
             String password = user.getPassword();
             Role role = user.getRole();
+            boolean isActive = user.isActive();
 
             // Create text fields for editing
             JTextField txtUsername = new JTextField(username);
             JTextField txtPassword = new JTextField(password);
             JTextField txtRole = new JTextField(role.toString());
+
+            // Create toggle button for active/inactive status
+            JCheckBox chkActive = new JCheckBox("Active", isActive);
 
             // Create a panel to hold the text fields
             JPanel panel = new JPanel();
@@ -121,6 +125,8 @@ public class ManageUsersPanel extends JPanel {
             panel.add(txtPassword);
             panel.add(new JLabel("Role:"));
             panel.add(txtRole);
+            panel.add(new JLabel("Active:"));
+            panel.add(chkActive);
 
             // Show the dialog
             int result = JOptionPane.showConfirmDialog(null, panel, "Edit User", JOptionPane.OK_CANCEL_OPTION,
@@ -131,13 +137,17 @@ public class ManageUsersPanel extends JPanel {
                 user.setUsername(txtUsername.getText());
                 user.setPassword(txtPassword.getText());
                 user.setRole(Role.valueOf(txtRole.getText().toUpperCase()));
+                user.setActive(chkActive.isSelected());
                 populateTable();
+
+                m_dealership.save();
 
                 // Show confirmation dialog with new details
                 JOptionPane.showMessageDialog(null, "User information successfully saved:\n" +
                         "Username: " + txtUsername.getText() + "\n" +
                         "Password: " + txtPassword.getText() + "\n" +
-                        "Role: " + txtRole.getText());
+                        "Role: " + txtRole.getText() + "\n" +
+                        "Active: " + (chkActive.isSelected() ? "Yes" : "No"));
             }
         } else {
             JOptionPane.showMessageDialog(null, "Please select a user to edit.");

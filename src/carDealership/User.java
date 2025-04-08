@@ -26,6 +26,7 @@ public class User implements Serializable {
     private String email;
     private String password;
     private Role role; // Admin, Manager, Salesperson, Customer
+    private boolean isActive;
     private List<Vehicle> wishlist;
 
     /**
@@ -59,6 +60,7 @@ public class User implements Serializable {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.isActive = true;
         this.wishlist = new ArrayList<>();
     }
 
@@ -103,6 +105,14 @@ public class User implements Serializable {
 
     public void setRole(String role) {
         this.role = roleFromString(role);
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     /**

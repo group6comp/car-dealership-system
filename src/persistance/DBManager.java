@@ -81,8 +81,16 @@ public class DBManager {
 		var stmt = m_connection.createStatement();
 		stmt.execute(dealershipSQL);
 
-		var userSQL = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,"
-				+ " username text NOT NULL, email text NOT NULL, password text NOT NULL, role TEXT CHECK(role IN ('Admin', 'Manager', 'Salesperson', 'Customer')) NOT NULL);";
+		var userSQL = """
+				CREATE TABLE IF NOT EXISTS users (
+					id INTEGER PRIMARY KEY AUTOINCREMENT,
+					username text NOT NULL,
+					email text NOT NULL,
+					password text NOT NULL,
+					role TEXT CHECK(role IN ('Admin', 'Manager', 'Salesperson', 'Customer')) NOT NULL,
+					is_active BOOLEAN NOT NULL DEFAULT TRUE
+				);
+				""";
 
 		stmt.execute(userSQL);
 

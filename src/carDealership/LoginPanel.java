@@ -138,10 +138,21 @@ public class LoginPanel extends JPanel {
         btnLogin.addActionListener(e -> {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
+            User user = validateLogin(username, password);
 
-            if (validateLogin(username, password) != null) {
-                Main.user = Main.m_dealership.getUser(username);
-                Main.role = Main.user.getRole();
+            if (user != null) {
+
+                if (!user.isActive()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Your account is inactive. Please contact the dealership for more information.",
+                            "Inactive Account",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+
+                Main.user = user;
+                Main.role = user.getRole();
+
                 Main.showMainUI();
             } else {
                 lblErrorMessage.setVisible(true);
