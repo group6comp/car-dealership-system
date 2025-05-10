@@ -15,8 +15,10 @@ import java.awt.CardLayout;
 import javax.swing.JPasswordField;
 
 /**
- * The FirstLaunchPage class represents the initial setup page for the dealership system.
- * It allows the user to enter dealership information and create an admin account.
+ * The FirstLaunchPage class represents the initial setup page for the
+ * dealership system.
+ * It allows the user to enter dealership information and create an admin
+ * account.
  */
 public class FirstLaunchPage extends JPanel {
 
@@ -25,6 +27,7 @@ public class FirstLaunchPage extends JPanel {
     private JTextField locationField;
     private JTextField inventoryCapacityField;
     private JTextField adminUsernameField;
+    private JTextField adminEmailField;
     private JPasswordField adminPasswordField;
 
     /**
@@ -193,6 +196,18 @@ public class FirstLaunchPage extends JPanel {
         adminUsernameField.setBounds(319, 104, 291, 30);
         panel.add(adminUsernameField);
 
+        // Add label for admin email
+        JLabel lblAdminEmail = new JLabel("Admin Email");
+        lblAdminEmail.setFont(new Font("Dubai Medium", Font.PLAIN, 15));
+        lblAdminEmail.setBounds(319, 144, 151, 22);
+        panel.add(lblAdminEmail);
+
+        // Create and configure the admin email field
+        adminEmailField = new JTextField();
+        adminEmailField.setColumns(10);
+        adminEmailField.setBounds(319, 176, 291, 30);
+        panel.add(adminEmailField);
+
         // Add label for admin password
         JLabel lblAdminPassword = new JLabel("Admin Password");
         lblAdminPassword.setFont(new Font("Dubai Medium", Font.PLAIN, 15));
@@ -214,7 +229,9 @@ public class FirstLaunchPage extends JPanel {
         // Add action listener to the "Go" button
         btnGoButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                User adminUser = new User(adminUsernameField.getText(), new String(adminPasswordField.getPassword()), ADMIN);
+                User adminUser = new User(adminUsernameField.getText(), adminEmailField.getText(),
+                        new String(adminPasswordField.getPassword()),
+                        ADMIN);
                 Main.m_dealership.addUser(adminUser);
                 Main.showMainUI();
             }

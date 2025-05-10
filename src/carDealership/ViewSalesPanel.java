@@ -5,12 +5,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
-import javax.swing.JButton;
 import javax.swing.table.TableRowSorter;
 import java.awt.Font;
 import java.awt.BorderLayout;
-import java.awt.event.ActionListener;
-import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -18,8 +15,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The ViewSalesPanel class represents the panel for viewing sales in the dealership system.
- * It displays a table of sales and includes a back button to return to the main UI.
+ * The ViewSalesPanel class represents the panel for viewing sales in the
+ * dealership system.
+ * It displays a table of sales and includes a back button to return to the main
+ * UI.
  */
 public class ViewSalesPanel extends JPanel {
 
@@ -41,7 +40,7 @@ public class ViewSalesPanel extends JPanel {
         if (Main.role == User.Role.SALESPERSON) {
             lblTitle = new JLabel("My Sales");
         } else {
-            lblTitle = new JLabel("View Sales");
+            lblTitle = new JLabel("Sales");
         }
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
@@ -70,9 +69,6 @@ public class ViewSalesPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Add back button to the button panel
-        addButton("Back", buttonPanel, gbc, 1, 0, e -> Main.showMainUI());
     }
 
     /**
@@ -87,30 +83,10 @@ public class ViewSalesPanel extends JPanel {
         }
         // Filter sales to only include those with pending set to false
         sales = sales.stream()
-                     .filter(sale -> !sale.isPending())
-                     .collect(Collectors.toList());
+                .filter(sale -> !sale.isPending())
+                .collect(Collectors.toList());
         model = new SalesTableModel(sales);
         table.setModel(model);
         table.setRowSorter(new TableRowSorter<>(model));
-    }
-
-    /**
-     * Add a button to the specified panel.
-     * 
-     * @param text the text of the button
-     * @param panel the panel to add the button to
-     * @param gbc the GridBagConstraints for the button
-     * @param x the x position of the button
-     * @param y the y position of the button
-     * @param actionListener the ActionListener for the button
-     */
-    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
-        gbc.gridx = x;
-        gbc.gridy = y;
-        JButton btn = new JButton(text);
-        btn.setForeground(Color.WHITE);
-        btn.setBackground(new Color(241, 57, 83));
-        panel.add(btn, gbc);
-        btn.addActionListener(actionListener);
     }
 }

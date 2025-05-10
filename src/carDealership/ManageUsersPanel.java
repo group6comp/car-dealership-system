@@ -28,7 +28,7 @@ public class ManageUsersPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Add title label
-        JLabel lblTitle = new JLabel("Manage Users");
+        JLabel lblTitle = new JLabel("Users");
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
         add(lblTitle, BorderLayout.NORTH);
@@ -61,7 +61,6 @@ public class ManageUsersPanel extends JPanel {
         addButton("Add User", buttonPanel, gbc, 0, 0, e -> addUser());
         addButton("Edit User", buttonPanel, gbc, 1, 0, e -> editUser());
         addButton("Delete User", buttonPanel, gbc, 2, 0, e -> deleteUser());
-        addButton("Back", buttonPanel, gbc, 3, 0, e -> Main.showMainUI());
     }
 
     /**
@@ -77,14 +76,15 @@ public class ManageUsersPanel extends JPanel {
     /**
      * Add a button to the specified panel.
      * 
-     * @param text the text of the button
-     * @param panel the panel to add the button to
-     * @param gbc the GridBagConstraints for the button
-     * @param x the x position of the button
-     * @param y the y position of the button
+     * @param text           the text of the button
+     * @param panel          the panel to add the button to
+     * @param gbc            the GridBagConstraints for the button
+     * @param x              the x position of the button
+     * @param y              the y position of the button
      * @param actionListener the ActionListener for the button
      */
-    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
+    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y,
+            ActionListener actionListener) {
         gbc.gridx = x;
         gbc.gridy = y;
         JButton btn = new JButton(text);
@@ -106,11 +106,15 @@ public class ManageUsersPanel extends JPanel {
             String username = user.getUsername();
             String password = user.getPassword();
             Role role = user.getRole();
+            boolean isActive = user.isActive();
 
             // Create text fields for editing
             JTextField txtUsername = new JTextField(username);
             JTextField txtPassword = new JTextField(password);
             JTextField txtRole = new JTextField(role.toString());
+
+            // Create toggle button for active/inactive status
+            JCheckBox chkActive = new JCheckBox("Active", isActive);
 
             // Create a panel to hold the text fields
             JPanel panel = new JPanel();
@@ -121,22 +125,29 @@ public class ManageUsersPanel extends JPanel {
             panel.add(txtPassword);
             panel.add(new JLabel("Role:"));
             panel.add(txtRole);
+            panel.add(new JLabel("Active:"));
+            panel.add(chkActive);
 
             // Show the dialog
-            int result = JOptionPane.showConfirmDialog(null, panel, "Edit User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(null, panel, "Edit User", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
                 // Update the user and table
                 user.setUsername(txtUsername.getText());
                 user.setPassword(txtPassword.getText());
                 user.setRole(Role.valueOf(txtRole.getText().toUpperCase()));
+                user.setActive(chkActive.isSelected());
                 populateTable();
+
+                m_dealership.save();
 
                 // Show confirmation dialog with new details
                 JOptionPane.showMessageDialog(null, "User information successfully saved:\n" +
                         "Username: " + txtUsername.getText() + "\n" +
                         "Password: " + txtPassword.getText() + "\n" +
-                        "Role: " + txtRole.getText());
+                        "Role: " + txtRole.getText() + "\n" +
+                        "Active: " + (chkActive.isSelected() ? "Yes" : "No"));
             }
         } else {
             JOptionPane.showMessageDialog(null, "Please select a user to edit.");
@@ -154,7 +165,8 @@ public class ManageUsersPanel extends JPanel {
 
             // Show confirmation dialog
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the following user?\n" +
-                    "Username: " + user.getUsername(), "Delete User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                    "Username: " + user.getUsername(), "Delete User", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
                 // Remove the user from the user list
@@ -175,6 +187,7 @@ public class ManageUsersPanel extends JPanel {
     private void addUser() {
         // Create text fields for adding a new user
         JTextField txtUsername = new JTextField();
+        JTextField txtEmail = new JTextField();
         JTextField txtPassword = new JTextField();
         JTextField txtRole = new JTextField();
 
@@ -183,17 +196,21 @@ public class ManageUsersPanel extends JPanel {
         panel.setLayout(new GridLayout(4, 2));
         panel.add(new JLabel("Username:"));
         panel.add(txtUsername);
+        panel.add(new JLabel("Email:"));
+        panel.add(txtEmail);
         panel.add(new JLabel("Password:"));
         panel.add(txtPassword);
         panel.add(new JLabel("Role:"));
         panel.add(txtRole);
 
         // Show the dialog
-        int result = JOptionPane.showConfirmDialog(null, panel, "Add User", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Add User", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             // Add the new user to the user list
-            User newUser = new User(txtUsername.getText(), txtPassword.getText(), Role.valueOf(txtRole.getText().toUpperCase()));
+            User newUser = new User(txtUsername.getText(), txtEmail.getText(), txtPassword.getText(),
+                    Role.valueOf(txtRole.getText().toUpperCase()));
             m_dealership.getUsers().add(newUser);
             populateTable();
 

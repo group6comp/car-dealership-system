@@ -22,8 +22,10 @@ import java.awt.Insets;
 import java.util.List;
 
 /**
- * The ViewWishlistPanel class represents the panel for viewing the user's wishlist in the dealership system.
- * It displays a table of vehicles in the wishlist and includes buttons for making enquiries and returning to the main UI.
+ * The ViewWishlistPanel class represents the panel for viewing the user's
+ * wishlist in the dealership system.
+ * It displays a table of vehicles in the wishlist and includes buttons for
+ * making enquiries and returning to the main UI.
  */
 public class ViewWishlistPanel extends JPanel {
 
@@ -72,7 +74,6 @@ public class ViewWishlistPanel extends JPanel {
 
         // Add buttons to the button panel
         addButton("Enquire", buttonPanel, gbc, 0, 0, e -> enquire());
-        addButton("Back", buttonPanel, gbc, 1, 0, e -> Main.showMainUI());
     }
 
     /**
@@ -80,18 +81,18 @@ public class ViewWishlistPanel extends JPanel {
      */
     private void populateTable() {
         List<Vehicle> wishlist = currentUser.getWishlist();
-        String[] columnNames = {"Make", "Model", "Color", "Year", "Price", "Type", "Stock"};
+        String[] columnNames = { "Make", "Model", "Color", "Year", "Price", "Type", "Stock" };
         model = new DefaultTableModel(columnNames, 0);
 
         for (Vehicle vehicle : wishlist) {
             Object[] row = {
-                vehicle.getMake(),
-                vehicle.getModel(),
-                vehicle.getColor(),
-                vehicle.getYear(),
-                vehicle.getPrice(),
-                vehicle.getType(),
-                vehicle.getStock(),
+                    vehicle.getMake(),
+                    vehicle.getModel(),
+                    vehicle.getColor(),
+                    vehicle.getYear(),
+                    vehicle.getPrice(),
+                    vehicle.getType(),
+                    vehicle.getStock(),
             };
             model.addRow(row);
         }
@@ -115,7 +116,8 @@ public class ViewWishlistPanel extends JPanel {
             messageField.setLineWrap(true);
             messageField.setWrapStyleWord(true);
             JScrollPane messageScrollPane = new JScrollPane(messageField);
-            contactField.setPreferredSize(new java.awt.Dimension(fieldWidth * 10, contactField.getPreferredSize().height));
+            contactField
+                    .setPreferredSize(new java.awt.Dimension(fieldWidth * 10, contactField.getPreferredSize().height));
 
             JPanel panel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
@@ -125,7 +127,8 @@ public class ViewWishlistPanel extends JPanel {
             addLabeledField("Message:", messageScrollPane, panel, gbc, 0, 0);
             addLabeledField("Contact Info:", contactField, panel, gbc, 0, 1);
 
-            int result = JOptionPane.showConfirmDialog(null, panel, "Enquire about Vehicle", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int result = JOptionPane.showConfirmDialog(null, panel, "Enquire about Vehicle",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
             if (result == JOptionPane.OK_OPTION) {
                 String message = messageField.getText();
@@ -133,7 +136,8 @@ public class ViewWishlistPanel extends JPanel {
                 User currentUser = Main.getCurrentUser();
 
                 Main.m_dealership.addEnquiry(vehicle, currentUser, message, contactInfo);
-                JOptionPane.showMessageDialog(null, "Enquiry successfully sent. A salesperson will contact you shortly.");
+                JOptionPane.showMessageDialog(null,
+                        "Enquiry successfully sent. A salesperson will contact you shortly.");
             }
         } else {
             JOptionPane.showMessageDialog(null, "Please select a vehicle to enquire about.");
@@ -146,9 +150,9 @@ public class ViewWishlistPanel extends JPanel {
      * @param label the label text
      * @param field the field component
      * @param panel the panel to add the field to
-     * @param gbc the GridBagConstraints for the field
-     * @param x the x position of the field
-     * @param y the y position of the field
+     * @param gbc   the GridBagConstraints for the field
+     * @param x     the x position of the field
+     * @param y     the y position of the field
      */
     private void addLabeledField(String label, JComponent field, JPanel panel, GridBagConstraints gbc, int x, int y) {
         gbc.gridx = x * 2;
@@ -162,14 +166,15 @@ public class ViewWishlistPanel extends JPanel {
     /**
      * Add a button to the specified panel.
      * 
-     * @param text the text of the button
-     * @param panel the panel to add the button to
-     * @param gbc the GridBagConstraints for the button
-     * @param x the x position of the button
-     * @param y the y position of the button
+     * @param text           the text of the button
+     * @param panel          the panel to add the button to
+     * @param gbc            the GridBagConstraints for the button
+     * @param x              the x position of the button
+     * @param y              the y position of the button
      * @param actionListener the ActionListener for the button
      */
-    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
+    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y,
+            ActionListener actionListener) {
         gbc.gridx = x;
         gbc.gridy = y;
         JButton btn = new JButton(text);

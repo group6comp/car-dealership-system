@@ -26,7 +26,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * The GenerateReportsPanel class is used to generate and display various reports for the dealership.
+ * The GenerateReportsPanel class is used to generate and display various
+ * reports for the dealership.
  */
 public class GenerateReportsPanel extends JPanel {
 
@@ -43,7 +44,7 @@ public class GenerateReportsPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Add title label
-        JLabel lblTitle = new JLabel("Manage Inventory");
+        JLabel lblTitle = new JLabel("Inventory");
         lblTitle.setFont(new Font("Dubai Medium", Font.PLAIN, 20));
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
         add(lblTitle, BorderLayout.NORTH);
@@ -68,8 +69,8 @@ public class GenerateReportsPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Add buttons to the button panel
-        addButton("Save Report as Text File", buttonPanel, gbc, 0, 0, e -> saveReportAsTextFile(generateSalespersonReport()));
-        addButton("Back", buttonPanel, gbc, 1, 0, e -> Main.showMainUI());
+        addButton("Save Report as Text File", buttonPanel, gbc, 0, 0,
+                e -> saveReportAsTextFile(generateSalespersonReport()));
     }
 
     /**
@@ -171,8 +172,8 @@ public class GenerateReportsPanel extends JPanel {
         report.append("Salesperson Report\n\n");
         for (Map.Entry<String, SalespersonStats> entry : statsMap.entrySet()) {
             report.append("Salesperson: ").append(entry.getKey()).append("\n")
-                .append("Number of Sales: ").append(entry.getValue().getSalesCount()).append("\n")
-                .append("Total Sales Amount: $").append(entry.getValue().getSalesAmount()).append("\n\n");
+                    .append("Number of Sales: ").append(entry.getValue().getSalesCount()).append("\n")
+                    .append("Total Sales Amount: $").append(entry.getValue().getSalesAmount()).append("\n\n");
         }
 
         return report.toString();
@@ -186,9 +187,11 @@ public class GenerateReportsPanel extends JPanel {
     private void saveReportAsTextFile(String reportContent) {
         try (FileWriter writer = new FileWriter("SalesReport.txt")) {
             writer.write(reportContent);
-            JOptionPane.showMessageDialog(this, "Report saved as SalesReport.txt", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Report saved as SalesReport.txt", "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving report as text file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error saving report as text file: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -254,11 +257,13 @@ public class GenerateReportsPanel extends JPanel {
 
             // Draw x-axis label
             g2d.setFont(new Font("Dubai Medium", Font.PLAIN, 12));
-            g2d.drawString(xAxisLabel, width / 2 - g2d.getFontMetrics().stringWidth(xAxisLabel) / 2, height - padding + labelPadding);
+            g2d.drawString(xAxisLabel, width / 2 - g2d.getFontMetrics().stringWidth(xAxisLabel) / 2,
+                    height - padding + labelPadding);
 
             // Draw y-axis label
             g2d.rotate(-Math.PI / 2);
-            g2d.drawString(yAxisLabel, -height / 2 - g2d.getFontMetrics().stringWidth(yAxisLabel) / 2, padding - labelPadding);
+            g2d.drawString(yAxisLabel, -height / 2 - g2d.getFontMetrics().stringWidth(yAxisLabel) / 2,
+                    padding - labelPadding);
             g2d.rotate(Math.PI / 2);
 
             // Draw bars
@@ -283,14 +288,15 @@ public class GenerateReportsPanel extends JPanel {
     /**
      * Add a button to the specified panel.
      * 
-     * @param text the text of the button
-     * @param panel the panel to add the button to
-     * @param gbc the GridBagConstraints for the button
-     * @param x the x position of the button
-     * @param y the y position of the button
+     * @param text           the text of the button
+     * @param panel          the panel to add the button to
+     * @param gbc            the GridBagConstraints for the button
+     * @param x              the x position of the button
+     * @param y              the y position of the button
      * @param actionListener the ActionListener for the button
      */
-    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y, ActionListener actionListener) {
+    private void addButton(String text, JPanel panel, GridBagConstraints gbc, int x, int y,
+            ActionListener actionListener) {
         gbc.gridx = x;
         gbc.gridy = y;
         JButton btn = new JButton(text);

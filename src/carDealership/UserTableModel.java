@@ -5,11 +5,12 @@ import java.util.List;
 
 /**
  * The UserTableModel class represents the table model for displaying user data.
- * It extends the AbstractTableModel class and provides custom functionality for handling users.
+ * It extends the AbstractTableModel class and provides custom functionality for
+ * handling users.
  */
 public class UserTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
-    private final String[] columnNames = {"Username", "Password", "Role"};
+    private final String[] columnNames = { "Username", "Password", "Role", "Status" };
     private final List<User> users;
 
     /**
@@ -44,7 +45,7 @@ public class UserTableModel extends AbstractTableModel {
     /**
      * Get the value at the specified row and column.
      * 
-     * @param rowIndex the row index
+     * @param rowIndex    the row index
      * @param columnIndex the column index
      * @return the value at the specified row and column
      */
@@ -58,6 +59,8 @@ public class UserTableModel extends AbstractTableModel {
                 return user.getPassword().replaceAll(".", "*"); // Blur the password with stars
             case 2:
                 return user.getRole();
+            case 3:
+                return user.isActive() ? "Active" : "Inactive";
             default:
                 return null;
         }
